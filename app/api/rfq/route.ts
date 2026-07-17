@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
+import { createAnonSupabaseClient } from "@/lib/supabase/server";
 
 // Backs every RFQ / Request-a-Part / Contact / search-no-result form.
-// Supabase isn't started yet (Phase 2), so this validates and logs the
-// enquiry server-side rather than persisting it — the endpoint is genuinely
-// functional end-to-end (real request/response, no dead link), and is the
-// one place Phase 3 swaps in an `rfq_enquiries` insert + email notification
-// per Handoff/design_handoff_leos_trading/data-model.md and components.md.
+// Persists to rfq_enquiries via the anon-key client — RLS's "anyone can
+// submit an rfq" insert policy (0001_init_schema.sql) is what allows this
+// without a session, same as any other public write in this app never uses
+// the service-role client. Email notification (RESEND_API_KEY) is a
+// documented fast-follow, not required for persistence itself.
 
 const VALID_SOURCES = ["product_page", "sourcing_request", "contact", "search_no_result"] as const;
 type RfqSource = (typeof VALID_SOURCES)[number];
@@ -32,6 +33,11 @@ function isValidPayload(body: unknown): body is RfqPayload {
   return true;
 }
 
+function nullIfEmpty(value: string | undefined): string | null {
+  const trimmed = value?.trim();
+  return trimmed ? trimmed : null;
+}
+
 export async function POST(request: Request) {
   let body: unknown;
   try {
@@ -44,17 +50,22 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "Name, a valid email, and source are required." }, { status: 400 });
   }
 
-  console.log("[rfq_enquiry]", {
-    receivedAt: new Date().toISOString(),
-    name: body.name,
-    company: body.company ?? null,
-    email: body.email,
-    phone: body.phone ?? null,
-    partNumber: body.partNumber ?? null,
-    quantity: body.quantity ?? null,
-    message: body.message ?? null,
+  const supabase = createAnonSupabaseClient();
+  const { error } = await supabase.from("rfq_enquiries").insert({
+    name: body.name.trim(),
+    company: nullIfEmpty(body.company),
+    email: body.email.trim(),
+    phone: nullIfEmpty(body.phone),
+    part_number: nullIfEmpty(body.partNumber),
+    quantity_required: nullIfEmpty(body.quantity),
+    message: nullIfEmpty(body.message),
     source: body.source,
   });
+
+  if (error) {
+    console.error("[rfq_enquiry] insert failed", error);
+    return NextResponse.json({ ok: false, error: "Something went wrong. Please try again." }, { status: 500 });
+  }
 
   return NextResponse.json({ ok: true });
 }
