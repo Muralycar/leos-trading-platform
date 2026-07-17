@@ -133,3 +133,32 @@ export async function listProducts(params: ProductListParams): Promise<ProductLi
 
   return { rows, total, page, pageSize: PAGE_SIZE };
 }
+
+export async function getProductById(id: string): Promise<AdminProduct | undefined> {
+  const supabase = await createServerSupabaseClient();
+  const { data, error } = await supabase.from("product_admin_view").select("*").eq("id", id).maybeSingle();
+  if (error) throw error;
+  return data ? mapRow(data) : undefined;
+}
+
+export interface ProductCategoryOption {
+  id: string;
+  slug: string;
+  name: string;
+}
+
+/** All 12 product categories (lib/data/categorize.ts's PRODUCT_CATEGORIES), for the edit page's checkbox list. */
+export async function getAllProductCategories(): Promise<ProductCategoryOption[]> {
+  const supabase = await createServerSupabaseClient();
+  const { data, error } = await supabase.from("product_categories").select("id, slug, name").order("name");
+  if (error) throw error;
+  return data;
+}
+
+/** Currently-mapped category ids for one product. */
+export async function getProductCategoryIds(productId: string): Promise<string[]> {
+  const supabase = await createServerSupabaseClient();
+  const { data, error } = await supabase.from("product_category_map").select("product_category_id").eq("product_id", productId);
+  if (error) throw error;
+  return data.map((r) => r.product_category_id);
+}

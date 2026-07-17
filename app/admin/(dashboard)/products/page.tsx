@@ -51,8 +51,15 @@ export default async function AdminProductsListPage({ searchParams }: PageProps)
 
   return (
     <div>
-      <div className="eyebrow">Admin</div>
-      <h1 className="mt-3.5 text-[28px]">Products</h1>
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <div className="eyebrow">Admin</div>
+          <h1 className="mt-3.5 text-[28px]">Products</h1>
+        </div>
+        <Link href="/admin/products/new" className="btn btn-primary btn-sm">
+          New Product
+        </Link>
+      </div>
 
       <form className="mt-6 flex flex-wrap gap-3" method="get">
         <input
@@ -108,7 +115,11 @@ export default async function AdminProductsListPage({ searchParams }: PageProps)
           <tbody>
             {rows.map((p) => (
               <tr key={p.id} className="border-b border-line bg-bg-0 last:border-0 hover:bg-bg-1">
-                <td className="whitespace-nowrap px-4 py-3 font-mono text-brass">{p.oemPartNumber}</td>
+                <td className="whitespace-nowrap px-4 py-3 font-mono text-brass">
+                  <Link href={`/admin/products/${p.id}/edit`} className="hover:underline">
+                    {p.oemPartNumber}
+                  </Link>
+                </td>
                 <td className="px-4 py-3 text-text-0">{p.description}</td>
                 <td className="whitespace-nowrap px-4 py-3 text-text-1">{p.brandName}</td>
                 <td className="whitespace-nowrap px-4 py-3 text-text-2">{p.equipmentCategoryName}</td>
