@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/types";
-import { getAvailability } from "@/lib/data/inventory";
 import { AvailabilityBadge } from "@/components/ui/AvailabilityBadge";
 
 export function RelatedParts({ products }: { products: Product[] }) {
@@ -31,7 +30,7 @@ export function RelatedParts({ products }: { products: Product[] }) {
           <div className="flex flex-1 flex-col gap-2 p-4">
             <div className="font-mono text-xs text-brass">{p.oemPartNumber}</div>
             <div className="flex-1 text-sm text-text-0">{p.description}</div>
-            <AvailabilityBadge quantity={getAvailability(p.id).quantity} />
+            <AvailabilityBadge quantity={p.quantity} />
           </div>
         </Link>
       ))}

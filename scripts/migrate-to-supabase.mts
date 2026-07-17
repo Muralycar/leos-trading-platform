@@ -19,6 +19,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import type { Database } from "../lib/supabase/types.ts";
+import { selectAllPaginated } from "../lib/supabase/paginate.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
@@ -63,26 +64,6 @@ function chunk<T>(items: T[], size: number): T[][] {
   const chunks: T[][] = [];
   for (let i = 0; i < items.length; i += size) chunks.push(items.slice(i, i + size));
   return chunks;
-}
-
-// PostgREST caps unpaginated selects at 1000 rows by default — Iveco alone
-// has 1,561 products, so any plain .select() over a brand's products silently
-// truncates. Page through with .range() until a page comes back short.
-async function selectAllPaginated<T>(
-  page: (from: number, to: number) => PromiseLike<{ data: T[] | null; error: { message: string } | null }>,
-  pageSize = 1000,
-): Promise<T[]> {
-  const results: T[] = [];
-  let from = 0;
-  for (;;) {
-    const { data, error } = await page(from, from + pageSize - 1);
-    if (error) throw new Error(error.message);
-    if (!data || data.length === 0) break;
-    results.push(...data);
-    if (data.length < pageSize) break;
-    from += pageSize;
-  }
-  return results;
 }
 
 async function main() {
@@ -164,7 +145,12 @@ async function main() {
   for (const brandSlug of brandSlugs) {
     const brandId = brandIdBySlug.get(brandSlug)!;
     const dbProducts = await selectAllPaginated<{ id: string; oem_part_number_normalized: string }>((from, to) =>
-      supabase.from("products").select("id, oem_part_number_normalized").eq("brand_id", brandId).range(from, to),
+      supabase
+        .from("products")
+        .select("id, oem_part_number_normalized")
+        .eq("brand_id", brandId)
+        .order("id", { ascending: true })
+        .range(from, to),
     );
     const dbIdByNormalized = new Map(dbProducts.map((p) => [p.oem_part_number_normalized, p.id]));
 

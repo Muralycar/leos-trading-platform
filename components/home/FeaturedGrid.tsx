@@ -1,11 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { AvailabilityBadge } from "@/components/ui/AvailabilityBadge";
-import { BRANDS, getAvailability, getFeaturedProducts } from "@/lib/data/inventory";
+import { getFeaturedProducts } from "@/lib/data/inventory";
 
-export function FeaturedGrid() {
-  const featured = getFeaturedProducts(4);
-  const brandNameBySlug = Object.fromEntries(BRANDS.map((b) => [b.slug, b.name]));
+export async function FeaturedGrid() {
+  const featured = await getFeaturedProducts(4);
 
   return (
     <section className="py-16">
@@ -33,8 +32,8 @@ export function FeaturedGrid() {
               <div className="font-mono text-xs text-brass">{p.oemPartNumber}</div>
               <div className="flex-1 text-[15px] font-medium text-text-0">{p.description}</div>
               <div className="mt-1.5 flex items-center justify-between">
-                <AvailabilityBadge quantity={getAvailability(p.id).quantity} />
-                <span className="tag">{brandNameBySlug[p.brandSlug] ?? p.brandSlug}</span>
+                <AvailabilityBadge quantity={p.quantity} />
+                <span className="tag">{p.brandName}</span>
               </div>
             </div>
           </Link>

@@ -1,10 +1,12 @@
-import { getLiveBrandCount, getTotalSkuCount, getTotalUnitCount } from "@/lib/placeholder-data";
+import { getLiveBrandCount, getTotalSkuCount, getTotalUnitCount } from "@/lib/data/inventory";
 
-export function StatStrip() {
+export async function StatStrip() {
+  const [totalSkus, totalUnits, liveBrands] = await Promise.all([getTotalSkuCount(), getTotalUnitCount(), getLiveBrandCount()]);
+
   const stats = [
-    { num: `${getTotalSkuCount().toLocaleString()}+`, label: "SKUs In Network" },
-    { num: `${getTotalUnitCount().toLocaleString()}+`, label: "Units In Stock" },
-    { num: String(getLiveBrandCount()), label: "Brands Live In Inventory" },
+    { num: `${totalSkus.toLocaleString()}+`, label: "SKUs In Network" },
+    { num: `${totalUnits.toLocaleString()}+`, label: "Units In Stock" },
+    { num: String(liveBrands), label: "Brands Live In Inventory" },
     { num: "MEA", label: "Regional Coverage" },
   ];
 

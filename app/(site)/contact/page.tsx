@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { RfqForm } from "@/components/rfq/RfqForm";
 import { LocationIcon, PhoneIcon, WhatsAppIcon, MailIcon } from "@/components/ui/Icons";
-import { SITE_SETTINGS } from "@/lib/placeholder-data";
+import { getSiteSettings } from "@/lib/data/inventory";
 import { waLink, mailtoLink } from "@/lib/whatsapp";
 
 export const metadata: Metadata = {
@@ -10,18 +10,19 @@ export const metadata: Metadata = {
   description: "Contact Leos Trading FZE — Sharjah, UAE. Phone, WhatsApp, email and request-a-quotation form.",
 };
 
-export default function ContactPage() {
-  const phoneHref = `tel:${SITE_SETTINGS.phonePrimary.replace(/\s+/g, "")}`;
+export default async function ContactPage() {
+  const settings = await getSiteSettings();
+  const phoneHref = `tel:${settings.phonePrimary.replace(/\s+/g, "")}`;
 
   const lines = [
-    { icon: LocationIcon, label: "Address", value: <>{SITE_SETTINGS.address}</> },
-    { icon: PhoneIcon, label: "Phone", value: <>{SITE_SETTINGS.phonePrimary} / {SITE_SETTINGS.phoneSecondary}</> },
+    { icon: LocationIcon, label: "Address", value: <>{settings.address}</> },
+    { icon: PhoneIcon, label: "Phone", value: <>{settings.phonePrimary} / {settings.phoneSecondary}</> },
     {
       icon: WhatsAppIcon,
       label: "WhatsApp",
       value: (
-        <a href={waLink()} target="_blank" rel="noreferrer" className="hover:text-brass">
-          {SITE_SETTINGS.phonePrimary}
+        <a href={waLink(settings)} target="_blank" rel="noreferrer" className="hover:text-brass">
+          {settings.phonePrimary}
         </a>
       ),
     },
@@ -29,8 +30,8 @@ export default function ContactPage() {
       icon: MailIcon,
       label: "Email",
       value: (
-        <a href={mailtoLink()} className="hover:text-brass">
-          {SITE_SETTINGS.email}
+        <a href={mailtoLink(settings)} className="hover:text-brass">
+          {settings.email}
         </a>
       ),
     },

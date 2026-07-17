@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { SearchClient } from "@/components/search/SearchClient";
+import { getSiteSettings } from "@/lib/data/inventory";
 
 export const metadata: Metadata = {
   title: "Inventory Search — Leos Trading FZE",
@@ -32,10 +33,11 @@ function ResultsSkeleton() {
   );
 }
 
-export default function SearchPage() {
+export default async function SearchPage() {
+  const settings = await getSiteSettings();
   return (
     <Suspense fallback={<ResultsSkeleton />}>
-      <SearchClient />
+      <SearchClient settings={settings} />
     </Suspense>
   );
 }

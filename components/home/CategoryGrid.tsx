@@ -1,8 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import { EQUIPMENT_CATEGORIES } from "@/lib/placeholder-data";
+import { getEquipmentCategories } from "@/lib/data/inventory";
 
-export function CategoryGrid() {
+export async function CategoryGrid() {
+  const categories = await getEquipmentCategories();
+
   return (
     <section className="py-16">
       <div className="wrap">
@@ -15,7 +17,7 @@ export function CategoryGrid() {
         </div>
       </div>
       <div className="grid grid-cols-1 gap-px bg-line min-[901px]:grid-cols-3">
-        {EQUIPMENT_CATEGORIES.map((c) => {
+        {categories.map((c) => {
           const isLive = c.status === "live";
           return (
             <div key={c.slug} className={`flex min-h-[420px] flex-col bg-bg-1 ${isLive ? "" : "opacity-90"}`}>

@@ -1,11 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/types";
-import { getAvailability } from "@/lib/data/inventory";
 import { AvailabilityBadge } from "@/components/ui/AvailabilityBadge";
 
 export function ResultRow({ product, brandName }: { product: Product; brandName: string }) {
-  const { quantity } = getAvailability(product.id);
+  const { quantity } = product;
 
   return (
     <Link

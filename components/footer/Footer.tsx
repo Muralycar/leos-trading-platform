@@ -1,9 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import { EQUIPMENT_CATEGORIES, SITE_SETTINGS } from "@/lib/placeholder-data";
+import { getEquipmentCategories, getSiteSettings } from "@/lib/data/inventory";
 
-export function Footer() {
-  const liveCategories = EQUIPMENT_CATEGORIES.filter((c) => c.status === "live");
+export async function Footer() {
+  const [categories, settings] = await Promise.all([getEquipmentCategories(), getSiteSettings()]);
+  const liveCategories = categories.filter((c) => c.status === "live");
 
   return (
     <footer className="border-t border-line bg-bg-1 pt-16">
@@ -34,10 +35,10 @@ export function Footer() {
         </div>
         <div>
           <h4 className="mb-4 font-mono text-[11px] uppercase tracking-[.1em] text-text-2">Contact</h4>
-          <div className="mb-2.5 text-sm text-text-1">{SITE_SETTINGS.address}</div>
-          <div className="mb-2.5 text-sm text-text-1">{SITE_SETTINGS.phonePrimary}</div>
-          <div className="mb-2.5 text-sm text-text-1">{SITE_SETTINGS.phoneSecondary}</div>
-          <div className="mb-2.5 text-sm text-text-1">{SITE_SETTINGS.email}</div>
+          <div className="mb-2.5 text-sm text-text-1">{settings.address}</div>
+          <div className="mb-2.5 text-sm text-text-1">{settings.phonePrimary}</div>
+          <div className="mb-2.5 text-sm text-text-1">{settings.phoneSecondary}</div>
+          <div className="mb-2.5 text-sm text-text-1">{settings.email}</div>
         </div>
       </div>
       <div className="border-t border-line">

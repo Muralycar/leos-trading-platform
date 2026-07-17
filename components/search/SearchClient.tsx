@@ -1,27 +1,34 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { BRANDS, PRODUCTS, getAvailability } from "@/lib/data/inventory";
-import { EQUIPMENT_CATEGORIES } from "@/lib/placeholder-data";
-import { DEFAULT_FILTERS, matchesSearchQuery, searchProducts, type SearchFilters, type SortOption } from "@/lib/search";
-import { AVAILABILITY_LABEL, type AvailabilityStatus } from "@/lib/types";
+import type { AvailabilityStatus, Product, SiteSettings } from "@/lib/types";
+import type { SortOption } from "@/lib/search";
 import { waLink } from "@/lib/whatsapp";
 import { FilterSidebar, type FilterOption } from "@/components/search/FilterSidebar";
 import { ResultRow } from "@/components/search/ResultRow";
 import { RfqForm } from "@/components/rfq/RfqForm";
 
-const AVAILABILITY_ORDER: AvailabilityStatus[] = ["in_stock", "limited_stock", "on_request", "out_of_stock"];
+interface SearchResponse {
+  results: Product[];
+  total: number;
+  brandOptions: FilterOption[];
+  categoryOptions: FilterOption[];
+  availabilityOptions: FilterOption[];
+}
+
+const EMPTY_RESPONSE: SearchResponse = { results: [], total: 0, brandOptions: [], categoryOptions: [], availabilityOptions: [] };
 
 function toggleInList<T>(list: T[], value: T): T[] {
   return list.includes(value) ? list.filter((v) => v !== value) : [...list, value];
 }
 
-export function SearchClient() {
+export function SearchClient({ settings }: { settings: SiteSettings }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const [query, setQuery] = useState(() => searchParams.get("q") ?? "");
+  const [debouncedQuery, setDebouncedQuery] = useState(query);
   const [selectedBrands, setSelectedBrands] = useState<string[]>(() => {
     const brand = searchParams.get("brand");
     return brand ? [brand.toLowerCase()] : [];
@@ -41,86 +48,53 @@ export function SearchClient() {
     return "relevance";
   });
 
-  // Keep the URL shareable/bookmarkable as filters change, without a full navigation.
+  const [data, setData] = useState<SearchResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  // Debounce the free-text query ~300ms per search-spec.md before it drives
+  // either the URL or a network request; checkbox/sort changes apply at once.
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedQuery(query), 300);
+    return () => clearTimeout(t);
+  }, [query]);
+
   useEffect(() => {
     const params = new URLSearchParams();
-    if (query) params.set("q", query);
+    if (debouncedQuery) params.set("q", debouncedQuery);
     if (selectedBrands.length === 1) params.set("brand", selectedBrands[0]);
     if (selectedCategories.length === 1) params.set("cat", selectedCategories[0]);
     if (sort !== "relevance") params.set("sort", sort);
     const qs = params.toString();
     router.replace(qs ? `/search?${qs}` : "/search", { scroll: false });
+
+    const apiParams = new URLSearchParams();
+    if (debouncedQuery) apiParams.set("q", debouncedQuery);
+    selectedBrands.forEach((b) => apiParams.append("brand", b));
+    selectedCategories.forEach((c) => apiParams.append("cat", c));
+    selectedAvailability.forEach((a) => apiParams.append("availability", a));
+    apiParams.set("sort", sort);
+
+    let cancelled = false;
+    setLoading(true);
+    fetch(`/api/search?${apiParams.toString()}`)
+      .then((res) => res.json() as Promise<SearchResponse>)
+      .then((json) => {
+        if (!cancelled) {
+          setData(json);
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query, selectedBrands, selectedCategories, sort]);
+  }, [debouncedQuery, selectedBrands, selectedCategories, selectedAvailability, sort]);
 
-  const brandNameBySlug = useMemo(() => Object.fromEntries(BRANDS.map((b) => [b.slug, b.name])), []);
-  const liveCategories = useMemo(() => EQUIPMENT_CATEGORIES.filter((c) => c.status === "live"), []);
-
-  const filters: SearchFilters = {
-    ...DEFAULT_FILTERS,
-    query,
-    brandSlugs: selectedBrands,
-    equipmentCategorySlugs: selectedCategories,
-    availabilityStatuses: selectedAvailability,
-    sort,
-  };
-
-  const results = useMemo(
-    () => searchProducts(filters, brandNameBySlug),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [query, selectedBrands, selectedCategories, selectedAvailability, sort, brandNameBySlug],
-  );
-
-  // Facet counts reflect the current query text plus every *other* selected
-  // filter — never the facet's own selection — so counts stay meaningful as
-  // you narrow down.
-  const brandOptions: FilterOption[] = useMemo(
-    () =>
-      BRANDS.map((b) => ({
-        slug: b.slug,
-        label: b.name,
-        count: PRODUCTS.filter(
-          (p) =>
-            p.brandSlug === b.slug &&
-            (selectedCategories.length === 0 || selectedCategories.includes(p.equipmentCategorySlug)) &&
-            (selectedAvailability.length === 0 || selectedAvailability.includes(getAvailability(p.id).status)) &&
-            matchesSearchQuery(p, b.name, query),
-        ).length,
-      })),
-    [query, selectedCategories, selectedAvailability],
-  );
-
-  const categoryOptions: FilterOption[] = useMemo(
-    () =>
-      liveCategories.map((c) => ({
-        slug: c.slug,
-        label: c.name,
-        count: PRODUCTS.filter(
-          (p) =>
-            p.equipmentCategorySlug === c.slug &&
-            (selectedBrands.length === 0 || selectedBrands.includes(p.brandSlug)) &&
-            (selectedAvailability.length === 0 || selectedAvailability.includes(getAvailability(p.id).status)) &&
-            matchesSearchQuery(p, brandNameBySlug[p.brandSlug] ?? p.brandSlug, query),
-        ).length,
-      })),
-    [query, selectedBrands, selectedAvailability, brandNameBySlug, liveCategories],
-  );
-
-  const availabilityOptions: FilterOption[] = useMemo(
-    () =>
-      AVAILABILITY_ORDER.map((status) => ({
-        slug: status,
-        label: AVAILABILITY_LABEL[status],
-        count: PRODUCTS.filter(
-          (p) =>
-            getAvailability(p.id).status === status &&
-            (selectedBrands.length === 0 || selectedBrands.includes(p.brandSlug)) &&
-            (selectedCategories.length === 0 || selectedCategories.includes(p.equipmentCategorySlug)) &&
-            matchesSearchQuery(p, brandNameBySlug[p.brandSlug] ?? p.brandSlug, query),
-        ).length,
-      })).filter((opt) => opt.count > 0 || opt.slug !== "out_of_stock"),
-    [query, selectedBrands, selectedCategories, brandNameBySlug],
-  );
+  const { results, total, brandOptions, categoryOptions, availabilityOptions } = data ?? EMPTY_RESPONSE;
+  const brandNameBySlug = Object.fromEntries(brandOptions.map((b) => [b.slug, b.label]));
 
   return (
     <>
@@ -162,7 +136,8 @@ export function SearchClient() {
           <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
             <div className="text-sm text-text-1">
               <strong className="text-text-0">{results.length}</strong> parts found{" "}
-              <span className="text-text-2">of {PRODUCTS.length.toLocaleString()} in network</span>
+              <span className="text-text-2">of {total.toLocaleString()} in network</span>
+              {loading ? <span className="ml-2 text-text-2">Searching…</span> : null}
             </div>
             <select
               value={sort}
@@ -175,8 +150,16 @@ export function SearchClient() {
             </select>
           </div>
 
-          {results.length > 0 ? (
-            <div className="flex flex-col gap-px overflow-hidden rounded-m border border-line bg-line">
+          {data === null ? (
+            <div className="flex flex-col gap-3">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="h-[84px] animate-pulse rounded-m bg-bg-2" />
+              ))}
+            </div>
+          ) : results.length > 0 ? (
+            <div
+              className={`flex flex-col gap-px overflow-hidden rounded-m border border-line bg-line transition-opacity ${loading ? "opacity-60" : ""}`}
+            >
               {results.map((p) => (
                 <ResultRow key={p.id} product={p} brandName={brandNameBySlug[p.brandSlug] ?? p.brandSlug} />
               ))}
@@ -192,7 +175,7 @@ export function SearchClient() {
                 <RfqForm variant="search-no-result" prefillPartNumber={query} />
               </div>
               <a
-                href={waLink(query ? `Inquiry — Part Number ${query}` : "Inquiry — part not found in online stock")}
+                href={waLink(settings, query ? `Inquiry — Part Number ${query}` : "Inquiry — part not found in online stock")}
                 target="_blank"
                 rel="noreferrer"
                 className="btn btn-wa btn-sm mt-6 inline-flex"

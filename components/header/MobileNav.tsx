@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { MenuIcon, CloseIcon } from "@/components/ui/Icons";
-import { MOBILE_LINKS } from "@/lib/nav";
+import type { NavLink } from "@/lib/nav";
 
-export function MobileNav() {
+export function MobileNav({ links }: { links: NavLink[] }) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -34,7 +34,7 @@ export function MobileNav() {
               >
                 <CloseIcon className="h-[18px] w-[18px]" />
               </button>
-              {MOBILE_LINKS.map((link) => (
+              {links.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}

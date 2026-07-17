@@ -1,7 +1,8 @@
 // Mirrors the shape of Handoff/design_handoff_leos_trading/data-model.md.
-// Phase 1 uses local literals implementing these types (see placeholder-data.ts);
-// Phase 3+ replaces the data source with live Supabase queries against
-// matching tables/views, without changing these shapes.
+// Phase 3 sources these from Supabase — see lib/data/inventory.ts — via the
+// product_public_view Postgres view, which is why Product below carries
+// brand/category display names and availability inline: the view already
+// joins and computes them, so callers never need a separate lookup.
 
 export type AvailabilityStatus =
   | "in_stock"
@@ -31,34 +32,40 @@ export interface EquipmentCategory {
 }
 
 export interface Product {
-  /** `${brandSlug}:${oemPartNumberNormalized}` — stable across regeneration. */
+  /** Database uuid (products.id). */
   id: string;
   brandSlug: string;
+  brandName: string;
   equipmentCategorySlug: string;
-  productCategorySlug: string;
-  productCategoryName: string;
+  equipmentCategoryName: string;
+  /** Null only if a product somehow has no product_category_map row. */
+  productCategorySlug: string | null;
+  productCategoryName: string | null;
   /** Original formatting, e.g. "KHED0037301210-S". */
   oemPartNumber: string;
   /** Uppercased, punctuation-stripped — search/dedupe key. */
   oemPartNumberNormalized: string;
   description: string;
   imagePath: string | null;
+  /** Sum of is_current inventory_batches — never stored on the products table itself. */
+  quantity: number;
+  status: AvailabilityStatus;
 }
 
 /**
- * A stock lot for a product. Deliberately separate from Product — a
- * product can have more than one batch (see the 53 real multi-line Iveco
- * SKUs in inventory-import-spec.md's dedupe rule). Never read quantity off
- * Product directly; always sum batches via getAvailability() in
- * lib/data/inventory.ts, mirroring the product_public_availability view in
- * data-model.md.
+ * A stock lot for a product (inventory_batches table) — deliberately
+ * separate from Product; a product can have more than one batch (see the
+ * 53 real multi-line Iveco SKUs). Admin-only; never fetched by public
+ * pages, which read Product.quantity/status (sourced from
+ * product_public_view, which already sums is_current batches) instead.
  */
 export interface InventoryBatch {
   id: string;
   productId: string;
   quantity: number;
-  /** Original spreadsheet row — private/debug only, never shown publicly. */
-  sourceLine: number;
+  sourceLine: number | null;
+  importJobId: string | null;
+  isCurrent: boolean;
 }
 
 export interface SiteSettings {

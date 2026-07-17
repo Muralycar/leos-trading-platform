@@ -1,20 +1,20 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { BRANDS, getAvailability, getProductsByBrand } from "@/lib/data/inventory";
-import { EQUIPMENT_CATEGORIES } from "@/lib/placeholder-data";
+import { getBrandBySlug, getBrands, getEquipmentCategories, getProductsByBrand } from "@/lib/data/inventory";
 import { ResultRow } from "@/components/search/ResultRow";
 
 interface PageProps {
   params: Promise<{ brand: string }>;
 }
 
-export function generateStaticParams() {
-  return BRANDS.map((b) => ({ brand: b.slug }));
+export async function generateStaticParams() {
+  const brands = await getBrands();
+  return brands.map((b) => ({ brand: b.slug }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { brand } = await params;
-  const b = BRANDS.find((x) => x.slug === brand);
+  const b = await getBrandBySlug(brand);
   if (!b) return {};
   return {
     title: `${b.name} Inventory — Leos Trading FZE`,
@@ -24,14 +24,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function BrandPage({ params }: PageProps) {
   const { brand } = await params;
-  const b = BRANDS.find((x) => x.slug === brand);
+  const b = await getBrandBySlug(brand);
   if (!b) notFound();
 
-  const products = getProductsByBrand(b.slug).sort(
-    (a, c) => getAvailability(c.id).quantity - getAvailability(a.id).quantity,
-  );
-  const totalUnits = products.reduce((sum, p) => sum + getAvailability(p.id).quantity, 0);
-  const category = EQUIPMENT_CATEGORIES.find((c) => c.slug === products[0]?.equipmentCategorySlug);
+  const [products, categories] = await Promise.all([getProductsByBrand(b.slug), getEquipmentCategories()]);
+  const totalUnits = products.reduce((sum, p) => sum + p.quantity, 0);
+  const category = categories.find((c) => c.slug === products[0]?.equipmentCategorySlug);
 
   return (
     <>

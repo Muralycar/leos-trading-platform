@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { BRANDS, PRODUCTS, getAvailability, getProductByBrandAndSku, getRelatedProducts } from "@/lib/data/inventory";
-import { EQUIPMENT_CATEGORIES } from "@/lib/placeholder-data";
+import { getAllProductParams, getProductByBrandAndSku, getRelatedProducts, getSiteSettings } from "@/lib/data/inventory";
 import { waLink, mailtoLink } from "@/lib/whatsapp";
 import { AVAILABILITY_LABEL } from "@/lib/types";
 import { AvailabilityBadge } from "@/components/ui/AvailabilityBadge";
@@ -16,12 +15,8 @@ interface PageProps {
   params: Promise<{ brand: string; sku: string }>;
 }
 
-export function generateStaticParams() {
-  return PRODUCTS.map((p) => ({ brand: p.brandSlug, sku: p.oemPartNumber.toLowerCase() }));
-}
-
-function brandName(brandSlug: string): string {
-  return BRANDS.find((b) => b.slug === brandSlug)?.name ?? brandSlug;
+export async function generateStaticParams() {
+  return getAllProductParams();
 }
 
 function descriptionSentence(brand: string): string {
@@ -30,34 +25,30 @@ function descriptionSentence(brand: string): string {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { brand, sku } = await params;
-  const product = getProductByBrandAndSku(brand, sku);
+  const product = await getProductByBrandAndSku(brand, sku);
   if (!product) return {};
-  const brand_ = brandName(product.brandSlug);
   return {
-    title: `${product.oemPartNumber} — ${product.description} | ${brand_} | Leos Trading FZE`,
-    description: descriptionSentence(brand_),
+    title: `${product.oemPartNumber} — ${product.description} | ${product.brandName} | Leos Trading FZE`,
+    description: descriptionSentence(product.brandName),
   };
 }
 
 export default async function ProductPage({ params }: PageProps) {
   const { brand, sku } = await params;
-  const product = getProductByBrandAndSku(brand, sku);
+  const product = await getProductByBrandAndSku(brand, sku);
   if (!product) notFound();
 
-  const brand_ = brandName(product.brandSlug);
-  const category = EQUIPMENT_CATEGORIES.find((c) => c.slug === product.equipmentCategorySlug);
-  const { quantity, status } = getAvailability(product.id);
-  const desc = descriptionSentence(brand_);
-  const related = getRelatedProducts(product, 4);
+  const [related, settings] = await Promise.all([getRelatedProducts(product, 4), getSiteSettings()]);
+  const desc = descriptionSentence(product.brandName);
   const waMessage = `Inquiry — Part Number ${product.oemPartNumber} (${product.description})`;
 
   return (
     <>
       <div className="wrap pt-6">
         <Breadcrumb
-          categoryName={category?.name ?? product.equipmentCategorySlug}
+          categoryName={product.equipmentCategoryName}
           categorySlug={product.equipmentCategorySlug}
-          brandName={brand_}
+          brandName={product.brandName}
           brandSlug={product.brandSlug}
           sku={product.oemPartNumber}
         />
@@ -68,9 +59,9 @@ export default async function ProductPage({ params }: PageProps) {
 
         <div>
           <div className="mb-4 flex flex-wrap gap-2.5">
-            <span className="tag">{brand_}</span>
-            <span className="tag">{category?.name ?? product.equipmentCategorySlug}</span>
-            <AvailabilityBadge quantity={quantity} />
+            <span className="tag">{product.brandName}</span>
+            <span className="tag">{product.equipmentCategoryName}</span>
+            <AvailabilityBadge quantity={product.quantity} />
           </div>
           <div className="font-mono text-[15px] text-brass">{product.oemPartNumber}</div>
           <h1 className="mt-2 text-[clamp(26px,3vw,38px)]">{product.description}</h1>
@@ -78,11 +69,17 @@ export default async function ProductPage({ params }: PageProps) {
 
           <SpecTable
             rows={[
-              { label: "Brand", value: brand_ },
-              { label: "Category", value: `${category?.name ?? product.equipmentCategorySlug} — ${product.productCategoryName}` },
+              { label: "Brand", value: product.brandName },
+              {
+                label: "Category",
+                value: `${product.equipmentCategoryName} — ${product.productCategoryName ?? "General Hardware"}`,
+              },
               {
                 label: "Available Quantity",
-                value: status === "on_request" ? AVAILABILITY_LABEL.on_request : `${quantity} unit${quantity === 1 ? "" : "s"}`,
+                value:
+                  product.status === "on_request"
+                    ? AVAILABILITY_LABEL.on_request
+                    : `${product.quantity} unit${product.quantity === 1 ? "" : "s"}`,
               },
             ]}
           />
@@ -91,11 +88,11 @@ export default async function ProductPage({ params }: PageProps) {
             <a href="#rfq" className="btn btn-primary">
               Request Quotation
             </a>
-            <a href={waLink(waMessage)} target="_blank" rel="noreferrer" className="btn btn-wa">
+            <a href={waLink(settings, waMessage)} target="_blank" rel="noreferrer" className="btn btn-wa">
               <WhatsAppIcon className="h-3.5 w-3.5" />
               WhatsApp Inquiry
             </a>
-            <a href={mailtoLink(`RFQ — ${product.oemPartNumber}`)} className="btn btn-ghost">
+            <a href={mailtoLink(settings, `RFQ — ${product.oemPartNumber}`)} className="btn btn-ghost">
               Email Inquiry
             </a>
           </div>
@@ -115,7 +112,7 @@ export default async function ProductPage({ params }: PageProps) {
               <div>
                 <span className="block font-mono text-[10.5px] uppercase text-text-2">Meta Title</span>
                 <p className="text-text-0">
-                  {product.oemPartNumber} — {product.description} | {brand_} | Leos Trading FZE
+                  {product.oemPartNumber} — {product.description} | {product.brandName} | Leos Trading FZE
                 </p>
               </div>
               <div>
@@ -155,11 +152,11 @@ export default async function ProductPage({ params }: PageProps) {
               RE: {product.oemPartNumber} — {product.description}
             </div>
             <div className="mt-5 flex flex-wrap gap-3">
-              <a href={waLink(waMessage)} target="_blank" rel="noreferrer" className="btn btn-wa btn-sm">
+              <a href={waLink(settings, waMessage)} target="_blank" rel="noreferrer" className="btn btn-wa btn-sm">
                 <WhatsAppIcon className="h-3.5 w-3.5" />
                 WhatsApp Inquiry
               </a>
-              <a href={mailtoLink(`RFQ — ${product.oemPartNumber}`)} className="btn btn-ghost btn-sm">
+              <a href={mailtoLink(settings, `RFQ — ${product.oemPartNumber}`)} className="btn btn-ghost btn-sm">
                 Email Inquiry
               </a>
             </div>

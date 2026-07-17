@@ -2,18 +2,23 @@ import Image from "next/image";
 import Link from "next/link";
 import { PhoneIcon, WhatsAppIcon, ChevronDownIcon } from "@/components/ui/Icons";
 import { MobileNav } from "@/components/header/MobileNav";
-import { PRODUCT_LINKS, INVENTORY_LINKS, SOURCING_LINKS, TOP_LEVEL_LINKS } from "@/lib/nav";
-import { SITE_SETTINGS } from "@/lib/placeholder-data";
+import { buildInventoryLinks, buildMobileLinks, buildProductLinks, SOURCING_LINKS, TOP_LEVEL_LINKS } from "@/lib/nav";
+import { getBrands, getEquipmentCategories, getSiteSettings } from "@/lib/data/inventory";
 import { waLink } from "@/lib/whatsapp";
 
-const DROPDOWNS = [
-  { label: "Products", links: PRODUCT_LINKS },
-  { label: "Inventory", links: INVENTORY_LINKS },
-];
+export async function Header() {
+  const [brands, categories, settings] = await Promise.all([getBrands(), getEquipmentCategories(), getSiteSettings()]);
 
-export function Header() {
-  const phoneHref = `tel:${SITE_SETTINGS.phonePrimary.replace(/\s+/g, "")}`;
-  const waHref = waLink();
+  const productLinks = buildProductLinks(categories);
+  const inventoryLinks = buildInventoryLinks(brands);
+  const mobileLinks = buildMobileLinks(categories);
+  const dropdowns = [
+    { label: "Products", links: productLinks },
+    { label: "Inventory", links: inventoryLinks },
+  ];
+
+  const phoneHref = `tel:${settings.phonePrimary.replace(/\s+/g, "")}`;
+  const waHref = waLink(settings);
 
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-bg-0/[.88] backdrop-blur-[10px]">
@@ -26,7 +31,7 @@ export function Header() {
           <Link href="/" className="py-7 text-[13px] font-semibold tracking-[.03em] text-brass">
             Home
           </Link>
-          {DROPDOWNS.map((group) => (
+          {dropdowns.map((group) => (
             <div key={group.label} className="group relative">
               <span className="flex cursor-pointer items-center gap-1.5 py-7 text-[13px] font-semibold tracking-[.03em] text-text-1 group-hover:text-text-0">
                 {group.label}
@@ -94,7 +99,7 @@ export function Header() {
           </Link>
         </div>
 
-        <MobileNav />
+        <MobileNav links={mobileLinks} />
       </div>
     </header>
   );
