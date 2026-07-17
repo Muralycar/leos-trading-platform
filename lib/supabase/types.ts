@@ -15,7 +15,7 @@ export type ProductCondition = "genuine_oem" | "aftermarket" | "obsolete_dead_st
 export type BrandStatus = "active" | "archived";
 export type IdentifierType = "alternative" | "superseded" | "cross_reference";
 export type RfqSource = "product_page" | "sourcing_request" | "contact" | "search_no_result";
-export type RfqStatus = "new" | "contacted" | "quoted" | "won" | "lost";
+export type RfqStatus = "new" | "in_progress" | "quoted" | "closed";
 export type ImportJobStatus = "pending" | "mapped" | "validated" | "previewed" | "imported" | "failed" | "cancelled";
 export type ImportRowStatus =
   | "valid"
@@ -360,9 +360,11 @@ export interface Database {
           quantity_required: string | null;
           message: string | null;
           attachment_url: string | null;
+          internal_notes: string | null;
           source: RfqSource;
           status: RfqStatus;
           created_at: string;
+          updated_at: string;
         };
         Insert: {
           id?: string;
@@ -378,9 +380,11 @@ export interface Database {
           quantity_required?: string | null;
           message?: string | null;
           attachment_url?: string | null;
+          internal_notes?: string | null;
           source: RfqSource;
           status?: RfqStatus;
           created_at?: string;
+          updated_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["rfq_enquiries"]["Insert"]>;
         Relationships: [];
