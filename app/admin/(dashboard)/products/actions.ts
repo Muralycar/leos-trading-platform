@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { requireRole } from "@/lib/admin/auth";
+import { revalidatePublicProductPaths } from "@/lib/admin/revalidate";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import type { ProductCondition, ProductStatus } from "@/lib/supabase/types";
 
@@ -75,6 +76,7 @@ export async function createProduct(formData: FormData) {
   }
 
   revalidatePath("/admin/products");
+  revalidatePublicProductPaths();
   redirect(`/admin/products/${data.id}/edit`);
 }
 
@@ -100,6 +102,7 @@ export async function updateProduct(id: string, formData: FormData) {
 
   revalidatePath("/admin/products");
   revalidatePath(`/admin/products/${id}/edit`);
+  revalidatePublicProductPaths();
   redirect(`/admin/products/${id}/edit?saved=1`);
 }
 
@@ -121,5 +124,6 @@ export async function updateProductCategories(id: string, formData: FormData) {
 
   revalidatePath("/admin/products");
   revalidatePath(`/admin/products/${id}/edit`);
+  revalidatePublicProductPaths();
   redirect(`/admin/products/${id}/edit?saved=1`);
 }

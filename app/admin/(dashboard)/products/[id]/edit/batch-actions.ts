@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { requireRole } from "@/lib/admin/auth";
+import { revalidatePublicProductPaths } from "@/lib/admin/revalidate";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 function str(formData: FormData, key: string): string | null {
@@ -32,6 +33,7 @@ export async function createBatch(productId: string, formData: FormData) {
   if (error) throw error;
 
   revalidatePath(`/admin/products/${productId}/edit`);
+  revalidatePublicProductPaths();
 }
 
 /**
@@ -64,6 +66,7 @@ export async function updateBatch(batchId: string, productId: string, formData: 
   if (error) throw error;
 
   revalidatePath(`/admin/products/${productId}/edit`);
+  revalidatePublicProductPaths();
 }
 
 export async function setBatchCurrent(batchId: string, productId: string, isCurrent: boolean) {
@@ -78,4 +81,5 @@ export async function setBatchCurrent(batchId: string, productId: string, isCurr
   if (error) throw error;
 
   revalidatePath(`/admin/products/${productId}/edit`);
+  revalidatePublicProductPaths();
 }

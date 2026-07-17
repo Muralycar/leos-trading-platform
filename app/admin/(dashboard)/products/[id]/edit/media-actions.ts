@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { requireRole } from "@/lib/admin/auth";
+import { revalidatePublicProductPaths } from "@/lib/admin/revalidate";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 const BUCKET = "product-media";
@@ -41,6 +42,7 @@ export async function uploadProductMedia(productId: string, formData: FormData) 
 
   revalidatePath(`/admin/products/${productId}/edit`);
   revalidatePath("/admin/products");
+  revalidatePublicProductPaths();
 }
 
 export async function setPrimaryMedia(mediaId: string, productId: string) {
@@ -55,6 +57,7 @@ export async function setPrimaryMedia(mediaId: string, productId: string) {
 
   revalidatePath(`/admin/products/${productId}/edit`);
   revalidatePath("/admin/products");
+  revalidatePublicProductPaths();
 }
 
 export async function deleteProductMedia(mediaId: string, productId: string, storagePath: string) {
@@ -69,4 +72,5 @@ export async function deleteProductMedia(mediaId: string, productId: string, sto
 
   revalidatePath(`/admin/products/${productId}/edit`);
   revalidatePath("/admin/products");
+  revalidatePublicProductPaths();
 }
