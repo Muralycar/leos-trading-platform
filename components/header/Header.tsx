@@ -4,6 +4,7 @@ import { PhoneIcon, WhatsAppIcon, ChevronDownIcon } from "@/components/ui/Icons"
 import { MobileNav } from "@/components/header/MobileNav";
 import { PRODUCT_LINKS, INVENTORY_LINKS, SOURCING_LINKS, TOP_LEVEL_LINKS } from "@/lib/nav";
 import { SITE_SETTINGS } from "@/lib/placeholder-data";
+import { waLink } from "@/lib/whatsapp";
 
 const DROPDOWNS = [
   { label: "Products", links: PRODUCT_LINKS },
@@ -12,7 +13,7 @@ const DROPDOWNS = [
 
 export function Header() {
   const phoneHref = `tel:${SITE_SETTINGS.phonePrimary.replace(/\s+/g, "")}`;
-  const waHref = `https://wa.me/${SITE_SETTINGS.whatsappNumber}`;
+  const waHref = waLink();
 
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-bg-0/[.88] backdrop-blur-[10px]">

@@ -31,15 +31,34 @@ export interface EquipmentCategory {
 }
 
 export interface Product {
-  sku: string;
-  name: string;
+  /** `${brandSlug}:${oemPartNumberNormalized}` — stable across regeneration. */
+  id: string;
   brandSlug: string;
-  brandName: string;
-  categorySlug: string;
-  categoryName: string;
-  subCategory: string;
-  quantity: number;
+  equipmentCategorySlug: string;
+  productCategorySlug: string;
+  productCategoryName: string;
+  /** Original formatting, e.g. "KHED0037301210-S". */
+  oemPartNumber: string;
+  /** Uppercased, punctuation-stripped — search/dedupe key. */
+  oemPartNumberNormalized: string;
+  description: string;
   imagePath: string | null;
+}
+
+/**
+ * A stock lot for a product. Deliberately separate from Product — a
+ * product can have more than one batch (see the 53 real multi-line Iveco
+ * SKUs in inventory-import-spec.md's dedupe rule). Never read quantity off
+ * Product directly; always sum batches via getAvailability() in
+ * lib/data/inventory.ts, mirroring the product_public_availability view in
+ * data-model.md.
+ */
+export interface InventoryBatch {
+  id: string;
+  productId: string;
+  quantity: number;
+  /** Original spreadsheet row — private/debug only, never shown publicly. */
+  sourceLine: number;
 }
 
 export interface SiteSettings {
