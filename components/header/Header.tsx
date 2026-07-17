@@ -73,13 +73,23 @@ export function Header() {
         </nav>
 
         <div className="flex flex-shrink-0 items-center gap-3">
-          <a href={phoneHref} aria-label="Call" className="flex h-[38px] w-[38px] items-center justify-center rounded-s border border-line-strong text-text-1 hover:border-brass hover:text-brass">
-            <PhoneIcon className="h-[17px] w-[17px]" />
+          <a
+            href={phoneHref}
+            aria-label="Call"
+            className="flex h-[46px] w-[46px] items-center justify-center rounded-s border border-line-strong text-text-1 transition-colors hover:border-brass hover:text-brass"
+          >
+            <PhoneIcon className="h-5 w-5" />
           </a>
-          <a href={waHref} target="_blank" rel="noreferrer" aria-label="WhatsApp" className="flex h-[38px] w-[38px] items-center justify-center rounded-s border border-line-strong text-text-1 hover:border-brass hover:text-brass">
-            <WhatsAppIcon className="h-[17px] w-[17px]" />
+          <a
+            href={waHref}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="WhatsApp"
+            className="flex h-[46px] w-[46px] items-center justify-center rounded-s bg-[#25D366] text-white transition-colors hover:bg-[#20bd5a]"
+          >
+            <WhatsAppIcon className="h-5 w-5" />
           </a>
-          <Link href="/contact" className="btn btn-primary hidden min-[1181px]:inline-flex">
+          <Link href="/contact" className="btn btn-primary hidden h-[46px] min-[1181px]:inline-flex">
             Request Quotation
           </Link>
         </div>
