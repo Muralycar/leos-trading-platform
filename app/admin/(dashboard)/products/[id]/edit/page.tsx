@@ -3,9 +3,11 @@ import { notFound } from "next/navigation";
 import { requireRole } from "@/lib/admin/auth";
 import { getAllProductCategories, getProductById, getProductCategoryIds } from "@/lib/admin/products";
 import { listBatchesForProduct } from "@/lib/admin/batches";
+import { listMediaForProduct } from "@/lib/admin/media";
 import type { ProductCondition } from "@/lib/supabase/types";
 import { updateProduct, updateProductCategories } from "../../actions";
 import { BatchesSection } from "./BatchesSection";
+import { MediaSection } from "./MediaSection";
 
 export const metadata: Metadata = {
   title: "Edit Product — Admin",
@@ -37,10 +39,11 @@ export default async function AdminEditProductPage({ params, searchParams }: Pag
   const product = await getProductById(id);
   if (!product) notFound();
 
-  const [allCategories, selectedCategoryIds, batches] = await Promise.all([
+  const [allCategories, selectedCategoryIds, batches, media] = await Promise.all([
     getAllProductCategories(),
     getProductCategoryIds(id),
     listBatchesForProduct(id),
+    listMediaForProduct(id),
   ]);
 
   return (
@@ -189,9 +192,7 @@ export default async function AdminEditProductPage({ params, searchParams }: Pag
 
           <BatchesSection productId={product.id} batches={batches} />
 
-          <div className="rounded-m border border-dashed border-line-strong p-6 text-sm text-text-2">
-            Media is managed here in a later checkpoint.
-          </div>
+          <MediaSection productId={product.id} media={media} />
         </div>
       </div>
     </div>

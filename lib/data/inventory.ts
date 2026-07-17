@@ -12,6 +12,7 @@ import { cache } from "react";
 import { createAnonSupabaseClient } from "@/lib/supabase/server";
 import { selectAllPaginated } from "@/lib/supabase/paginate";
 import { normalizePartNumber } from "@/lib/part-number";
+import { getPublicMediaUrl } from "@/lib/supabase/storage";
 import type { Database } from "@/lib/supabase/types";
 import type { Brand, EquipmentCategory, Product, SiteSettings } from "@/lib/types";
 
@@ -29,7 +30,10 @@ function mapViewRowToProduct(row: ProductViewRow): Product {
     oemPartNumber: row.oem_part_number,
     oemPartNumberNormalized: row.oem_part_number_normalized,
     description: row.description,
-    imagePath: row.image_path,
+    // image_path is a raw Storage object path (product_media.storage_path),
+    // never a full URL — resolved here so every public component just
+    // renders Product.imagePath directly, same as before media existed.
+    imagePath: row.image_path ? getPublicMediaUrl("product-media", row.image_path) : null,
     quantity: row.quantity,
     status: row.status,
   };
