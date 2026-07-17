@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brand Guidelines — Leos Trading FZE</title>
+<meta name="description" content="Design system, brand guidelines and photography enhancement guide for Leos Trading FZE.">
+<link rel="stylesheet" href="styles.css">
+<script src="data.js" defer></script>
+<style>
+.gl-nav{position:sticky;top:76px;background:var(--bg-1);border-bottom:1px solid var(--line);z-index:10;overflow-x:auto}
+.gl-nav .wrap{display:flex;gap:28px;padding:16px 32px}
+.gl-nav a{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-2);white-space:nowrap}
+.gl-nav a:hover{color:var(--brass)}
+.quote-block{border-left:2px solid var(--brass);padding-left:28px;margin:0 auto;max-width:720px}
+.quote-block p{font-family:'Barlow Condensed',sans-serif;font-size:clamp(24px,3vw,34px);color:var(--text-0);font-weight:600;line-height:1.2;text-transform:none}
+
+.logo-showcase{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line)}
+.logo-panel{background:var(--bg-2);padding:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;text-align:center}
+.logo-panel.dark{background:#000}
+.logo-panel img{height:90px}
+.logo-panel .cap{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-2);text-transform:uppercase;letter-spacing:.06em}
+.logo-rules{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);margin-top:1px}
+.logo-rule{background:var(--bg-0);padding:24px 28px;font-size:14px;color:var(--text-1)}
+.logo-rule .tag-ok{color:var(--ok);font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:8px}
+.logo-rule .tag-no{color:var(--safety);font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:8px}
+
+.swatch-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.swatch{background:var(--bg-0)}
+.swatch-color{height:96px}
+.swatch-info{padding:16px 18px}
+.swatch-info .name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:17px;letter-spacing:.02em;text-transform:uppercase}
+.swatch-info .val{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--text-2);margin-top:5px}
+.swatch-info .use{font-size:12.5px;color:var(--text-1);margin-top:10px;line-height:1.4}
+
+.type-specimen{padding:28px 0;border-bottom:1px solid var(--line)}
+.type-specimen:last-child{border-bottom:none}
+.type-specimen .label{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;display:flex;justify-content:space-between}
+
+.photo-grid{display:flex;flex-direction:column;gap:1px;background:var(--line);border:1px solid var(--line)}
+.photo-card{background:var(--bg-0);display:grid;grid-template-columns:240px 1fr;gap:28px;padding:28px}
+.photo-card img{width:100%;height:100%;object-fit:cover;border-radius:var(--radius-s);background:var(--bg-2);aspect-ratio:4/3}
+.photo-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:14px}
+.photo-head h3{font-size:18px}
+.photo-analysis{display:grid;grid-template-columns:1fr 1fr;gap:12px 28px}
+.photo-analysis .row span{display:block;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.photo-analysis .row p{font-size:13.5px;color:var(--text-1);margin:0}
+.photo-verdict{grid-column:1/-1;margin-top:8px;padding-top:14px;border-top:1px solid var(--line);font-size:13.5px}
+.photo-verdict span{color:var(--brass);font-family:'IBM Plex Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;margin-right:8px}
+.photo-card.excluded img{filter:grayscale(1) brightness(.7)}
+
+.comp-block{padding:32px;background:var(--bg-0);border:1px solid var(--line);border-radius:var(--radius-m);margin-bottom:1px}
+.comp-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-top:16px}
+.icon-showcase{display:flex;gap:32px;flex-wrap:wrap;margin-top:16px}
+.icon-showcase div{display:flex;flex-direction:column;align-items:center;gap:10px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-2)}
+.icon-showcase svg{width:26px;height:26px;color:var(--text-0)}
+</style>
+</head>
+<body>
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="index.html"><img src="assets/logo-crest.png" alt="Leos Trading crest"><span class="brand-word">LEOS TRADING<span>SALES · SERVICE · RENTAL</span></span></a>
+<nav class="main-nav">
+<a href="index.html">Home</a>
+<a href="brand-guidelines.html" class="active">Brand Guidelines</a>
+</nav>
+<div class="header-actions">
+<a href="contact.html" class="btn btn-primary">Request Quotation</a>
+</div>
+<button class="nav-toggle" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+</div>
+</header>
+<div class="mobile-drawer" id="mobile-drawer">
+<button class="drawer-close" aria-label="Close menu" onclick="document.getElementById('mobile-drawer').classList.remove('open')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+<a href="index.html">Home</a>
+<a href="search.html?cat=Truck%20Parts">Truck Parts</a>
+<a href="search.html?cat=Construction%20Equipment%20Parts">Construction Equipment Parts</a>
+<a href="search.html?cat=Generator%20Parts">Generator Parts</a>
+<a href="search.html">Search All Stock</a>
+<a href="brands.html">Brands</a>
+<a href="sourcing.html#request">Request a Part</a>
+<a href="sourcing.html">Sourcing</a>
+<a href="export.html">Export</a>
+<a href="about.html">About</a>
+<a href="contact.html">Contact</a>
+</div>
+<script>document.querySelectorAll('.nav-toggle').forEach(function(b){b.addEventListener('click',function(){document.getElementById('mobile-drawer').classList.toggle('open');});});</script>
+
+
+<section class="page-header"><div class="wrap">
+<div class="eyebrow">Brand Guidelines</div>
+<h1>Leos Trading FZE — Design System</h1>
+<p>Positioning, color, type, photography and component standards for a UAE-based industrial trading and sourcing platform.</p>
+</div></section>
+
+<nav class="gl-nav"><div class="wrap">
+<a href="#positioning">Positioning</a>
+<a href="#logo">Logo</a>
+<a href="#color">Color</a>
+<a href="#type">Typography</a>
+<a href="#photography">Photography</a>
+<a href="#components">Components</a>
+<a href="#icons">Iconography</a>
+<a href="#motion">Motion</a>
+<a href="#scalability">Scalability</a>
+</div></nav>
+
+<section id="positioning"><div class="wrap">
+<div class="quote-block"><p>"A UAE-based global supplier of OEM parts, industrial equipment and sourcing solutions."</p></div>
+<p style="max-width:640px;margin:28px auto 0;text-align:center;font-size:15px">Premium industrial positioning — closer to Caterpillar, Komatsu and Bosch Industrial than to automotive retail or e-commerce. Confident, technical, spec-sheet tone throughout.</p>
+</div></section>
+
+<section id="logo" class="section-tight"><div class="wrap">
+<div class="section-head"><div class="eyebrow">Logo</div><h2>Crest &amp; Wordmark</h2><p>The crest is a heritage mark — used small and sparingly. The wordmark leads on every primary surface.</p></div>
+<div class="logo-showcase">
+<div class="logo-panel dark"><img src="assets/logo-crest.png" alt="Leos Trading crest on black"><span class="cap">Crest — favicon, footer, documents</span></div>
+<div class="logo-panel"><span class="brand-word" style="font-size:32px">LEOS TRADING<span style="font-size:12px">SALES · SERVICE · RENTAL</span></span><span class="cap">Wordmark — primary header lockup</span></div>
+</div>
+<div class="logo-rules">
+<div class="logo-rule"><span class="tag-ok">Do</span>Lead with the wordmark in header, hero and print. Use the crest small — header mark, favicon, footer seal, business documents.</div>
+<div class="logo-rule"><span class="tag-no">Don't</span>Enlarge the crest as a homepage centerpiece, or pair it with heraldic ornamentation elsewhere on the site — it reads luxury-automotive, not industrial.</div>
+</div>
+</div></section>
+
+<section id="color"><div class="wrap">
+<div class="section-head"><div class="eyebrow">Color</div><h2>Palette</h2><p>Dark industrial base with a single restrained brass accent — drawn from the logo's gold, desaturated for premium-technical rather than ornamental use.</p></div>
+<div class="swatch-grid">
+<div class="swatch"><div class="swatch-color" style="background:var(--bg-0)"></div><div class="swatch-info"><div class="name">Charcoal 0</div><div class="val">#0B0C0E</div><div class="use">Base background, header, footer</div></div></div>
+<div class="swatch"><div class="swatch-color" style="background:var(--bg-1)"></div><div class="swatch-info"><div class="name">Charcoal 1</div><div class="val">#14161B</div><div class="use">Section fills, stat strip</div></div></div>
+<div class="swatch"><div class="swatch-color" style="background:var(--bg-2)"></div><div class="swatch-info"><div class="name">Charcoal 2</div><div class="val">#1B1E22</div><div class="use">Card surfaces, media frames</div></div></div>
+<div class="swatch"><div class="swatch-color" style="background:var(--brass)"></div><div class="swatch-info"><div class="name">Brass</div><div class="val">oklch(0.74 0.11 78)</div><div class="use">CTAs, links, accents — use sparingly</div></div></div>
+<div class="swatch"><div class="swatch-color" style="background:var(--text-0)"></div><div class="swatch-info"><div class="name">Text 0</div><div class="val">oklch(0.96 0.003 90)</div><div class="use">Headlines, primary text</div></div></div>
+<div class="swatch"><div class="swatch-color" style="background:var(--text-1)"></div><div class="swatch-info"><div class="name">Text 1</div><div class="val">oklch(0.72 0.01 90)</div><div class="use">Body copy, secondary text</div></div></div>
+<div class="swatch"><div class="swatch-color" style="background:var(--ok)"></div><div class="swatch-info"><div class="name">Stock Green</div><div class="val">oklch(0.68 0.13 150)</div><div class="use">In-stock status only</div></div></div>
+<div class="swatch"><div class="swatch-color" style="background:var(--warn)"></div><div class="swatch-info"><div class="name">Limited Amber</div><div class="val">oklch(0.75 0.15 85)</div><div class="use">Limited-stock status only</div></div></div>
+</div>
+<p style="margin-top:20px;font-size:13px;max-width:60ch">Maximum one accent color (brass) plus two functional status colors. Never use brass decoratively — reserve it for actionable elements: links, primary buttons, active states, key numerals.</p>
+</div></section>
+
+<section id="type" class="section-tight"><div class="wrap">
+<div class="section-head"><div class="eyebrow">Typography</div><h2>Type System</h2><p>Two families plus a monospace for technical data — no more.</p></div>
+<div class="type-specimen"><div class="label"><span>Display — Barlow Condensed 700, uppercase</span><span>Headlines, section labels</span></div><h1 style="font-size:56px">PARTS &amp; EQUIPMENT</h1></div>
+<div class="type-specimen"><div class="label"><span>Body — Inter 400/500/600</span><span>Paragraphs, UI labels</span></div><p style="font-size:18px;color:var(--text-0);max-width:640px">Genuine and aftermarket supply for trucks, construction equipment, generators, mining, marine and industrial applications.</p></div>
+<div class="type-specimen"><div class="label"><span>Mono — IBM Plex Mono 500/600</span><span>Part numbers, SKUs, stats, tags</span></div><div class="mono" style="font-size:22px;color:var(--brass)">ED0011573970-S</div></div>
+</div></section>
+
+<section id="photography"><div class="wrap">
+<div class="section-head"><div class="eyebrow">Photography</div><h2>Enhancement Guide</h2><p>Uploaded assets are real company material, evaluated below for composition, lighting, sharpness, background and branding, with a recommendation for use. A second upload batch (warehouse shots, inventory spreadsheets, additional product photos) confirmed real inventory depth: 2,256 SKUs across Kohler (329), Iveco (1,614) and Kobelco (313), ~20,000 units on hand. Several new images were manufacturer marketing graphics or generic stock photography (Kobelco/Iveco brochure art, a tire lineup, a boat-parts diagram, a "Parts of Generator" infographic) — excluded from the public site for the same reason as the brochure page below: not Leos-owned photography, some showing third-party branding. The usable additions (Kohler XTX engine, a diesel filter cartridge, a PCB control board, a bronze sea-water pump) are used as category-level imagery only, never pinned to a specific SKU record unless the photo carries no conflicting printed part number.</p></div>
+</div>
+<div class="photo-grid">
+
+<div class="photo-card">
+<img src="assets/kohler-command-pro.png" alt="Kohler Command Pro engine">
+<div>
+<div class="photo-head"><h3>Command PRO 20 Engine</h3><span class="tag tag-stock">Use as-is</span></div>
+<div class="photo-analysis">
+<div class="row"><span>Composition</span><p>Clean 3/4 hero angle, good subject prominence.</p></div>
+<div class="row"><span>Lighting</span><p>Even studio lighting, minor hotspot on cooling fins.</p></div>
+<div class="row"><span>Sharpness</span><p>Sharp, high enough resolution for hero/category use.</p></div>
+<div class="row"><span>Background</span><p>Flat white/transparent — clashes with dark theme until re-graded.</p></div>
+<div class="photo-verdict"><span>Recommendation</span>Color-grade onto a dark industrial gradient with subtle brass rim-light and a cast shadow for grounding. <span style="color:var(--text-2)">Suggested use: Category hero, Generator Parts banner.</span></div>
+</div>
+</div>
+</div>
+
+<div class="photo-card">
+<img src="assets/kohler-controller.png" alt="Kohler GM123551 controller">
+<div>
+<div class="photo-head"><h3>GM123551 Controller</h3><span class="tag tag-stock">Use as-is</span></div>
+<div class="photo-analysis">
+<div class="row"><span>Composition</span><p>Centered, front-facing — genuine manufacturer product shot quality.</p></div>
+<div class="row"><span>Lighting</span><p>Even, minimal shadow, slight blown highlight top-left.</p></div>
+<div class="row"><span>Sharpness</span><p>Sharp throughout.</p></div>
+<div class="row"><span>Background</span><p>Pure white — needs a dark vignette so it doesn't look pasted onto the site.</p></div>
+<div class="photo-verdict"><span>Recommendation</span>Add a soft dark gradient floor instead of pure white. <span style="color:var(--text-2)">Suggested use: Product detail primary image, category tile.</span></div>
+</div>
+</div>
+</div>
+
+<div class="photo-card">
+<img src="assets/kohler-alternator.png" alt="Kohler alternator on box">
+<div>
+<div class="photo-head"><h3>Alternator + Kohler Box</h3><span class="tag tag-sourcing">Enhance before use</span></div>
+<div class="photo-analysis">
+<div class="row"><span>Composition</span><p>Decent overhead symmetry, but domestic wood-floor setting undercuts premium-industrial feel.</p></div>
+<div class="row"><span>Lighting</span><p>Single overhead source, flat with a hot specular highlight on the housing.</p></div>
+<div class="row"><span>Sharpness</span><p>In focus, acceptable.</p></div>
+<div class="row"><span>Background</span><p>Wood-grain flooring and visible seams are a distraction.</p></div>
+<div class="photo-verdict"><span>Recommendation</span>Reshoot or composite onto a neutral charcoal/brushed-steel surface, crop tighter, add rim light to define chrome edges. <span style="color:var(--text-2)">Suggested use: Product gallery, secondary image.</span></div>
+</div>
+</div>
+</div>
+
+<div class="photo-card">
+<img src="assets/kohler-parts-kit.png" alt="Kohler engine service kit collage">
+<div>
+<div class="photo-head"><h3>Engine + Service Kit Collage</h3><span class="tag tag-soon">Do not publish as-is</span></div>
+<div class="photo-analysis">
+<div class="row"><span>Composition</span><p>Busy composite layout — reads as a marketplace listing image.</p></div>
+<div class="row"><span>Lighting</span><p>Inconsistent between elements — evidence of stitched sourcing.</p></div>
+<div class="row"><span>Sharpness</span><p>Mixed sharpness across items.</p></div>
+<div class="row"><span>Background</span><p>Some items on white, some transparent — visually noisy.</p></div>
+<div class="photo-verdict"><span>Recommendation</span>Break apart and re-shoot each part individually against a consistent background and lighting rig, then recompose in Leos' own grid. <span style="color:var(--text-2)">Suggested use: internal reference only until re-shot.</span></div>
+</div>
+</div>
+</div>
+
+<div class="photo-card">
+<img src="assets/kohler-filters-kit.png" alt="Kohler filters and parts kit collage">
+<div>
+<div class="photo-head"><h3>Filters &amp; Parts Kit Collage</h3><span class="tag tag-soon">Do not publish as-is</span></div>
+<div class="photo-analysis">
+<div class="row"><span>Composition</span><p>Flat-lay style but ungridded — items float without alignment.</p></div>
+<div class="row"><span>Lighting</span><p>Acceptable but inconsistent per item.</p></div>
+<div class="row"><span>Sharpness</span><p>Variable across items.</p></div>
+<div class="row"><span>Background</span><p>Visible leftover crop-guide dashes at the corners — a real artifact from a listing template.</p></div>
+<div class="photo-verdict"><span>Recommendation</span>Remove artifacts, reshoot as a clean top-down flat-lay on a branded dark surface, grouped by sub-category. <span style="color:var(--text-2)">Suggested use: category breadth graphic, after cleanup.</span></div>
+</div>
+</div>
+</div>
+
+<div class="photo-card excluded">
+<img src="assets/kohler-parts-poster.png" alt="Kohler Genuine Parts brochure page">
+<div>
+<div class="photo-head"><h3>"Kohler Genuine Parts" Brochure Page</h3><span class="tag tag-soon">Exclude</span></div>
+<div class="photo-analysis">
+<div class="row"><span>Composition</span><p>Flat-lay grid, decent variety shown.</p></div>
+<div class="row"><span>Lighting / Quality</span><p>Photographed/scanned from print — visible glare, page edges, lower resolution.</p></div>
+<div class="row"><span>Branding</span><p>This is Kohler's own marketing collateral, not a Leos-owned asset — publishing it risks looking like reproduced manufacturer material rather than Leos' brand.</p></div>
+<div class="photo-verdict"><span>Recommendation</span>Exclude from the public site. Use only as an internal reference for category breadth; re-shoot a comparable flat-lay under the Leos brand instead.</div>
+</div>
+</div>
+</div>
+
+<div class="photo-card excluded">
+<img src="assets/kohler-command-pro.png" alt="Warehouse — placeholder for excluded stock photos" style="filter:grayscale(1) brightness(.4)">
+<div>
+<div class="photo-head"><h3>Two Pexels Warehouse Photos</h3><span class="tag tag-soon">Excluded</span></div>
+<div class="photo-analysis">
+<div class="row"><span>Composition</span><p>Wide racking shots — visually strong, well lit and sharp.</p></div>
+<div class="row"><span>Branding</span><p>They depict a home-appliance / refrigerator warehouse — visible LG, Zephyr and Liebherr branding on cartons — not Leos' actual generator-parts operation.</p></div>
+<div class="row"><span>Fit</span><p>Using another operator's warehouse (with competing brand names visible) would misrepresent the business and contradicts the brief's stock-photo guidance.</p></div>
+<div class="photo-verdict"><span>Recommendation</span>Excluded entirely, per instruction — replaced site-wide with styled placeholders until real Leos warehouse photography (bin-tracked racking, part-number labels, staff in PPE) is available.</div>
+</div>
+</div>
+</div>
+
+</div>
+</section>
+
+<section class="section-tight"><div class="wrap">
+<div class="section-head"><div class="eyebrow">Future Photography</div><h2>Shot list for the next session</h2></div>
+<div class="step-list">
+<div class="step-item"><div class="step-num mono">01</div><h3>Warehouse Racking</h3><p>Wide angle, bin labels visible, consistent color temperature.</p></div>
+<div class="step-item"><div class="step-num mono">02</div><h3>Individual Parts</h3><p>Neutral charcoal backdrop, top-down and 3/4 angle, per SKU.</p></div>
+<div class="step-item"><div class="step-num mono">03</div><h3>Logistics &amp; Export</h3><p>Packing, crating and dispatch — process, not posed.</p></div>
+<div class="step-item"><div class="step-num mono">04</div><h3>People at Work</h3><p>Staff in PPE handling inventory — builds trust without stock-photo gloss.</p></div>
+</div>
+</div></section>
+
+<section id="components"><div class="wrap">
+<div class="section-head"><div class="eyebrow">Components</div><h2>Component Library</h2></div>
+<div class="comp-block"><h3 style="margin-bottom:4px">Buttons</h3><div class="comp-row">
+<button class="btn btn-primary">Primary</button>
+<button class="btn btn-ghost">Ghost</button>
+<button class="btn btn-wa"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20l1.3-4.1A8 8 0 1 1 8.9 19L4 20Z"/></svg>WhatsApp</button>
+<button class="btn btn-primary btn-sm">Small</button>
+</div></div>
+<div class="comp-block"><h3 style="margin-bottom:4px">Status Tags</h3><div class="comp-row">
+<span class="tag tag-stock">In Stock</span>
+<span class="tag tag-sourcing">Limited Stock</span>
+<span class="tag tag-soon">Availability On Request</span>
+<span class="tag">Kohler</span>
+</div></div>
+<div class="comp-block"><h3 style="margin-bottom:4px">Form Field</h3><div class="field" style="max-width:360px;margin-top:16px"><label>Part Number</label><input type="text" placeholder="e.g. GM123551"></div></div>
+</div></section>
+
+<section class="section-tight" id="icons"><div class="wrap">
+<div class="section-head"><div class="eyebrow">Iconography</div><h2>Line Icons</h2><p>1.5–1.8px stroke, geometric, no fills — search, contact and status glyphs only. No decorative icon sets.</p></div>
+<div class="icon-showcase">
+<div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>Search</div>
+<div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.9 21 3 13.1 3 3.7c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.2 1L6.6 10.8Z"/></svg>Call</div>
+<div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20l1.3-4.1A8 8 0 1 1 8.9 19L4 20Z"/></svg>WhatsApp</div>
+<div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 6 9 17l-5-5"/></svg>Confirmed</div>
+<div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="7" width="18" height="13"/><path d="M3 11h18M8 7V4h8v3"/></svg>Inventory</div>
+</div>
+</div></section>
+
+<section id="motion"><div class="wrap">
+<div class="section-head"><div class="eyebrow">Motion</div><h2>Motion Language</h2><p>Restrained and functional — motion confirms an action, it never decorates.</p></div>
+<ul class="icon-list">
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 6 9 17l-5-5"/></svg>150–200ms ease transitions on hover/focus states — buttons, links, cards</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 6 9 17l-5-5"/></svg>No parallax, no auto-playing carousels, no decorative motion on load</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 6 9 17l-5-5"/></svg>RFQ/search state changes (filtering, submit confirmation) respond instantly, no artificial delay</li>
+</ul>
+</div></section>
+
+<section class="section-tight" id="scalability"><div class="wrap">
+<div class="section-head"><div class="eyebrow">Scalability</div><h2>Future Scalability Plan</h2><p>The architecture is built for thousands of part numbers across unlimited brands and categories from day one.</p></div>
+<div class="step-list">
+<div class="step-item"><div class="step-num mono">01</div><h3>Category → Brand → Part</h3><p>Fixed three-level taxonomy. New brands slot under existing categories without new page templates.</p></div>
+<div class="step-item"><div class="step-num mono">02</div><h3>Spreadsheet Import</h3><p>Inventory spreadsheets map directly to the part record schema used across search and product pages.</p></div>
+<div class="step-item"><div class="step-num mono">03</div><h3>Faceted Search</h3><p>Brand, category, condition and availability filters scale automatically as new part records are added.</p></div>
+<div class="step-item"><div class="step-num mono">04</div><h3>SEO Per Part</h3><p>Every part record generates its own URL slug, meta title/description and structured data — no manual page authoring.</p></div>
+</div>
+</div></section>
+
+<footer class="site-footer">
+<div class="wrap footer-grid">
+<div>
+<div class="footer-brand"><img src="assets/logo-crest.png" alt="Leos Trading crest"><span>LEOS TRADING</span></div>
+<p>UAE-based global supplier of OEM parts, industrial equipment and sourcing solutions. Sales · Service · Rental.</p>
+</div>
+<div class="footer-col">
+<h4>Products</h4>
+<a href="search.html?cat=truck">Truck Parts</a>
+<a href="search.html?cat=equipment">Construction Equipment</a>
+<a href="search.html?cat=generator">Generator Parts</a>
+<a href="search.html?cat=mining">Mining &amp; Industrial</a>
+</div>
+<div class="footer-col">
+<h4>Company</h4>
+<a href="about.html">About</a>
+<a href="sourcing.html">Sourcing</a>
+<a href="export.html">Export</a>
+<a href="brands.html">Brands</a>
+<a href="brand-guidelines.html">Brand Guidelines</a>
+</div>
+<div class="footer-col">
+<h4>Contact</h4>
+<div>SRTIP, Sharjah, UAE</div>
+<div>+971 50 848 9640</div>
+<div>+971 50 285 1056</div>
+<div>trade@leosdubai.com</div>
+</div>
+</div>
+<div class="wrap footer-bottom">
+<span>© 2026 Leos Trading FZE. All rights reserved.</span>
+<span class="mono">SALES · SERVICE · RENTAL</span>
+</div>
+</footer>
+</body>
+</html>

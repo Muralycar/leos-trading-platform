@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Leos Trading FZE</title>
+<meta name="description" content="Contact Leos Trading FZE for part availability, pricing and export quotations.">
+<link rel="stylesheet" href="styles.css">
+<script src="data.js" defer></script>
+<style>
+.stat-strip{border-bottom:1px solid var(--line);background:var(--bg-1)}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);padding:36px 0}
+.stat{text-align:left;border-left:1px solid var(--line);padding-left:24px}
+.stat:first-child{border-left:none;padding-left:0}
+.stat .num{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:38px;color:var(--brass)}
+.stat .lbl{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-2);margin-top:4px}
+.cta-banner{background:var(--bg-1);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.cta-inner{display:flex;justify-content:space-between;align-items:center;gap:40px}
+.cta-inner h2{max-width:14ch}
+.cta-actions{display:flex;gap:14px;flex-shrink:0}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);margin-top:24px}
+.compare-col{background:var(--bg-0);padding:28px}
+.compare-col h4{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass);margin-bottom:14px}
+.generic-form{background:var(--bg-0);border:1px solid var(--line);border-radius:var(--radius-m);padding:32px;max-width:640px}
+@media (max-width:900px){
+.stat-grid{grid-template-columns:repeat(2,1fr);gap:20px}
+.stat{border-left:none;padding-left:0}
+.cta-inner{flex-direction:column;align-items:flex-start}
+.compare-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="index.html"><img src="assets/logo-crest.png" alt="Leos Trading crest"><span class="brand-word">LEOS TRADING<span>SALES · SERVICE · RENTAL</span></span></a>
+<nav class="main-nav">
+<a href="index.html">Home</a>
+<div class="nav-item"><span class="nav-top">Products <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></span>
+<div class="nav-dropdown">
+<a href="search.html?cat=truck">Truck Parts</a>
+<a href="search.html?cat=equipment">Construction Equipment Parts</a>
+<a href="search.html?cat=generator">Generator Parts</a>
+<a href="search.html?cat=mining">Mining &amp; Industrial Parts</a>
+<a href="search.html?cat=marine">Marine Parts</a>
+<a href="search.html?cat=accessories">Tyres, Batteries &amp; Accessories</a>
+</div>
+</div>
+<div class="nav-item"><span class="nav-top">Inventory <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></span>
+<div class="nav-dropdown">
+<a href="search.html">Search All Stock</a>
+<a href="search.html?brand=kohler">Kohler Inventory</a>
+<a href="search.html?brand=iveco">Iveco Inventory</a>
+<a href="search.html?brand=kobelco">Kobelco Inventory</a>
+<a href="search.html?sort=recent">Recently Added</a>
+</div>
+</div>
+<a href="brands.html">Brands</a>
+<div class="nav-item"><span class="nav-top">Sourcing <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></span>
+<div class="nav-dropdown">
+<a href="sourcing.html#request">Request a Part</a>
+<a href="sourcing.html#hard-to-find">Hard-to-Find Parts</a>
+<a href="sourcing.html#obsolete">Obsolete Parts</a>
+<a href="sourcing.html#genuine-aftermarket">Genuine &amp; Aftermarket Supply</a>
+<a href="sourcing.html#procurement">Global Procurement</a>
+</div>
+</div>
+<a href="export.html">Export</a>
+<a href="about.html">About</a>
+</nav>
+<div class="header-actions">
+<a href="tel:+971508489640" class="icon-btn" aria-label="Call"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.9 21 3 13.1 3 3.7c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.2 1L6.6 10.8Z"/></svg></a>
+<a href="https://wa.me/971508489640" target="_blank" class="icon-btn" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20l1.3-4.1A8 8 0 1 1 8.9 19L4 20Z"/></svg></a>
+<a href="contact.html" class="btn btn-primary">Request Quotation</a>
+</div>
+<button class="nav-toggle" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+</div>
+</header>
+<div class="mobile-drawer" id="mobile-drawer">
+<button class="drawer-close" aria-label="Close menu" onclick="document.getElementById('mobile-drawer').classList.remove('open')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+<a href="index.html">Home</a>
+<a href="search.html?cat=Truck%20Parts">Truck Parts</a>
+<a href="search.html?cat=Construction%20Equipment%20Parts">Construction Equipment Parts</a>
+<a href="search.html?cat=Generator%20Parts">Generator Parts</a>
+<a href="search.html">Search All Stock</a>
+<a href="brands.html">Brands</a>
+<a href="sourcing.html#request">Request a Part</a>
+<a href="sourcing.html">Sourcing</a>
+<a href="export.html">Export</a>
+<a href="about.html">About</a>
+<a href="contact.html">Contact</a>
+</div>
+<script>document.querySelectorAll('.nav-toggle').forEach(function(b){b.addEventListener('click',function(){document.getElementById('mobile-drawer').classList.toggle('open');});});</script>
+
+
+<section class="page-header"><div class="wrap">
+<div class="eyebrow">Contact</div>
+<h1>Get in touch</h1>
+<p>Send a part number, equipment details, or a general inquiry — our team responds with availability and pricing.</p>
+</div></section>
+<section><div class="wrap content-split">
+<div>
+<div class="contact-card">
+<div class="contact-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg><div><span class="lbl">Address</span>Sharjah Research Technology and Innovation Park, Sharjah, United Arab Emirates</div></div>
+<div class="contact-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.9 21 3 13.1 3 3.7c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.2 1L6.6 10.8Z"/></svg><div><span class="lbl">Phone</span>+971 50 848 9640 / +971 50 285 1056</div></div>
+<div class="contact-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20l1.3-4.1A8 8 0 1 1 8.9 19L4 20Z"/></svg><div><span class="lbl">WhatsApp</span><a href="https://wa.me/971508489640" target="_blank">+971 50 848 9640</a></div></div>
+<div class="contact-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="0"/><path d="m3 6 9 7 9-7"/></svg><div><span class="lbl">Email</span><a href="mailto:trade@leosdubai.com">trade@leosdubai.com</a></div></div>
+</div>
+</div>
+<form class="generic-form" onsubmit="event.preventDefault();this.style.display='none';this.nextElementSibling.style.display='block';return false">
+<div class="field-row">
+<div class="field"><label>Name</label><input type="text" required></div>
+<div class="field"><label>Company</label><input type="text"></div>
+</div>
+<div class="field-row">
+<div class="field"><label>Email</label><input type="email" required></div>
+<div class="field"><label>Phone</label><input type="tel"></div>
+</div>
+<div class="field"><label>Part Number or Equipment Details (optional)</label><input type="text" placeholder="Part number, or make / model / equipment details"></div>
+<div class="field"><label>Message</label><textarea placeholder="Quantity, urgency, destination country"></textarea></div>
+<button type="submit" class="btn btn-primary btn-block">Submit Request for Quotation</button>
+</form>
+<div class="confirm-note" style="display:none;text-align:center;padding:40px 20px">
+<svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="var(--ok)" stroke-width="1.6" style="margin-bottom:16px"><path d="M20 6 9 17l-5-5"/></svg>
+<h3>Request received</h3>
+<p style="margin-top:8px;font-size:14px">Our team will confirm availability and pricing shortly.</p>
+</div>
+</div></section>
+
+<footer class="site-footer">
+<div class="wrap footer-grid">
+<div>
+<div class="footer-brand"><img src="assets/logo-crest.png" alt="Leos Trading crest"><span>LEOS TRADING</span></div>
+<p>UAE-based global supplier of OEM parts, industrial equipment and sourcing solutions. Sales · Service · Rental.</p>
+</div>
+<div class="footer-col">
+<h4>Products</h4>
+<a href="search.html?cat=truck">Truck Parts</a>
+<a href="search.html?cat=equipment">Construction Equipment</a>
+<a href="search.html?cat=generator">Generator Parts</a>
+<a href="search.html?cat=mining">Mining &amp; Industrial</a>
+</div>
+<div class="footer-col">
+<h4>Company</h4>
+<a href="about.html">About</a>
+<a href="sourcing.html">Sourcing</a>
+<a href="export.html">Export</a>
+<a href="brands.html">Brands</a>
+<a href="brand-guidelines.html">Brand Guidelines</a>
+</div>
+<div class="footer-col">
+<h4>Contact</h4>
+<div>SRTIP, Sharjah, UAE</div>
+<div>+971 50 848 9640</div>
+<div>+971 50 285 1056</div>
+<div>trade@leosdubai.com</div>
+</div>
+</div>
+<div class="wrap footer-bottom">
+<span>© 2026 Leos Trading FZE. All rights reserved.</span>
+<span class="mono">SALES · SERVICE · RENTAL</span>
+</div>
+</footer>
+</body>
+</html>

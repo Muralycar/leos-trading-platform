@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sourcing — Leos Trading FZE</title>
+<meta name="description" content="Global procurement for hard-to-find, obsolete and dead-stock OEM parts. Genuine and aftermarket supply options.">
+<link rel="stylesheet" href="styles.css">
+<script src="data.js" defer></script>
+<style>
+.stat-strip{border-bottom:1px solid var(--line);background:var(--bg-1)}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);padding:36px 0}
+.stat{text-align:left;border-left:1px solid var(--line);padding-left:24px}
+.stat:first-child{border-left:none;padding-left:0}
+.stat .num{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:38px;color:var(--brass)}
+.stat .lbl{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-2);margin-top:4px}
+.cta-banner{background:var(--bg-1);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.cta-inner{display:flex;justify-content:space-between;align-items:center;gap:40px}
+.cta-inner h2{max-width:14ch}
+.cta-actions{display:flex;gap:14px;flex-shrink:0}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);margin-top:24px}
+.compare-col{background:var(--bg-0);padding:28px}
+.compare-col h4{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass);margin-bottom:14px}
+.generic-form{background:var(--bg-0);border:1px solid var(--line);border-radius:var(--radius-m);padding:32px;max-width:640px}
+@media (max-width:900px){
+.stat-grid{grid-template-columns:repeat(2,1fr);gap:20px}
+.stat{border-left:none;padding-left:0}
+.cta-inner{flex-direction:column;align-items:flex-start}
+.compare-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="index.html"><img src="assets/logo-crest.png" alt="Leos Trading crest"><span class="brand-word">LEOS TRADING<span>SALES · SERVICE · RENTAL</span></span></a>
+<nav class="main-nav">
+<a href="index.html">Home</a>
+<div class="nav-item"><span class="nav-top">Products <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></span>
+<div class="nav-dropdown">
+<a href="search.html?cat=truck">Truck Parts</a>
+<a href="search.html?cat=equipment">Construction Equipment Parts</a>
+<a href="search.html?cat=generator">Generator Parts</a>
+<a href="search.html?cat=mining">Mining &amp; Industrial Parts</a>
+<a href="search.html?cat=marine">Marine Parts</a>
+<a href="search.html?cat=accessories">Tyres, Batteries &amp; Accessories</a>
+</div>
+</div>
+<div class="nav-item"><span class="nav-top">Inventory <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></span>
+<div class="nav-dropdown">
+<a href="search.html">Search All Stock</a>
+<a href="search.html?brand=kohler">Kohler Inventory</a>
+<a href="search.html?brand=iveco">Iveco Inventory</a>
+<a href="search.html?brand=kobelco">Kobelco Inventory</a>
+<a href="search.html?sort=recent">Recently Added</a>
+</div>
+</div>
+<a href="brands.html">Brands</a>
+<div class="nav-item"><span class="nav-top">Sourcing <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></span>
+<div class="nav-dropdown">
+<a href="sourcing.html#request">Request a Part</a>
+<a href="sourcing.html#hard-to-find">Hard-to-Find Parts</a>
+<a href="sourcing.html#obsolete">Obsolete Parts</a>
+<a href="sourcing.html#genuine-aftermarket">Genuine &amp; Aftermarket Supply</a>
+<a href="sourcing.html#procurement">Global Procurement</a>
+</div>
+</div>
+<a href="export.html">Export</a>
+<a href="about.html">About</a>
+</nav>
+<div class="header-actions">
+<a href="tel:+971508489640" class="icon-btn" aria-label="Call"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.9 21 3 13.1 3 3.7c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.2 1L6.6 10.8Z"/></svg></a>
+<a href="https://wa.me/971508489640" target="_blank" class="icon-btn" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20l1.3-4.1A8 8 0 1 1 8.9 19L4 20Z"/></svg></a>
+<a href="contact.html" class="btn btn-primary">Request Quotation</a>
+</div>
+<button class="nav-toggle" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+</div>
+</header>
+<div class="mobile-drawer" id="mobile-drawer">
+<button class="drawer-close" aria-label="Close menu" onclick="document.getElementById('mobile-drawer').classList.remove('open')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+<a href="index.html">Home</a>
+<a href="search.html?cat=Truck%20Parts">Truck Parts</a>
+<a href="search.html?cat=Construction%20Equipment%20Parts">Construction Equipment Parts</a>
+<a href="search.html?cat=Generator%20Parts">Generator Parts</a>
+<a href="search.html">Search All Stock</a>
+<a href="brands.html">Brands</a>
+<a href="sourcing.html#request">Request a Part</a>
+<a href="sourcing.html">Sourcing</a>
+<a href="export.html">Export</a>
+<a href="about.html">About</a>
+<a href="contact.html">Contact</a>
+</div>
+<script>document.querySelectorAll('.nav-toggle').forEach(function(b){b.addEventListener('click',function(){document.getElementById('mobile-drawer').classList.toggle('open');});});</script>
+
+
+<section class="page-header"><div class="wrap">
+<div class="eyebrow">Sourcing</div>
+<h1>Global procurement for parts that are hard to move</h1>
+<p>Genuine and aftermarket options, hard-to-find and obsolete parts, sourced through our global procurement network.</p>
+</div></section>
+<section id="request"><div class="wrap content-split">
+<div>
+<div class="eyebrow">Request a Part</div>
+<h2 style="margin-top:14px">Send the part number or equipment details</h2>
+<p style="margin-top:14px;font-size:15px">Availability subject to confirmation. Include as much detail as possible — OEM part number, equipment make/model, or a photo of the part — for the fastest response.</p>
+</div>
+<form class="generic-form" onsubmit="event.preventDefault();this.style.display='none';this.nextElementSibling.style.display='block';return false">
+<div class="field-row">
+<div class="field"><label>Name</label><input type="text" required></div>
+<div class="field"><label>Company</label><input type="text"></div>
+</div>
+<div class="field-row">
+<div class="field"><label>Email</label><input type="email" required></div>
+<div class="field"><label>Phone</label><input type="tel"></div>
+</div>
+<div class="field"><label>Part Number or Equipment Details</label><input type="text" placeholder="Part number, or make / model / equipment details"></div>
+<div class="field"><label>Message</label><textarea placeholder="Quantity, urgency, destination country"></textarea></div>
+<button type="submit" class="btn btn-primary btn-block">Submit Request for Quotation</button>
+</form>
+<div class="confirm-note" style="display:none;text-align:center;padding:40px 20px">
+<svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="var(--ok)" stroke-width="1.6" style="margin-bottom:16px"><path d="M20 6 9 17l-5-5"/></svg>
+<h3>Request received</h3>
+<p style="margin-top:8px;font-size:14px">Our team will confirm availability and pricing shortly.</p>
+</div>
+</div></section>
+<section class="section-tight" id="hard-to-find"><div class="wrap content-split reverse">
+<div>
+<div class="eyebrow">Hard-to-Find Parts</div>
+<h2 style="margin-top:14px">If it carries a part number, we can search for it</h2>
+<p style="margin-top:14px;font-size:15px">Discontinued lines, low-volume regional variants, and parts no longer listed by the manufacturer — our sourcing network extends beyond what's in our own warehousing.</p>
+</div>
+<image-slot id="src-hardtofind" shape="rect" placeholder="Hard-to-find parts — warehouse search" style="width:100%;aspect-ratio:4/3"></image-slot>
+</div></section>
+<section id="obsolete"><div class="wrap content-split">
+<image-slot id="src-obsolete" shape="rect" placeholder="Obsolete / dead-stock inventory" style="width:100%;aspect-ratio:4/3"></image-slot>
+<div>
+<div class="eyebrow">Obsolete Parts</div>
+<h2 style="margin-top:14px">Dead-stock and discontinued inventory</h2>
+<p style="margin-top:14px;font-size:15px">We hold and actively acquire obsolete and discontinued part numbers that other suppliers have written off — condition-graded and disclosed at quotation.</p>
+</div>
+</div></section>
+<section class="section-tight" id="genuine-aftermarket"><div class="wrap">
+<div class="section-head"><div class="eyebrow">Genuine &amp; Aftermarket Supply</div><h2>Two supply options, disclosed upfront</h2></div>
+<div class="compare-grid">
+<div class="compare-col"><h4>Genuine OEM</h4><p style="font-size:14px;color:var(--text-1)">Manufacturer-sourced parts with full traceability. Recommended where warranty or certification requirements apply.</p></div>
+<div class="compare-col"><h4>Aftermarket</h4><p style="font-size:14px;color:var(--text-1)">Cross-referenced equivalents, typically faster to source and lower cost where genuine OEM is unavailable or discontinued.</p></div>
+</div>
+</div></section>
+<section id="procurement"><div class="wrap">
+<div class="section-head"><div class="eyebrow">Global Procurement</div><h2>How we source</h2></div>
+<div class="step-list">
+<div class="step-item"><div class="step-num mono">01</div><h3>Part Identified</h3><p>Part number, cross-reference or equipment details received.</p></div>
+<div class="step-item"><div class="step-num mono">02</div><h3>Network Search</h3><p>Checked against our stock and partner supplier network.</p></div>
+<div class="step-item"><div class="step-num mono">03</div><h3>Availability Confirmed</h3><p>Condition, lead time and pricing confirmed in writing.</p></div>
+<div class="step-item"><div class="step-num mono">04</div><h3>Quotation Issued</h3><p>RFQ delivered with export terms.</p></div>
+</div>
+</div></section>
+<section class="cta-banner"><div class="wrap cta-inner">
+<h2>Can't find your part number?<br>Send it to us.</h2>
+<div class="cta-actions">
+<a href="https://wa.me/971508489640" target="_blank" class="btn btn-wa"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20l1.3-4.1A8 8 0 1 1 8.9 19L4 20Z"/></svg>WhatsApp Us</a>
+<a href="#request" class="btn btn-primary">Request a Part</a>
+</div>
+</div></section>
+
+<footer class="site-footer">
+<div class="wrap footer-grid">
+<div>
+<div class="footer-brand"><img src="assets/logo-crest.png" alt="Leos Trading crest"><span>LEOS TRADING</span></div>
+<p>UAE-based global supplier of OEM parts, industrial equipment and sourcing solutions. Sales · Service · Rental.</p>
+</div>
+<div class="footer-col">
+<h4>Products</h4>
+<a href="search.html?cat=truck">Truck Parts</a>
+<a href="search.html?cat=equipment">Construction Equipment</a>
+<a href="search.html?cat=generator">Generator Parts</a>
+<a href="search.html?cat=mining">Mining &amp; Industrial</a>
+</div>
+<div class="footer-col">
+<h4>Company</h4>
+<a href="about.html">About</a>
+<a href="sourcing.html">Sourcing</a>
+<a href="export.html">Export</a>
+<a href="brands.html">Brands</a>
+<a href="brand-guidelines.html">Brand Guidelines</a>
+</div>
+<div class="footer-col">
+<h4>Contact</h4>
+<div>SRTIP, Sharjah, UAE</div>
+<div>+971 50 848 9640</div>
+<div>+971 50 285 1056</div>
+<div>trade@leosdubai.com</div>
+</div>
+</div>
+<div class="wrap footer-bottom">
+<span>© 2026 Leos Trading FZE. All rights reserved.</span>
+<span class="mono">SALES · SERVICE · RENTAL</span>
+</div>
+</footer>
+</body>
+</html>

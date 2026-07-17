@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="doc-title">Product — Leos Trading FZE</title>
+<meta id="doc-desc" name="description" content="">
+<link rel="stylesheet" href="styles.css">
+<script src="data.js" defer></script>
+<style>
+.product-layout{display:grid;grid-template-columns:1fr 1fr;gap:64px;padding:48px 0 32px}
+.gallery-main{aspect-ratio:1;background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius-m);display:flex;align-items:center;justify-content:center;padding:40px}
+.gallery-main img{width:100%;height:100%;object-fit:contain}
+.gallery-thumbs{display:flex;gap:10px;margin-top:12px}
+.gallery-thumbs div{width:64px;height:64px;background:var(--bg-2);border:1px solid var(--line-strong);border-radius:var(--radius-s);padding:8px}
+.gallery-thumbs img{width:100%;height:100%;object-fit:contain}
+.detail-tags{display:flex;gap:10px;margin-bottom:16px}
+.detail-sku{font-family:'IBM Plex Mono',monospace;font-size:15px;color:var(--brass);margin-bottom:8px}
+.detail-h1{font-size:clamp(26px,3vw,38px)}
+.spec-table{margin-top:24px;border-top:1px solid var(--line)}
+.spec-row{display:grid;grid-template-columns:180px 1fr;padding:13px 0;border-bottom:1px solid var(--line);font-size:14px}
+.spec-row .k{color:var(--text-2);font-family:'IBM Plex Mono',monospace;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em}
+.spec-row .v{color:var(--text-0)}
+.detail-actions{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap}
+.notes-box{margin-top:24px;background:var(--bg-1);border:1px solid var(--line);border-radius:var(--radius-m);padding:18px 20px;font-size:14px;color:var(--text-1)}
+.notes-box .lbl{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--brass);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:6px}
+
+.related-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.part-card{background:var(--bg-0);display:flex;flex-direction:column}
+.part-media{aspect-ratio:1;background:var(--bg-2);display:flex;align-items:center;justify-content:center;padding:22px}
+.part-media img{width:100%;height:100%;object-fit:contain}
+.part-body{padding:20px;display:flex;flex-direction:column;gap:8px;flex:1}
+.part-sku{font-size:12px;color:var(--brass)}
+.part-name{font-size:15px;color:var(--text-0);font-weight:500;flex:1}
+.part-meta{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+
+.rfq-section{background:var(--bg-1);border-top:1px solid var(--line)}
+.rfq-layout{display:grid;grid-template-columns:1fr 1.3fr;gap:56px}
+.rfq-summary{align-self:start;position:sticky;top:96px}
+.rfq-summary .mono{color:var(--brass);font-size:13px}
+.rfq-form{background:var(--bg-0);border:1px solid var(--line);border-radius:var(--radius-m);padding:32px}
+.confirm-note{display:none;text-align:center;padding:40px 20px}
+.confirm-note svg{width:40px;height:40px;color:var(--ok);margin-bottom:16px}
+
+.seo-toggle{margin-top:40px;border:1px dashed var(--line-strong);border-radius:var(--radius-m);padding:16px 20px}
+.seo-toggle summary{cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-2)}
+.seo-body{margin-top:16px;display:flex;flex-direction:column;gap:10px;font-size:13px}
+.seo-body div span{color:var(--text-2);font-family:'IBM Plex Mono',monospace;font-size:10.5px;text-transform:uppercase;display:block;margin-bottom:3px}
+.seo-body div p{color:var(--text-0);font-size:13.5px}
+
+@media (max-width:900px){
+.product-layout,.rfq-layout{grid-template-columns:1fr;gap:28px}
+.related-grid{grid-template-columns:1fr 1fr}
+.spec-row{grid-template-columns:140px 1fr}
+}
+</style>
+</head>
+<body>
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="index.html"><img src="assets/logo-crest.png" alt="Leos Trading crest"><span class="brand-word">LEOS TRADING<span>SALES · SERVICE · RENTAL</span></span></a>
+<nav class="main-nav">
+<a href="index.html">Home</a>
+<div class="nav-item"><span class="nav-top">Products <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></span>
+<div class="nav-dropdown">
+<a href="search.html?cat=truck">Truck Parts</a>
+<a href="search.html?cat=equipment">Construction Equipment Parts</a>
+<a href="search.html?cat=generator">Generator Parts</a>
+<a href="search.html?cat=mining">Mining &amp; Industrial Parts</a>
+<a href="search.html?cat=marine">Marine Parts</a>
+<a href="search.html?cat=accessories">Tyres, Batteries &amp; Accessories</a>
+</div>
+</div>
+<div class="nav-item"><span class="nav-top">Inventory <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></span>
+<div class="nav-dropdown">
+<a href="search.html">Search All Stock</a>
+<a href="search.html?brand=kohler">Kohler Inventory</a>
+<a href="search.html?brand=iveco">Iveco Inventory</a>
+<a href="search.html?brand=kobelco">Kobelco Inventory</a>
+<a href="search.html?sort=recent">Recently Added</a>
+</div>
+</div>
+<a href="brands.html">Brands</a>
+<div class="nav-item"><span class="nav-top">Sourcing <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></span>
+<div class="nav-dropdown">
+<a href="sourcing.html#request">Request a Part</a>
+<a href="sourcing.html#hard-to-find">Hard-to-Find Parts</a>
+<a href="sourcing.html#obsolete">Obsolete Parts</a>
+<a href="sourcing.html#genuine-aftermarket">Genuine &amp; Aftermarket Supply</a>
+<a href="sourcing.html#procurement">Global Procurement</a>
+</div>
+</div>
+<a href="export.html">Export</a>
+<a href="about.html">About</a>
+</nav>
+<div class="header-actions">
+<a href="tel:+971508489640" class="icon-btn" aria-label="Call"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.9 21 3 13.1 3 3.7c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.2 1L6.6 10.8Z"/></svg></a>
+<a href="https://wa.me/971508489640" target="_blank" class="icon-btn" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20l1.3-4.1A8 8 0 1 1 8.9 19L4 20Z"/></svg></a>
+<a href="contact.html" class="btn btn-primary">Request Quotation</a>
+</div>
+<button class="nav-toggle" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+</div>
+</header>
+<div class="mobile-drawer" id="mobile-drawer">
+<button class="drawer-close" aria-label="Close menu" onclick="document.getElementById('mobile-drawer').classList.remove('open')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+<a href="index.html">Home</a>
+<a href="search.html?cat=Truck%20Parts">Truck Parts</a>
+<a href="search.html?cat=Construction%20Equipment%20Parts">Construction Equipment Parts</a>
+<a href="search.html?cat=Generator%20Parts">Generator Parts</a>
+<a href="search.html">Search All Stock</a>
+<a href="brands.html">Brands</a>
+<a href="sourcing.html#request">Request a Part</a>
+<a href="sourcing.html">Sourcing</a>
+<a href="export.html">Export</a>
+<a href="about.html">About</a>
+<a href="contact.html">Contact</a>
+</div>
+<script>document.querySelectorAll('.nav-toggle').forEach(function(b){b.addEventListener('click',function(){document.getElementById('mobile-drawer').classList.toggle('open');});});</script>
+
+
+<div class="wrap" style="padding-top:24px">
+<div class="breadcrumb" id="breadcrumb"></div>
+</div>
+
+<div class="wrap product-layout" id="product-layout"></div>
+
+<section class="section-tight">
+<div class="wrap">
+<div class="section-head">
+<div class="eyebrow">Related Parts</div>
+<h2 style="font-size:28px">Same category</h2>
+</div>
+<div class="related-grid" id="related-grid"></div>
+</div>
+</section>
+
+<section class="rfq-section" id="rfq">
+<div class="wrap rfq-layout">
+<div class="rfq-summary">
+<div class="eyebrow">Request Quotation</div>
+<h2 style="margin-top:14px;font-size:32px">Send us the part number or equipment details</h2>
+<p style="margin-top:16px;font-size:15px">Availability subject to confirmation. Our team responds with pricing, lead time and export documentation.</p>
+<div class="mono" id="rfq-sku-ref" style="margin-top:20px"></div>
+<div style="display:flex;gap:12px;margin-top:20px;flex-wrap:wrap">
+<a href="https://wa.me/971508489640" target="_blank" class="btn btn-wa btn-sm"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20l1.3-4.1A8 8 0 1 1 8.9 19L4 20Z"/></svg>WhatsApp Inquiry</a>
+<a id="email-link" href="#" class="btn btn-ghost btn-sm">Email Inquiry</a>
+</div>
+</div>
+<div class="rfq-form">
+<form id="rfq-form" onsubmit="return submitRFQ(event)">
+<div class="field-row">
+<div class="field"><label>Name</label><input type="text" required></div>
+<div class="field"><label>Company</label><input type="text"></div>
+</div>
+<div class="field-row">
+<div class="field"><label>Email</label><input type="email" required></div>
+<div class="field"><label>Phone</label><input type="tel"></div>
+</div>
+<div class="field-row">
+<div class="field"><label>Part Number</label><input type="text" id="rfq-part-input"></div>
+<div class="field"><label>Quantity Required</label><input type="text" placeholder="e.g. 2 units"></div>
+</div>
+<div class="field"><label>Message</label><textarea placeholder="Additional equipment details, application, or urgency"></textarea></div>
+<button type="submit" class="btn btn-primary btn-block">Submit Request for Quotation</button>
+</form>
+<div class="confirm-note" id="confirm-note">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 6 9 17l-5-5"/></svg>
+<h3>Request received</h3>
+<p style="margin-top:8px;font-size:14px">Our team will confirm availability and pricing shortly. For urgent requirements, use WhatsApp above.</p>
+</div>
+</div>
+</div>
+</section>
+
+<footer class="site-footer">
+<div class="wrap footer-grid">
+<div>
+<div class="footer-brand"><img src="assets/logo-crest.png" alt="Leos Trading crest"><span>LEOS TRADING</span></div>
+<p>UAE-based global supplier of OEM parts, industrial equipment and sourcing solutions. Sales · Service · Rental.</p>
+</div>
+<div class="footer-col">
+<h4>Products</h4>
+<a href="search.html?cat=truck">Truck Parts</a>
+<a href="search.html?cat=equipment">Construction Equipment</a>
+<a href="search.html?cat=generator">Generator Parts</a>
+<a href="search.html?cat=mining">Mining &amp; Industrial</a>
+</div>
+<div class="footer-col">
+<h4>Company</h4>
+<a href="about.html">About</a>
+<a href="sourcing.html">Sourcing</a>
+<a href="export.html">Export</a>
+<a href="brands.html">Brands</a>
+<a href="brand-guidelines.html">Brand Guidelines</a>
+</div>
+<div class="footer-col">
+<h4>Contact</h4>
+<div>SRTIP, Sharjah, UAE</div>
+<div>+971 50 848 9640</div>
+<div>+971 50 285 1056</div>
+<div>trade@leosdubai.com</div>
+</div>
+</div>
+<div class="wrap footer-bottom">
+<span>© 2026 Leos Trading FZE. All rights reserved.</span>
+<span class="mono">SALES · SERVICE · RENTAL</span>
+</div>
+</footer>
+
+<script>
+function statusTag(status){
+if(status==='instock')return '<span class="tag tag-stock">'+STATUS_LABEL.instock+'</span>';
+if(status==='limited')return '<span class="tag tag-sourcing">'+STATUS_LABEL.limited+'</span>';
+return '<span class="tag tag-soon">'+STATUS_LABEL.onrequest+'</span>';
+}
+function submitRFQ(e){
+e.preventDefault();
+document.getElementById('rfq-form').style.display='none';
+document.getElementById('confirm-note').style.display='block';
+return false;
+}
+document.addEventListener('DOMContentLoaded',()=>{
+const params=new URLSearchParams(location.search);
+const sku=params.get('sku')||LEOS_PARTS[0].sku;
+const p=LEOS_PARTS.find(x=>x.sku===sku)||LEOS_PARTS[0];
+const status=stockStatus(p.stock);
+const desc=`Real stock item from Leos Trading's ${p.brand} inventory — condition and exact fitment confirmed at RFQ stage.`;
+
+document.getElementById('doc-title').textContent=p.sku+' — '+p.name+' | '+p.brand+' | Leos Trading FZE';
+document.getElementById('doc-desc').setAttribute('content',desc);
+document.getElementById('breadcrumb').innerHTML=`<a href="index.html">Home</a>/<a href="search.html?cat=${encodeURIComponent(p.category)}">${p.category}</a>/<a href="search.html?brand=${p.brand.toLowerCase()}">${p.brand}</a>/<span style="color:var(--text-1)">${p.sku}</span>`;
+
+document.getElementById('product-layout').innerHTML=`
+<div>
+<div class="gallery-main">${p.img?`<img src="${p.img}" alt="${p.name}">`:`<image-slot id="gallery-${p.sku}" shape="rect" placeholder="${p.name} — photography pending" style="width:100%;height:100%"></image-slot>`}</div>
+</div>
+<div>
+<div class="detail-tags"><span class="tag">${p.brand}</span><span class="tag">${p.category}</span>${statusTag(status)}</div>
+<div class="detail-sku mono">${p.sku}</div>
+<h1 class="detail-h1">${p.name}</h1>
+<p style="margin-top:14px">${desc}</p>
+<div class="spec-table">
+<div class="spec-row"><div class="k">Brand</div><div class="v">${p.brand}</div></div>
+<div class="spec-row"><div class="k">Category</div><div class="v">${p.category} — ${p.sub}</div></div>
+<div class="spec-row"><div class="k">Available Quantity</div><div class="v">${p.stock} unit${p.stock===1?'':'s'}</div></div>
+</div>
+<div class="detail-actions">
+<a href="#rfq" class="btn btn-primary">Request Quotation</a>
+<a href="https://wa.me/971508489640?text=${encodeURIComponent('Inquiry — Part Number '+p.sku+' ('+p.name+')')}" target="_blank" class="btn btn-wa"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20l1.3-4.1A8 8 0 1 1 8.9 19L4 20Z"/></svg>WhatsApp Inquiry</a>
+<a href="mailto:trade@leosdubai.com?subject=${encodeURIComponent('RFQ — '+p.sku)}" class="btn btn-ghost">Email Inquiry</a>
+</div>
+<div class="notes-box"><span class="lbl">Technical Notes</span>Condition and exact fitment confirmed at RFQ stage — send your equipment serial number for cross-reference.</div>
+<details class="seo-toggle">
+<summary>Page SEO Metadata</summary>
+<div class="seo-body">
+<div><span>Meta Title</span><p>${p.sku} — ${p.name} | ${p.brand} | Leos Trading FZE</p></div>
+<div><span>Meta Description</span><p>${desc}</p></div>
+<div><span>URL Slug</span><p>/inventory/${p.brand.toLowerCase()}/${p.sku.toLowerCase()}</p></div>
+<div><span>Structured Data</span><p>schema.org/Product — brand, sku, category, availability</p></div>
+</div>
+</details>
+</div>`;
+
+document.getElementById('rfq-sku-ref').textContent='RE: '+p.sku+' — '+p.name;
+document.getElementById('rfq-part-input').value=p.sku;
+document.getElementById('email-link').href='mailto:trade@leosdubai.com?subject='+encodeURIComponent('RFQ — '+p.sku);
+
+document.getElementById('related-grid').innerHTML=LEOS_PARTS.filter(x=>x.category===p.category&&x.sku!==p.sku).slice(0,4).map(r=>`
+<a class="part-card" href="product.html?sku=${r.sku}">
+<div class="part-media">${r.img?`<img src="${r.img}" alt="${r.name}">`:`<image-slot id="rel-${r.sku}" shape="rect" placeholder="${r.name}" style="width:100%;height:100%"></image-slot>`}</div>
+<div class="part-body">
+<div class="part-sku mono">${r.sku}</div>
+<div class="part-name">${r.name}</div>
+<div class="part-meta">${statusTag(stockStatus(r.stock))}</div>
+</div>
+</a>`).join('');
+});
+</script>
+</body>
+</html>

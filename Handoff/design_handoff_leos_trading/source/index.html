@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leos Trading FZE — OEM Parts, Industrial Equipment &amp; Global Sourcing</title>
+<meta name="description" content="UAE-based global supplier of OEM and aftermarket parts for trucks, construction equipment, generators, mining and marine applications. Search available stock or request global sourcing.">
+<link rel="stylesheet" href="styles.css">
+<script src="image-slot.js"></script>
+<script src="data.js" defer></script>
+<style>
+.hero{position:relative;min-height:92vh;display:flex;align-items:flex-end;border-bottom:1px solid var(--line);overflow:hidden}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(11,12,14,.55) 0%,rgba(11,12,14,.75) 55%,var(--bg-0) 100%);pointer-events:none}
+.hero-content{position:relative;z-index:2;width:100%;padding-bottom:64px}
+.hero-content .eyebrow{color:var(--brass-glow)}
+.hero-content h1{margin-top:18px;max-width:15ch}
+.hero-content p{margin-top:20px;font-size:19px;max-width:52ch;color:var(--text-0);opacity:.85}
+.search-bar{margin-top:40px;background:var(--bg-2);border:1px solid var(--line-strong);border-radius:var(--radius-m);padding:8px;display:flex;gap:8px;max-width:760px;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.search-bar input{flex:1;background:transparent;border:none;color:var(--text-0);font-size:16px;padding:14px 16px;font-family:'IBM Plex Mono',monospace}
+.search-bar input::placeholder{color:var(--text-2);font-family:Inter,sans-serif}
+.search-bar input:focus{outline:none}
+.search-bar .btn{flex-shrink:0}
+.hero-ctas{display:flex;gap:16px;margin-top:22px}
+.stat-strip{border-bottom:1px solid var(--line);background:var(--bg-1)}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);padding:36px 0}
+.stat{text-align:left;border-left:1px solid var(--line);padding-left:24px}
+.stat:first-child{border-left:none;padding-left:0}
+.stat .num{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:38px;color:var(--brass)}
+.stat .lbl{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-2);margin-top:4px}
+
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--line)}
+.cat-card{background:var(--bg-1);padding:0;position:relative;display:flex;flex-direction:column;min-height:420px}
+.cat-media{height:240px;position:relative}
+.cat-media img{width:100%;height:100%;object-fit:contain;background:var(--bg-2);padding:24px}
+.cat-body{padding:28px;flex:1;display:flex;flex-direction:column}
+.cat-body h3{font-size:26px}
+.cat-body .brand-tag{margin:10px 0 12px}
+.cat-body p{font-size:14px;flex:1}
+.cat-body .btn{margin-top:20px;align-self:flex-start}
+.cat-card.soon .cat-media img,.cat-card.soon .cat-body{opacity:.55}
+
+.why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.why-item{background:var(--bg-0);padding:32px 28px}
+.why-item svg{width:26px;height:26px;color:var(--brass);margin-bottom:20px}
+.why-item h3{font-size:18px;margin-bottom:10px}
+.why-item p{font-size:14px}
+
+.depth-split{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.depth-media{aspect-ratio:4/3}
+.depth-list{list-style:none;margin-top:28px;display:flex;flex-direction:column;gap:16px}
+.depth-list li{display:flex;gap:14px;font-size:15px;color:var(--text-1);align-items:flex-start}
+.depth-list svg{width:18px;height:18px;color:var(--brass);flex-shrink:0;margin-top:2px}
+
+.brand-strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:36px 0;overflow:hidden}
+.brand-row{display:flex;gap:48px;flex-wrap:wrap;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:20px;letter-spacing:.05em;color:var(--text-2);text-transform:uppercase}
+
+.featured-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.part-card{background:var(--bg-0);display:flex;flex-direction:column}
+.part-media{aspect-ratio:1;background:var(--bg-2);display:flex;align-items:center;justify-content:center;padding:22px}
+.part-media img{width:100%;height:100%;object-fit:contain}
+.part-body{padding:20px;display:flex;flex-direction:column;gap:8px;flex:1}
+.part-sku{font-size:12px;color:var(--brass)}
+.part-name{font-size:15px;color:var(--text-0);font-weight:500;flex:1}
+.part-meta{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+
+.cta-banner{background:var(--bg-1);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.cta-inner{display:flex;justify-content:space-between;align-items:center;gap:40px}
+.cta-inner h2{max-width:14ch}
+.cta-actions{display:flex;gap:14px;flex-shrink:0}
+
+@media (max-width:900px){
+.stat-grid{grid-template-columns:repeat(2,1fr);gap:20px}
+.stat{border-left:none;padding-left:0}
+.cat-grid,.why-grid,.featured-grid{grid-template-columns:1fr}
+.depth-split{grid-template-columns:1fr;gap:32px}
+.cta-inner{flex-direction:column;align-items:flex-start}
+.search-bar{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="index.html"><img src="assets/logo-crest.png" alt="Leos Trading crest"><span class="brand-word">LEOS TRADING<span>SALES · SERVICE · RENTAL</span></span></a>
+<nav class="main-nav">
+<a href="index.html" class="active">Home</a>
+<div class="nav-item"><span class="nav-top">Products <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></span>
+<div class="nav-dropdown">
+<a href="search.html?cat=truck">Truck Parts</a>
+<a href="search.html?cat=equipment">Construction Equipment Parts</a>
+<a href="search.html?cat=generator">Generator Parts</a>
+<a href="search.html?cat=mining">Mining &amp; Industrial Parts</a>
+<a href="search.html?cat=marine">Marine Parts</a>
+<a href="search.html?cat=accessories">Tyres, Batteries &amp; Accessories</a>
+</div>
+</div>
+<div class="nav-item"><span class="nav-top">Inventory <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></span>
+<div class="nav-dropdown">
+<a href="search.html">Search All Stock</a>
+<a href="search.html?brand=kohler">Kohler Inventory</a>
+<a href="search.html?brand=iveco">Iveco Inventory</a>
+<a href="search.html?brand=kobelco">Kobelco Inventory</a>
+<a href="search.html?sort=recent">Recently Added</a>
+</div>
+</div>
+<a href="brands.html">Brands</a>
+<div class="nav-item"><span class="nav-top">Sourcing <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></span>
+<div class="nav-dropdown">
+<a href="sourcing.html#request">Request a Part</a>
+<a href="sourcing.html#hard-to-find">Hard-to-Find Parts</a>
+<a href="sourcing.html#obsolete">Obsolete Parts</a>
+<a href="sourcing.html#genuine-aftermarket">Genuine &amp; Aftermarket Supply</a>
+<a href="sourcing.html#procurement">Global Procurement</a>
+</div>
+</div>
+<a href="export.html">Export</a>
+<a href="about.html">About</a>
+</nav>
+<div class="header-actions">
+<a href="tel:+971508489640" class="icon-btn" aria-label="Call"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.9 21 3 13.1 3 3.7c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.2 1L6.6 10.8Z"/></svg></a>
+<a href="https://wa.me/971508489640" target="_blank" class="icon-btn" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20l1.3-4.1A8 8 0 1 1 8.9 19L4 20Z"/><path d="M8.5 9.3c0 3.5 2.7 6.2 6.2 6.2.5 0 .9-.4.9-.9v-1c0-.3-.2-.5-.4-.6l-1.7-.6c-.2-.1-.5 0-.6.2l-.4.6c-1.1-.5-2-1.4-2.5-2.5l.6-.4c.2-.1.3-.4.2-.6l-.6-1.7c-.1-.2-.3-.4-.6-.4h-1c-.5 0-.9.4-.9.9Z"/></svg></a>
+<a href="contact.html" class="btn btn-primary">Request Quotation</a>
+</div>
+<button class="nav-toggle" aria-label="Menu">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+</button>
+</div>
+</header>
+<div class="mobile-drawer" id="mobile-drawer">
+<button class="drawer-close" aria-label="Close menu" onclick="document.getElementById('mobile-drawer').classList.remove('open')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+<a href="index.html">Home</a>
+<a href="search.html?cat=Truck%20Parts">Truck Parts</a>
+<a href="search.html?cat=Construction%20Equipment%20Parts">Construction Equipment Parts</a>
+<a href="search.html?cat=Generator%20Parts">Generator Parts</a>
+<a href="search.html">Search All Stock</a>
+<a href="brands.html">Brands</a>
+<a href="sourcing.html#request">Request a Part</a>
+<a href="sourcing.html">Sourcing</a>
+<a href="export.html">Export</a>
+<a href="about.html">About</a>
+<a href="contact.html">Contact</a>
+</div>
+<script>document.querySelectorAll('.nav-toggle').forEach(function(b){b.addEventListener('click',function(){document.getElementById('mobile-drawer').classList.toggle('open');});});</script>
+
+<section class="hero">
+<div class="hero-bg" style="position:absolute;inset:0">
+<image-slot id="hero-warehouse" shape="rect" fit="cover" placeholder="Leos warehouse — wide racking shot, part-number bins visible" style="width:100%;height:100%"></image-slot>
+</div>
+<div class="hero-scrim"></div>
+<div class="hero-content wrap">
+<div class="eyebrow">UAE · GLOBAL INDUSTRIAL SUPPLY</div>
+<h1>PARTS &amp; EQUIPMENT.<br>SOURCED FROM THE UAE.</h1>
+<p>Genuine and aftermarket supply for trucks, construction equipment, generators, mining, marine and industrial applications.</p>
+<form class="search-bar" action="search.html" method="get">
+<input type="text" name="q" placeholder="Search part number, description, or brand — e.g. GM123551">
+<button type="submit" class="btn btn-primary">Search Available Stock</button>
+</form>
+<div class="hero-ctas">
+<a href="search.html" class="btn btn-ghost">Search Available Stock</a>
+<a href="sourcing.html#request" class="btn btn-ghost">Request a Part</a>
+</div>
+</div>
+</section>
+
+<div class="stat-strip">
+<div class="wrap stat-grid">
+<div class="stat"><div class="num">2,256+</div><div class="lbl">SKUs In Network</div></div>
+<div class="stat"><div class="num">20,000+</div><div class="lbl">Units In Stock</div></div>
+<div class="stat"><div class="num">3</div><div class="lbl">Brands Live In Inventory</div></div>
+<div class="stat"><div class="num">MEA</div><div class="lbl">Regional Coverage</div></div>
+</div>
+</div>
+
+<section class="section-tight">
+<div class="wrap">
+<div class="section-head">
+<div class="eyebrow">Products</div>
+<h2>Categories</h2>
+<p>Live inventory in Generator Parts today, with the same architecture onboarding every other category.</p>
+</div>
+</div>
+<div class="cat-grid" id="cat-grid"></div>
+</section>
+
+<section>
+<div class="wrap">
+<div class="section-head">
+<div class="eyebrow">Why Leos</div>
+<h2>Built for parts that are hard to move</h2>
+</div>
+</div>
+<div class="why-grid">
+<div class="why-item">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2 3 6v6c0 5 4 8.5 9 10 5-1.5 9-5 9-10V6l-9-4Z"/><path d="m8.5 12 2.5 2.5 4.5-4.5"/></svg>
+<h3>Genuine OEM Sourcing</h3>
+<p>Traceable parts sourced direct from manufacturer channels — not gray-market substitutes.</p>
+</div>
+<div class="why-item">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="7" width="18" height="13" rx="0"/><path d="M3 11h18M8 7V4h8v3"/></svg>
+<h3>Dead-Stock &amp; Obsolete</h3>
+<p>We specialize in discontinued and hard-to-find part numbers other suppliers have written off.</p>
+</div>
+<div class="why-item">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a13 13 0 0 1 0 18 13 13 0 0 1 0-18Z"/></svg>
+<h3>Global Sourcing Network</h3>
+<p>Multi-manufacturer reach across generator, truck and construction equipment lines.</p>
+</div>
+<div class="why-item">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+<h3>Fast RFQ Turnaround</h3>
+<p>Typical dispatch of 48–72 hours once a quote is confirmed, anywhere in the MEA region.</p>
+</div>
+</div>
+</section>
+
+<section>
+<div class="wrap depth-split">
+<div class="depth-media"><image-slot id="depth-warehouse" shape="rect" placeholder="Warehouse racking — full inventory depth" style="width:100%;height:100%"></image-slot></div>
+<div>
+<div class="eyebrow">Inventory Depth</div>
+<h2 style="margin-top:14px">Thousands of part numbers, held and shelf-ready</h2>
+<p style="margin-top:16px;font-size:16px">If it carries an OEM part number, chances are we can locate it — in our own racking, or through our supplier network.</p>
+<ul class="depth-list">
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 6 9 17l-5-5"/></svg>Bin-tracked warehousing with full part-number traceability</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 6 9 17l-5-5"/></svg>Dedicated dead-stock and surplus acquisition program</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 6 9 17l-5-5"/></svg>Condition-graded inventory: Genuine OEM, Surplus, Obsolete</li>
+</ul>
+</div>
+</div>
+</section>
+
+<div class="brand-strip">
+<div class="wrap brand-row" id="brand-row"></div>
+</div>
+
+<section>
+<div class="wrap">
+<div class="section-head">
+<div class="eyebrow">Featured Parts</div>
+<h2>Recently added to inventory</h2>
+</div>
+</div>
+<div class="featured-grid" id="featured-grid"></div>
+</section>
+
+<section class="cta-banner">
+<div class="wrap cta-inner">
+<h2>Can't find your part number?<br>Send it to us.</h2>
+<div class="cta-actions">
+<a href="https://wa.me/971508489640" target="_blank" class="btn btn-wa">
+<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20l1.3-4.1A8 8 0 1 1 8.9 19L4 20Z"/></svg>
+WhatsApp Us
+</a>
+<a href="sourcing.html#request" class="btn btn-primary">Request a Part</a>
+</div>
+</div>
+</section>
+
+<footer class="site-footer">
+<div class="wrap footer-grid">
+<div>
+<div class="footer-brand"><img src="assets/logo-crest.png" alt="Leos Trading crest"><span>LEOS TRADING</span></div>
+<p>UAE-based global supplier of OEM parts, industrial equipment and sourcing solutions. Sales · Service · Rental.</p>
+</div>
+<div class="footer-col">
+<h4>Products</h4>
+<a href="search.html?cat=truck">Truck Parts</a>
+<a href="search.html?cat=equipment">Construction Equipment</a>
+<a href="search.html?cat=generator">Generator Parts</a>
+<a href="search.html?cat=mining">Mining &amp; Industrial</a>
+</div>
+<div class="footer-col">
+<h4>Company</h4>
+<a href="about.html">About</a>
+<a href="sourcing.html">Sourcing</a>
+<a href="export.html">Export</a>
+<a href="brands.html">Brands</a>
+<a href="brand-guidelines.html">Brand Guidelines</a>
+</div>
+<div class="footer-col">
+<h4>Contact</h4>
+<div>SRTIP, Sharjah, UAE</div>
+<div>+971 50 848 9640</div>
+<div>+971 50 285 1056</div>
+<div>trade@leosdubai.com</div>
+</div>
+</div>
+<div class="wrap footer-bottom">
+<span>© 2026 Leos Trading FZE. All rights reserved.</span>
+<span class="mono">SALES · SERVICE · RENTAL</span>
+</div>
+</footer>
+
+<script>
+function statusTag(status){
+if(status==='instock')return '<span class="tag tag-stock">'+STATUS_LABEL.instock+'</span>';
+if(status==='limited')return '<span class="tag tag-sourcing">'+STATUS_LABEL.limited+'</span>';
+return '<span class="tag tag-soon">'+STATUS_LABEL.onrequest+'</span>';
+}
+document.addEventListener('DOMContentLoaded',()=>{
+const allBrands=[...new Set(Object.values(LEOS_BRANDS).flat())];
+document.getElementById('brand-row').innerHTML=allBrands.map(b=>`<span>${b}</span>`).join('');
+document.getElementById('cat-grid').innerHTML=LEOS_CATEGORIES.map((c,i)=>`
+<div class="cat-card ${c.status!=='live'?'soon':''}">
+<div class="cat-media">${c.img?`<img src="${c.img}" alt="${c.name}">`:`<image-slot id="cat-img-${i}" shape="rect" placeholder="${c.name} — photography pending" style="width:100%;height:100%"></image-slot>`}</div>
+<div class="cat-body">
+<span class="tag ${c.status==='live'?'tag-stock':'tag-soon'}">${c.status==='live'?c.skuCount+' SKUs In Stock':'Sourcing Network'}</span>
+<h3 class="brand-tag" style="margin-top:12px">${c.name}</h3>
+<p>${c.brands}. ${c.status==='live'?'Genuine OEM inventory held in UAE warehousing, searchable by part number.':'Sourced through our global procurement network on request.'}</p>
+<a href="search.html?cat=${encodeURIComponent(c.name)}" class="btn btn-ghost btn-sm">${c.status==='live'?'View Inventory':'Request a Part'} →</a>
+</div>
+</div>`).join('');
+document.getElementById('featured-grid').innerHTML=LEOS_PARTS.slice(0,4).map(p=>`
+<a class="part-card" href="product.html?sku=${encodeURIComponent(p.sku)}" style="cursor:pointer">
+<div class="part-media">${p.img?`<img src="${p.img}" alt="${p.name}">`:`<image-slot id="feat-${p.sku}" shape="rect" placeholder="${p.name}" style="width:100%;height:100%"></image-slot>`}</div>
+<div class="part-body">
+<div class="part-sku mono">${p.sku}</div>
+<div class="part-name">${p.name}</div>
+<div class="part-meta">${statusTag(stockStatus(p.stock))}<span class="tag">${p.brand}</span></div>
+</div>
+</a>`).join('');
+});
+</script>
+</body>
+</html>
