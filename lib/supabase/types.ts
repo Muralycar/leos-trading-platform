@@ -459,6 +459,38 @@ export interface Database {
         };
         Relationships: [];
       };
+      product_admin_view: {
+        Row: {
+          id: string;
+          brand_id: string;
+          brand_slug: string;
+          brand_name: string;
+          equipment_category_id: string;
+          equipment_category_slug: string;
+          equipment_category_name: string;
+          oem_part_number: string;
+          oem_part_number_normalized: string;
+          description: string;
+          equipment_make: string | null;
+          equipment_model: string | null;
+          application: string | null;
+          condition: ProductCondition | null;
+          country_of_origin: string | null;
+          weight: number | null;
+          dimensions: string | null;
+          price: number | null;
+          currency: string | null;
+          min_order_qty: number | null;
+          public_notes: string | null;
+          internal_notes: string | null;
+          status: ProductStatus;
+          created_at: string;
+          updated_at: string;
+          quantity: number;
+          availability_status: AvailabilityStatus;
+        };
+        Relationships: [];
+      };
     };
     Functions: Record<string, never>;
     Enums: {

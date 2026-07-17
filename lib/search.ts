@@ -1,8 +1,8 @@
 // Part-number/description search, implementing the ranking + normalization
 // rules in Handoff/design_handoff_leos_trading/search-spec.md. Pure functions
-// over a Product[] the caller already fetched — app/api/search/route.ts is
-// the only caller now (search moved server-side in Phase 3); these functions
-// don't know or care where the products came from.
+// over a Product[] the caller already fetched — app/api/search/route.ts and
+// lib/admin/products.ts are the callers; these functions don't know or care
+// where the products came from.
 
 import type { AvailabilityStatus, Product } from "@/lib/types";
 import { normalizePartNumber } from "@/lib/part-number";
@@ -33,14 +33,28 @@ export const DEFAULT_FILTERS: SearchFilters = {
  *      superseded numbers, so this tier is structurally present but unused)
  *   3. partial match on normalized OEM part number
  *   4. match on description or brand
- * Returns null when the query matches none of the above.
+ * Returns null when the query matches none of the above. Takes primitives
+ * rather than a full Product so callers with a different row shape (the
+ * admin product view, which includes private fields the public Product
+ * type doesn't) can reuse the exact same ranking rules without adapting to
+ * the public type.
  */
-function matchTier(product: Product, brandName: string, rawQueryLower: string, normalizedQuery: string): number | null {
+export function rankTier(
+  oemPartNumberNormalized: string,
+  description: string,
+  brandName: string,
+  rawQueryLower: string,
+  normalizedQuery: string,
+): number | null {
   if (!rawQueryLower) return 0;
-  if (normalizedQuery && product.oemPartNumberNormalized === normalizedQuery) return 1;
-  if (normalizedQuery && product.oemPartNumberNormalized.includes(normalizedQuery)) return 3;
-  if (product.description.toLowerCase().includes(rawQueryLower) || brandName.toLowerCase().includes(rawQueryLower)) return 4;
+  if (normalizedQuery && oemPartNumberNormalized === normalizedQuery) return 1;
+  if (normalizedQuery && oemPartNumberNormalized.includes(normalizedQuery)) return 3;
+  if (description.toLowerCase().includes(rawQueryLower) || brandName.toLowerCase().includes(rawQueryLower)) return 4;
   return null;
+}
+
+function matchTier(product: Product, brandName: string, rawQueryLower: string, normalizedQuery: string): number | null {
+  return rankTier(product.oemPartNumberNormalized, product.description, brandName, rawQueryLower, normalizedQuery);
 }
 
 export function matchesSearchQuery(product: Product, brandName: string, query: string): boolean {

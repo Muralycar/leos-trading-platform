@@ -8,6 +8,7 @@ import { signOut } from "./actions";
 // confirms a profiles row exists for this session.
 const NAV_LINKS = [
   { label: "Dashboard", href: "/admin" },
+  { label: "Products", href: "/admin/products" },
   { label: "RFQ Enquiries", href: "/admin/rfq" },
 ];
 
