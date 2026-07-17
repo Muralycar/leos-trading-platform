@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { requireRole } from "@/lib/admin/auth";
 import { getAllProductCategories, getProductById, getProductCategoryIds } from "@/lib/admin/products";
+import { listBatchesForProduct } from "@/lib/admin/batches";
 import type { ProductCondition } from "@/lib/supabase/types";
 import { updateProduct, updateProductCategories } from "../../actions";
+import { BatchesSection } from "./BatchesSection";
 
 export const metadata: Metadata = {
   title: "Edit Product — Admin",
@@ -35,7 +37,11 @@ export default async function AdminEditProductPage({ params, searchParams }: Pag
   const product = await getProductById(id);
   if (!product) notFound();
 
-  const [allCategories, selectedCategoryIds] = await Promise.all([getAllProductCategories(), getProductCategoryIds(id)]);
+  const [allCategories, selectedCategoryIds, batches] = await Promise.all([
+    getAllProductCategories(),
+    getProductCategoryIds(id),
+    listBatchesForProduct(id),
+  ]);
 
   return (
     <div>
@@ -181,8 +187,10 @@ export default async function AdminEditProductPage({ params, searchParams }: Pag
             </form>
           </div>
 
+          <BatchesSection productId={product.id} batches={batches} />
+
           <div className="rounded-m border border-dashed border-line-strong p-6 text-sm text-text-2">
-            Inventory batches and media are managed here in a later checkpoint.
+            Media is managed here in a later checkpoint.
           </div>
         </div>
       </div>
