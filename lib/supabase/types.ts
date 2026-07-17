@@ -2,6 +2,13 @@
 // Once a live project exists, regenerate with `supabase gen types typescript`
 // and diff against this file — this hand-written version is what every
 // Phase 3 query is written against until then.
+//
+// `Relationships: []` on every table/view and `Functions` on the schema are
+// required by @supabase/postgrest-js's GenericSchema/GenericTable/GenericView
+// constraints (see node_modules/@supabase/postgrest-js/dist/index.d.mts) —
+// omitting them makes every .from(...).select(...) result type collapse to
+// `never` instead of erroring loudly, so don't drop them even though this
+// project doesn't use the relationship-based nested-select feature.
 
 export type ProductStatus = "draft" | "published" | "archived";
 export type ProductCondition = "genuine_oem" | "aftermarket" | "obsolete_dead_stock" | "used_serviceable";
@@ -50,6 +57,7 @@ export interface Database {
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["brands"]["Insert"]>;
+        Relationships: [];
       };
       equipment_categories: {
         Row: {
@@ -65,6 +73,7 @@ export interface Database {
           parent_id?: string | null;
         };
         Update: Partial<Database["public"]["Tables"]["equipment_categories"]["Insert"]>;
+        Relationships: [];
       };
       product_categories: {
         Row: {
@@ -78,6 +87,7 @@ export interface Database {
           slug: string;
         };
         Update: Partial<Database["public"]["Tables"]["product_categories"]["Insert"]>;
+        Relationships: [];
       };
       warehouse_locations: {
         Row: {
@@ -93,6 +103,7 @@ export interface Database {
           is_active?: boolean;
         };
         Update: Partial<Database["public"]["Tables"]["warehouse_locations"]["Insert"]>;
+        Relationships: [];
       };
       profiles: {
         Row: {
@@ -106,6 +117,7 @@ export interface Database {
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["profiles"]["Insert"]>;
+        Relationships: [];
       };
       import_jobs: {
         Row: {
@@ -133,6 +145,7 @@ export interface Database {
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["import_jobs"]["Insert"]>;
+        Relationships: [];
       };
       import_templates: {
         Row: {
@@ -152,6 +165,7 @@ export interface Database {
           created_by?: string | null;
         };
         Update: Partial<Database["public"]["Tables"]["import_templates"]["Insert"]>;
+        Relationships: [];
       };
       products: {
         Row: {
@@ -200,6 +214,7 @@ export interface Database {
           updated_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["products"]["Insert"]>;
+        Relationships: [];
       };
       product_identifiers: {
         Row: {
@@ -216,6 +231,7 @@ export interface Database {
           value: string;
         };
         Update: Partial<Database["public"]["Tables"]["product_identifiers"]["Insert"]>;
+        Relationships: [];
       };
       product_category_map: {
         Row: {
@@ -227,6 +243,7 @@ export interface Database {
           product_category_id: string;
         };
         Update: Partial<Database["public"]["Tables"]["product_category_map"]["Insert"]>;
+        Relationships: [];
       };
       inventory_batches: {
         Row: {
@@ -264,6 +281,7 @@ export interface Database {
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["inventory_batches"]["Insert"]>;
+        Relationships: [];
       };
       product_media: {
         Row: {
@@ -283,6 +301,7 @@ export interface Database {
           is_primary?: boolean;
         };
         Update: Partial<Database["public"]["Tables"]["product_media"]["Insert"]>;
+        Relationships: [];
       };
       technical_documents: {
         Row: {
@@ -302,6 +321,7 @@ export interface Database {
           is_public?: boolean;
         };
         Update: Partial<Database["public"]["Tables"]["technical_documents"]["Insert"]>;
+        Relationships: [];
       };
       import_rows: {
         Row: {
@@ -323,6 +343,7 @@ export interface Database {
           error_notes?: string | null;
         };
         Update: Partial<Database["public"]["Tables"]["import_rows"]["Insert"]>;
+        Relationships: [];
       };
       rfq_enquiries: {
         Row: {
@@ -362,6 +383,7 @@ export interface Database {
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["rfq_enquiries"]["Insert"]>;
+        Relationships: [];
       };
       pages: {
         Row: {
@@ -383,6 +405,7 @@ export interface Database {
           updated_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["pages"]["Insert"]>;
+        Relationships: [];
       };
       settings: {
         Row: {
@@ -402,6 +425,7 @@ export interface Database {
           address: string;
         };
         Update: Partial<Database["public"]["Tables"]["settings"]["Insert"]>;
+        Relationships: [];
       };
     };
     Views: {
@@ -411,8 +435,10 @@ export interface Database {
           quantity: number;
           status: AvailabilityStatus;
         };
+        Relationships: [];
       };
     };
+    Functions: Record<string, never>;
     Enums: {
       product_status: ProductStatus;
       product_condition: ProductCondition;
@@ -425,5 +451,6 @@ export interface Database {
       import_row_outcome: ImportRowOutcome;
       user_role: UserRole;
     };
+    CompositeTypes: Record<string, never>;
   };
 }
