@@ -65,6 +65,26 @@ function chunk<T>(items: T[], size: number): T[][] {
   return chunks;
 }
 
+// PostgREST caps unpaginated selects at 1000 rows by default — Iveco alone
+// has 1,561 products, so any plain .select() over a brand's products silently
+// truncates. Page through with .range() until a page comes back short.
+async function selectAllPaginated<T>(
+  page: (from: number, to: number) => PromiseLike<{ data: T[] | null; error: { message: string } | null }>,
+  pageSize = 1000,
+): Promise<T[]> {
+  const results: T[] = [];
+  let from = 0;
+  for (;;) {
+    const { data, error } = await page(from, from + pageSize - 1);
+    if (error) throw new Error(error.message);
+    if (!data || data.length === 0) break;
+    results.push(...data);
+    if (data.length < pageSize) break;
+    from += pageSize;
+  }
+  return results;
+}
+
 async function main() {
   const dataPath = resolve(ROOT, "lib/data/inventory.generated.json");
   const data: GeneratedData = JSON.parse(readFileSync(dataPath, "utf-8"));
@@ -143,11 +163,9 @@ async function main() {
 
   for (const brandSlug of brandSlugs) {
     const brandId = brandIdBySlug.get(brandSlug)!;
-    const { data: dbProducts, error } = await supabase
-      .from("products")
-      .select("id, oem_part_number_normalized")
-      .eq("brand_id", brandId);
-    if (error) throw error;
+    const dbProducts = await selectAllPaginated<{ id: string; oem_part_number_normalized: string }>((from, to) =>
+      supabase.from("products").select("id, oem_part_number_normalized").eq("brand_id", brandId).range(from, to),
+    );
     const dbIdByNormalized = new Map(dbProducts.map((p) => [p.oem_part_number_normalized, p.id]));
 
     for (const p of data.products.filter((x) => x.brandSlug === brandSlug)) {
