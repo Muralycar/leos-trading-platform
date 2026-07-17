@@ -5,6 +5,7 @@ import { listProducts } from "@/lib/admin/products";
 import { getBrands, getEquipmentCategories } from "@/lib/data/inventory";
 import { AvailabilityBadge } from "@/components/ui/AvailabilityBadge";
 import type { ProductStatus } from "@/lib/supabase/types";
+import { bulkArchive, bulkDelete, bulkPublish, bulkUnpublish } from "./actions";
 
 export const metadata: Metadata = {
   title: "Products — Admin",
@@ -37,7 +38,7 @@ const inputClass =
   "rounded-s border border-line-strong bg-bg-1 px-3.5 py-2.5 text-sm text-text-0 placeholder:text-text-2 focus:border-brass focus:outline-none";
 
 export default async function AdminProductsListPage({ searchParams }: PageProps) {
-  await requireRole("editor", "admin");
+  const profile = await requireRole("editor", "admin");
   const { page, status, brand, cat, q } = await searchParams;
   const pageNum = Math.max(1, Number(page) || 1);
   const statusFilter = isProductStatus(status) ? status : undefined;
@@ -100,47 +101,73 @@ export default async function AdminProductsListPage({ searchParams }: PageProps)
 
       <div className="mt-6 text-sm text-text-2">{total.toLocaleString()} products</div>
 
-      <div className="mt-3 overflow-x-auto rounded-m border border-line">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-line bg-bg-1 text-left font-mono text-[11px] uppercase tracking-[.06em] text-text-2">
-              <th className="px-4 py-3 font-medium">SKU</th>
-              <th className="px-4 py-3 font-medium">Description</th>
-              <th className="px-4 py-3 font-medium">Brand</th>
-              <th className="px-4 py-3 font-medium">Category</th>
-              <th className="px-4 py-3 font-medium">Quantity</th>
-              <th className="px-4 py-3 font-medium">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((p) => (
-              <tr key={p.id} className="border-b border-line bg-bg-0 last:border-0 hover:bg-bg-1">
-                <td className="whitespace-nowrap px-4 py-3 font-mono text-brass">
-                  <Link href={`/admin/products/${p.id}/edit`} className="hover:underline">
-                    {p.oemPartNumber}
-                  </Link>
-                </td>
-                <td className="px-4 py-3 text-text-0">{p.description}</td>
-                <td className="whitespace-nowrap px-4 py-3 text-text-1">{p.brandName}</td>
-                <td className="whitespace-nowrap px-4 py-3 text-text-2">{p.equipmentCategoryName}</td>
-                <td className="whitespace-nowrap px-4 py-3">
-                  <AvailabilityBadge quantity={p.quantity} />
-                </td>
-                <td className="whitespace-nowrap px-4 py-3">
-                  <span className="tag">{STATUS_LABEL[p.status]}</span>
-                </td>
+      <form>
+        <div className="mt-3 overflow-x-auto rounded-m border border-line">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-line bg-bg-1 text-left font-mono text-[11px] uppercase tracking-[.06em] text-text-2">
+                <th className="w-10 px-4 py-3"></th>
+                <th className="px-4 py-3 font-medium">SKU</th>
+                <th className="px-4 py-3 font-medium">Description</th>
+                <th className="px-4 py-3 font-medium">Brand</th>
+                <th className="px-4 py-3 font-medium">Category</th>
+                <th className="px-4 py-3 font-medium">Quantity</th>
+                <th className="px-4 py-3 font-medium">Status</th>
               </tr>
-            ))}
-            {rows.length === 0 ? (
-              <tr>
-                <td colSpan={6} className="px-4 py-10 text-center text-text-2">
-                  No products match.
-                </td>
-              </tr>
+            </thead>
+            <tbody>
+              {rows.map((p) => (
+                <tr key={p.id} className="border-b border-line bg-bg-0 last:border-0 hover:bg-bg-1">
+                  <td className="px-4 py-3">
+                    <input type="checkbox" name="ids" value={p.id} className="accent-brass" />
+                  </td>
+                  <td className="whitespace-nowrap px-4 py-3 font-mono text-brass">
+                    <Link href={`/admin/products/${p.id}/edit`} className="hover:underline">
+                      {p.oemPartNumber}
+                    </Link>
+                  </td>
+                  <td className="px-4 py-3 text-text-0">{p.description}</td>
+                  <td className="whitespace-nowrap px-4 py-3 text-text-1">{p.brandName}</td>
+                  <td className="whitespace-nowrap px-4 py-3 text-text-2">{p.equipmentCategoryName}</td>
+                  <td className="whitespace-nowrap px-4 py-3">
+                    <AvailabilityBadge quantity={p.quantity} />
+                  </td>
+                  <td className="whitespace-nowrap px-4 py-3">
+                    <span className="tag">{STATUS_LABEL[p.status]}</span>
+                  </td>
+                </tr>
+              ))}
+              {rows.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="px-4 py-10 text-center text-text-2">
+                    No products match.
+                  </td>
+                </tr>
+              ) : null}
+            </tbody>
+          </table>
+        </div>
+
+        {rows.length > 0 ? (
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <span className="text-[13px] text-text-2">Selected rows:</span>
+            <button type="submit" formAction={bulkPublish} className="btn btn-ghost btn-sm">
+              Publish
+            </button>
+            <button type="submit" formAction={bulkUnpublish} className="btn btn-ghost btn-sm">
+              Unpublish
+            </button>
+            <button type="submit" formAction={bulkArchive} className="btn btn-ghost btn-sm">
+              Archive
+            </button>
+            {profile.role === "admin" ? (
+              <button type="submit" formAction={bulkDelete} className="btn btn-ghost btn-sm">
+                Delete
+              </button>
             ) : null}
-          </tbody>
-        </table>
-      </div>
+          </div>
+        ) : null}
+      </form>
 
       <div className="mt-4 flex items-center justify-between text-sm text-text-2">
         <span>

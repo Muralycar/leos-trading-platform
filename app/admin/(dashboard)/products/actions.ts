@@ -127,3 +127,61 @@ export async function updateProductCategories(id: string, formData: FormData) {
   revalidatePublicProductPaths();
   redirect(`/admin/products/${id}/edit?saved=1`);
 }
+
+function selectedIds(formData: FormData): string[] {
+  return formData.getAll("ids").map(String);
+}
+
+export async function bulkPublish(formData: FormData) {
+  await requireRole("editor", "admin");
+  const ids = selectedIds(formData);
+  if (ids.length === 0) return;
+
+  const supabase = await createServerSupabaseClient();
+  const { error } = await supabase.from("products").update({ status: "published" }).in("id", ids);
+  if (error) throw error;
+
+  revalidatePath("/admin/products");
+  revalidatePublicProductPaths();
+}
+
+/** Sets status back to draft — the natural published<->draft toggle, distinct from the terminal "archived" state. */
+export async function bulkUnpublish(formData: FormData) {
+  await requireRole("editor", "admin");
+  const ids = selectedIds(formData);
+  if (ids.length === 0) return;
+
+  const supabase = await createServerSupabaseClient();
+  const { error } = await supabase.from("products").update({ status: "draft" }).in("id", ids);
+  if (error) throw error;
+
+  revalidatePath("/admin/products");
+  revalidatePublicProductPaths();
+}
+
+export async function bulkArchive(formData: FormData) {
+  await requireRole("editor", "admin");
+  const ids = selectedIds(formData);
+  if (ids.length === 0) return;
+
+  const supabase = await createServerSupabaseClient();
+  const { error } = await supabase.from("products").update({ status: "archived" }).in("id", ids);
+  if (error) throw error;
+
+  revalidatePath("/admin/products");
+  revalidatePublicProductPaths();
+}
+
+/** Admin-only, per the confirmed permission split — re-checked here regardless of whether the UI shows this button. */
+export async function bulkDelete(formData: FormData) {
+  await requireRole("admin");
+  const ids = selectedIds(formData);
+  if (ids.length === 0) return;
+
+  const supabase = await createServerSupabaseClient();
+  const { error } = await supabase.from("products").delete().in("id", ids);
+  if (error) throw error;
+
+  revalidatePath("/admin/products");
+  revalidatePublicProductPaths();
+}
