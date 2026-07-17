@@ -437,6 +437,24 @@ export interface Database {
         };
         Relationships: [];
       };
+      product_public_view: {
+        Row: {
+          id: string;
+          oem_part_number: string;
+          oem_part_number_normalized: string;
+          description: string;
+          brand_slug: string;
+          brand_name: string;
+          equipment_category_slug: string;
+          equipment_category_name: string;
+          product_category_slug: string | null;
+          product_category_name: string | null;
+          image_path: string | null;
+          quantity: number;
+          status: AvailabilityStatus;
+        };
+        Relationships: [];
+      };
     };
     Functions: Record<string, never>;
     Enums: {
