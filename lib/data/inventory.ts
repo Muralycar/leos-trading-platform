@@ -90,35 +90,41 @@ const CATEGORY_ORDER = Object.keys(CATEGORY_DISPLAY);
 // "Live" vs "sourcing" is never hardcoded — it's computed from whether the
 // category actually has published SKUs, so a category goes live the moment
 // real inventory is imported for it, with no code change.
+//
+// Counts come from getAllPublishedProducts() (itself unstable_cache'd,
+// tagged "catalog") grouped in memory, not from a per-category count(*)
+// query — this used to be 1 query + one count(*) round trip per category
+// (7 total, ~440ms). Both this function and getAllPublishedProducts share
+// the same cache tag, so they invalidate together and can never disagree
+// about what "currently published" means.
 export const getEquipmentCategories = cache(
   unstable_cache(
     async (): Promise<EquipmentCategory[]> => {
       const supabase = createAnonSupabaseClient();
-      const { data: categories, error } = await supabase.from("equipment_categories").select("id, name, slug");
+      const [{ data: categories, error }, products] = await Promise.all([
+        supabase.from("equipment_categories").select("id, name, slug"),
+        getAllPublishedProducts(),
+      ]);
       if (error) throw error;
+
+      const countBySlug = new Map<string, number>();
+      for (const p of products) countBySlug.set(p.equipmentCategorySlug, (countBySlug.get(p.equipmentCategorySlug) ?? 0) + 1);
 
       const sorted = [...categories].sort((a, b) => CATEGORY_ORDER.indexOf(a.slug) - CATEGORY_ORDER.indexOf(b.slug));
 
-      return Promise.all(
-        sorted.map(async (c) => {
-          const { count, error: countError } = await supabase
-            .from("product_public_view")
-            .select("*", { count: "exact", head: true })
-            .eq("equipment_category_slug", c.slug);
-          if (countError) throw countError;
-
-          const display = CATEGORY_DISPLAY[c.slug];
-          return {
-            id: c.id,
-            name: c.name,
-            slug: c.slug,
-            status: (count ?? 0) > 0 ? "live" : "sourcing",
-            brandsLabel: display?.brandsLabel ?? "Multi-brand sourcing network",
-            skuCount: count ?? 0,
-            imagePath: display?.imagePath ?? null,
-          } satisfies EquipmentCategory;
-        }),
-      );
+      return sorted.map((c) => {
+        const count = countBySlug.get(c.slug) ?? 0;
+        const display = CATEGORY_DISPLAY[c.slug];
+        return {
+          id: c.id,
+          name: c.name,
+          slug: c.slug,
+          status: count > 0 ? "live" : "sourcing",
+          brandsLabel: display?.brandsLabel ?? "Multi-brand sourcing network",
+          skuCount: count,
+          imagePath: display?.imagePath ?? null,
+        } satisfies EquipmentCategory;
+      });
     },
     ["public-equipment-categories"],
     { tags: [CATALOG_CACHE_TAG] },
