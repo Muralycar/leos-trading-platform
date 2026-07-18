@@ -160,6 +160,9 @@ export default async function ProductPage({ params }: PageProps) {
                 Email Inquiry
               </a>
             </div>
+            <p className="mt-3 max-w-[38ch] text-[12.5px] text-text-2">
+              WhatsApp and email open your own app directly — for a request our team logs and tracks, use the form.
+            </p>
           </div>
           <div className="rounded-m border border-line bg-bg-0 p-8">
             <RfqForm variant="product" prefillPartNumber={product.oemPartNumber} />

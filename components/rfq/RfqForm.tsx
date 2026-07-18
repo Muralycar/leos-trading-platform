@@ -76,10 +76,13 @@ export function RfqForm({
 
   if (status === "success") {
     return (
-      <div className={`py-10 text-center ${className}`}>
+      <div
+        role="status"
+        className={`rounded-m border border-ok/40 bg-ok/10 px-6 py-10 text-center ${className}`}
+      >
         <CheckIcon className="mx-auto mb-4 h-10 w-10 text-ok" />
-        <h3>Request received</h3>
-        <p className="mx-auto mt-2 max-w-[40ch] text-sm">
+        <h3 className="text-text-0">Request received</h3>
+        <p className="mx-auto mt-2 max-w-[40ch] text-sm text-text-1">
           Our team will confirm availability and pricing shortly. For urgent requirements, use WhatsApp.
         </p>
       </div>

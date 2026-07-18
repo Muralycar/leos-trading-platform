@@ -58,6 +58,9 @@ export default async function ContactPage() {
             <a href={phoneHref} className="btn btn-ghost mt-2 w-fit">
               Call Now
             </a>
+            <p className="max-w-[42ch] text-[12.5px] text-text-2">
+              Calling, WhatsApp, and email open your own app directly — for a request our team logs and tracks, use the form.
+            </p>
           </div>
           <div className="rounded-m border border-line bg-bg-1 p-8">
             <RfqForm variant="contact" />
