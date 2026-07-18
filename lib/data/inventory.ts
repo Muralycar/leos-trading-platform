@@ -248,12 +248,10 @@ export const getTotalSkuCount = cache(async (): Promise<number> => {
   return count ?? 0;
 });
 
+/** Reuses the cached getAllPublishedProducts() list rather than a second full paginated fetch of the same rows — this used to run its own independent selectAllPaginated over product_public_view. */
 export const getTotalUnitCount = cache(async (): Promise<number> => {
-  const supabase = createAnonSupabaseClient();
-  const rows = await selectAllPaginated<{ id: string; quantity: number }>((from, to) =>
-    supabase.from("product_public_view").select("id, quantity").order("id", { ascending: true }).range(from, to),
-  );
-  return rows.reduce((sum, r) => sum + r.quantity, 0);
+  const products = await getAllPublishedProducts();
+  return products.reduce((sum, p) => sum + p.quantity, 0);
 });
 
 export const getLiveBrandCount = cache(async (): Promise<number> => {
