@@ -14,6 +14,8 @@
 //   a spreadsheet's free-text "Condition" column can't be losslessly
 //   coerced into that enum, so it always means the batch's condition).
 
+import { optionalStr, optionalNum, optionalInt } from "@/lib/admin/import/coerce";
+
 export type ImportFieldTarget = "product" | "batch";
 
 export interface ImportTargetField {
@@ -55,4 +57,17 @@ export const UPDATABLE_PRODUCT_FIELD_KEYS = IMPORT_TARGET_FIELDS.filter((f) => f
 
 export function importFieldLabel(key: string): string {
   return IMPORT_TARGET_FIELDS.find((f) => f.key === key)?.label ?? key;
+}
+
+/**
+ * Coerces a raw cell value to the correctly-typed value for a given
+ * UPDATABLE_PRODUCT_FIELD_KEYS member — weight/price are numeric,
+ * min_order_qty is integer, everything else is text. One place for this
+ * mapping so the "update all mapped fields" write path and any future
+ * caller can't drift into disagreeing about a field's type.
+ */
+export function coerceProductFieldValue(key: string, rawValue: unknown): string | number | null {
+  if (key === "weight" || key === "price") return optionalNum(rawValue);
+  if (key === "min_order_qty") return optionalInt(rawValue);
+  return optionalStr(rawValue);
 }

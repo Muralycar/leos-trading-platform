@@ -31,3 +31,8 @@ export function requiredQuantity(value: unknown): number {
   const n = optionalNum(value);
   return n === null ? 0 : Math.max(0, Math.trunc(n));
 }
+
+/** snake_case column name -> camelCase, for reading MatchedProduct's fields by a dynamic import-field key. */
+export function toCamel(key: string): string {
+  return key.replace(/_([a-z])/g, (_, c: string) => c.toUpperCase());
+}

@@ -1,4 +1,5 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { chunkArray, FILTER_CHUNK_SIZE } from "@/lib/admin/import/chunk";
 import type { Database, ImportJobStatus, ProductStatus } from "@/lib/supabase/types";
 
 type ImportJobRow = Database["public"]["Tables"]["import_jobs"]["Row"];
@@ -138,12 +139,41 @@ export async function getAffectedProducts(jobId: string): Promise<AffectedProduc
   const productIds = [...new Set((batchRows ?? []).map((b) => b.product_id))];
   if (productIds.length === 0) return [];
 
-  const { data: products, error: productsError } = await supabase
-    .from("product_admin_view")
-    .select("id, oem_part_number, description, quantity, status")
-    .in("id", productIds)
-    .order("oem_part_number");
-  if (productsError) throw productsError;
+  // Chunked — a large import can touch thousands of products, and .in()
+  // values travel in the request URL, not the body.
+  const results: AffectedProduct[] = [];
+  for (const idChunk of chunkArray(productIds, FILTER_CHUNK_SIZE)) {
+    const { data: products, error: productsError } = await supabase
+      .from("product_admin_view")
+      .select("id, oem_part_number, description, quantity, status")
+      .in("id", idChunk);
+    if (productsError) throw productsError;
+    results.push(...products.map((p) => ({ id: p.id, oemPartNumber: p.oem_part_number, description: p.description, quantity: p.quantity, status: p.status })));
+  }
 
-  return products.map((p) => ({ id: p.id, oemPartNumber: p.oem_part_number, description: p.description, quantity: p.quantity, status: p.status }));
+  results.sort((a, b) => a.oemPartNumber.localeCompare(b.oemPartNumber));
+  return results;
+}
+
+/**
+ * Report fields every status-transition write must carry forward
+ * unchanged — Postgres jsonb columns are replaced wholesale on update, so
+ * every writer that touches import_jobs.report needs the previous fields
+ * spread back in explicitly or they'd be silently dropped. Shared by
+ * computePreview/resetPreview/cancelImport (preview/actions.ts) and
+ * runConfirmImport (confirm.ts).
+ */
+export function reportBase(job: ImportJobListItem) {
+  return {
+    headers: job.headers,
+    duplicateOfJobId: null as string | null,
+    duplicateOfFileName: job.duplicateOfFileName,
+    duplicateOfCreatedAt: job.duplicateOfCreatedAt,
+    mapping: job.mapping,
+    validCount: job.validCount,
+    duplicateCount: job.duplicateCount,
+    errorCount: job.errorCount,
+    errorSamples: job.errorSamples,
+    repeatedPartNumbers: job.repeatedPartNumbers,
+  };
 }

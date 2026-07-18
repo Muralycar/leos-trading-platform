@@ -502,7 +502,20 @@ export interface Database {
         Relationships: [];
       };
     };
-    Functions: Record<string, never>;
+    Functions: {
+      // Real bulk UPDATEs (migration 0010) — see lib/admin/import/rows.ts
+      // and lib/admin/import/confirm.ts for why a REST upsert can't safely
+      // do this (Postgres validates NOT NULL on the tentative INSERT row
+      // before ON CONFLICT decides to redirect to UPDATE).
+      bulk_set_import_row_outcome: {
+        Args: { updates: { id: string; outcome: string; mapped_product_id: string | null }[] };
+        Returns: void;
+      };
+      bulk_update_product_fields: {
+        Args: { updates: Record<string, string | number | null>[] };
+        Returns: void;
+      };
+    };
     Enums: {
       product_status: ProductStatus;
       product_condition: ProductCondition;

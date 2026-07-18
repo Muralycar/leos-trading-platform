@@ -42,13 +42,17 @@ function mapRow(row: ProductAdminRow): MatchedProduct {
   };
 }
 
+type SupabaseClientLike = Awaited<ReturnType<typeof createServerSupabaseClient>>;
+
 /**
  * Every existing product for this brand, keyed by normalized OEM part
  * number — fetched once per preview/confirm run rather than one query per
  * row, since a brand can have 1000+ products (Iveco alone has 1,561).
+ * Accepts an optional injected client for the same reason as
+ * listMatchableRows in lib/admin/import/rows.ts.
  */
-export async function getBrandProductsByNormalizedKey(brandId: string): Promise<Map<string, MatchedProduct>> {
-  const supabase = await createServerSupabaseClient();
+export async function getBrandProductsByNormalizedKey(brandId: string, client?: SupabaseClientLike): Promise<Map<string, MatchedProduct>> {
+  const supabase = client ?? (await createServerSupabaseClient());
   const rows = await selectAllPaginated<ProductAdminRow>((from, to) =>
     supabase.from("product_admin_view").select("*").eq("brand_id", brandId).order("id").range(from, to),
   );
