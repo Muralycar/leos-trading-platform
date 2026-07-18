@@ -16,7 +16,15 @@ export type BrandStatus = "active" | "archived";
 export type IdentifierType = "alternative" | "superseded" | "cross_reference";
 export type RfqSource = "product_page" | "sourcing_request" | "contact" | "search_no_result";
 export type RfqStatus = "new" | "in_progress" | "quoted" | "closed";
-export type ImportJobStatus = "pending" | "mapped" | "validated" | "previewed" | "imported" | "failed" | "cancelled";
+export type ImportJobStatus =
+  | "pending"
+  | "mapped"
+  | "validated"
+  | "previewed"
+  | "imported"
+  | "failed"
+  | "cancelled"
+  | "rolled_back";
 export type ImportRowStatus =
   | "valid"
   | "duplicate"
