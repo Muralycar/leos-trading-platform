@@ -13,6 +13,15 @@ export interface RepeatedPartNumber {
   count: number;
 }
 
+export interface MissingFromFileProduct {
+  id: string;
+  oemPartNumber: string;
+  description: string;
+  quantity: number;
+}
+
+export type ImportBehavior = "skip" | "replace" | "add" | "update_fields";
+
 export interface ImportJobListItem {
   id: string;
   brandId: string | null;
@@ -33,6 +42,13 @@ export interface ImportJobListItem {
   errorCount: number | null;
   errorSamples: ImportRowErrorSample[] | null;
   repeatedPartNumbers: RepeatedPartNumber[] | null;
+  /** Set once Checkpoint 4's preview has been computed. */
+  behavior: ImportBehavior | null;
+  createCount: number | null;
+  updateCount: number | null;
+  unchangedCount: number | null;
+  skipCount: number | null;
+  missingFromFile: MissingFromFileProduct[] | null;
   createdAt: string;
 }
 
@@ -57,6 +73,12 @@ function mapRow(row: ImportJobRow, brandNameById: Map<string, string>): ImportJo
     errorCount: typeof report.errorCount === "number" ? report.errorCount : null,
     errorSamples: Array.isArray(report.errorSamples) ? (report.errorSamples as ImportRowErrorSample[]) : null,
     repeatedPartNumbers: Array.isArray(report.repeatedPartNumbers) ? (report.repeatedPartNumbers as RepeatedPartNumber[]) : null,
+    behavior: typeof report.behavior === "string" ? (report.behavior as ImportBehavior) : null,
+    createCount: typeof report.createCount === "number" ? report.createCount : null,
+    updateCount: typeof report.updateCount === "number" ? report.updateCount : null,
+    unchangedCount: typeof report.unchangedCount === "number" ? report.unchangedCount : null,
+    skipCount: typeof report.skipCount === "number" ? report.skipCount : null,
+    missingFromFile: Array.isArray(report.missingFromFile) ? (report.missingFromFile as MissingFromFileProduct[]) : null,
     createdAt: row.created_at,
   };
 }

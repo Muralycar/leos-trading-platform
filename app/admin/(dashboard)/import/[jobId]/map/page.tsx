@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { requireRole } from "@/lib/admin/auth";
 import { getImportJob } from "@/lib/admin/import/jobs";
@@ -154,6 +155,7 @@ function EditableForm({
 }
 
 function ValidatedView({
+  jobId,
   job,
   headers,
   resetAction,
@@ -222,11 +224,16 @@ function ValidatedView({
         </div>
       ) : null}
 
-      <form action={resetAction}>
-        <button type="submit" className="btn btn-ghost btn-sm">
-          Re-map This File
-        </button>
-      </form>
+      <div className="flex flex-wrap gap-3">
+        <Link href={`/admin/import/${jobId}/preview`} className="btn btn-primary btn-sm">
+          Continue to Preview
+        </Link>
+        <form action={resetAction}>
+          <button type="submit" className="btn btn-ghost btn-sm">
+            Re-map This File
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
