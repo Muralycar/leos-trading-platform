@@ -210,6 +210,11 @@ export async function confirmImport(jobId: string) {
 
   const batchesToInsert: ReturnType<typeof batchInsertFor>[] = [];
   const productsToSupersede = new Set<string>();
+  // computePreview only resolves mapped_product_id for matched (update) rows
+  // — a "create" row has no product to point to until it's actually
+  // inserted here. Backfilled after the fact so rollback and the job detail
+  // page can tell exactly which products this job created vs. only updated.
+  const createdRowProductLinks: { id: string; productId: string }[] = [];
 
   for (const [, groupRows] of groups) {
     const outcome = groupRows[0].outcome;
@@ -249,6 +254,7 @@ export async function confirmImport(jobId: string) {
       }
 
       for (const row of groupRows) batchesToInsert.push(batchInsertFor(row, product.id));
+      createdRowProductLinks.push(...groupRows.map((r) => ({ id: r.id, productId: product.id })));
     } else {
       // outcome === "update" — mapped_product_id was resolved and stored on every row in this group during computePreview.
       const productId = first.mappedProductId;
@@ -280,6 +286,12 @@ export async function confirmImport(jobId: string) {
         }
       }
     }
+  }
+
+  if (createdRowProductLinks.length > 0) {
+    const payload = createdRowProductLinks.map((l) => ({ id: l.id, mapped_product_id: l.productId })) as unknown as Database["public"]["Tables"]["import_rows"]["Insert"][];
+    const { error: linkError } = await supabase.from("import_rows").upsert(payload, { onConflict: "id" });
+    if (linkError) throw linkError;
   }
 
   if (productsToSupersede.size > 0) {

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { requireRole } from "@/lib/admin/auth";
 import { getImportJob } from "@/lib/admin/import/jobs";
@@ -49,8 +48,9 @@ export default async function AdminImportPreviewPage({ params, searchParams }: P
 
   const job = await getImportJob(jobId);
   if (!job) redirect("/admin/import?error=" + encodeURIComponent("Import job not found."));
-  if (job.status === "mapped") redirect(`/admin/import/${jobId}/map`);
-  if (job.status !== "validated" && job.status !== "previewed" && job.status !== "imported" && job.status !== "cancelled") {
+  if (job.status === "pending" || job.status === "mapped") redirect(`/admin/import/${jobId}/map`);
+  if (job.status === "imported" || job.status === "cancelled" || job.status === "rolled_back") redirect(`/admin/import/${jobId}`);
+  if (job.status !== "validated" && job.status !== "previewed") {
     redirect("/admin/import?error=" + encodeURIComponent("This job isn't ready for preview."));
   }
 
@@ -78,12 +78,8 @@ export default async function AdminImportPreviewPage({ params, searchParams }: P
 
       {job.status === "validated" ? (
         <BehaviorForm job={job} action={boundCompute} />
-      ) : job.status === "previewed" ? (
-        <PreviewResults jobId={jobId} job={job} resetAction={boundReset} cancelAction={boundCancel} confirmAction={boundConfirm} />
-      ) : job.status === "imported" ? (
-        <ImportedSummary job={job} />
       ) : (
-        <p className="mt-6 text-sm text-text-2">This import was cancelled. No Products or Inventory Batches were changed.</p>
+        <PreviewResults jobId={jobId} job={job} resetAction={boundReset} cancelAction={boundCancel} confirmAction={boundConfirm} />
       )}
     </div>
   );
@@ -246,20 +242,6 @@ async function PreviewResults({
           </button>
         </form>
       </div>
-    </div>
-  );
-}
-
-function ImportedSummary({ job }: { job: ImportJobListItem }) {
-  return (
-    <div className="mt-6 flex flex-col gap-4">
-      <p className="rounded-s border border-line-strong bg-bg-1 px-3.5 py-3 text-sm text-text-1">
-        This import was completed. {job.createCount ?? 0} products created, {job.updateCount ?? 0} updated, {job.unchangedCount ?? 0}{" "}
-        left unchanged, {job.skipCount ?? 0} skipped.
-      </p>
-      <Link href="/admin/products?status=draft" className="btn btn-primary self-start">
-        Review New Draft Products
-      </Link>
     </div>
   );
 }

@@ -5,7 +5,8 @@ import { listImportJobs } from "@/lib/admin/import/jobs";
 import type { ImportJobStatus } from "@/lib/supabase/types";
 
 const MAPPABLE_STATUSES: ImportJobStatus[] = ["mapped", "validated"];
-const PREVIEWABLE_STATUSES: ImportJobStatus[] = ["previewed", "imported", "cancelled"];
+const PREVIEWABLE_STATUSES: ImportJobStatus[] = ["previewed"];
+const DETAIL_STATUSES: ImportJobStatus[] = ["imported", "cancelled", "rolled_back"];
 
 export const metadata: Metadata = {
   title: "Import Jobs — Admin",
@@ -96,6 +97,10 @@ export default async function AdminImportListPage({ searchParams }: PageProps) {
                     </Link>
                   ) : PREVIEWABLE_STATUSES.includes(job.status) ? (
                     <Link href={`/admin/import/${job.id}/preview`} className="text-brass hover:underline">
+                      {job.fileName}
+                    </Link>
+                  ) : DETAIL_STATUSES.includes(job.status) ? (
+                    <Link href={`/admin/import/${job.id}`} className="text-brass hover:underline">
                       {job.fileName}
                     </Link>
                   ) : (

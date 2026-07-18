@@ -1,5 +1,5 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
-import type { Database, ImportJobStatus } from "@/lib/supabase/types";
+import type { Database, ImportJobStatus, ProductStatus } from "@/lib/supabase/types";
 
 type ImportJobRow = Database["public"]["Tables"]["import_jobs"]["Row"];
 
@@ -113,4 +113,37 @@ export async function getImportJob(id: string): Promise<ImportJobListItem | unde
   ]);
   if (error) throw error;
   return data ? mapRow(data, brandNameById) : undefined;
+}
+
+export interface AffectedProduct {
+  id: string;
+  oemPartNumber: string;
+  description: string;
+  quantity: number;
+  status: ProductStatus;
+}
+
+/**
+ * Every product this job wrote a batch for — new or matched — found via
+ * inventory_batches.import_job_id rather than import_rows, since every
+ * batch this job created (for both a brand-new product and a matched one)
+ * carries that tag regardless of outcome. Naturally returns nothing once a
+ * job has been rolled back, since its batches no longer exist by then.
+ */
+export async function getAffectedProducts(jobId: string): Promise<AffectedProduct[]> {
+  const supabase = await createServerSupabaseClient();
+  const { data: batchRows, error: batchError } = await supabase.from("inventory_batches").select("product_id").eq("import_job_id", jobId);
+  if (batchError) throw batchError;
+
+  const productIds = [...new Set((batchRows ?? []).map((b) => b.product_id))];
+  if (productIds.length === 0) return [];
+
+  const { data: products, error: productsError } = await supabase
+    .from("product_admin_view")
+    .select("id, oem_part_number, description, quantity, status")
+    .in("id", productIds)
+    .order("oem_part_number");
+  if (productsError) throw productsError;
+
+  return products.map((p) => ({ id: p.id, oemPartNumber: p.oem_part_number, description: p.description, quantity: p.quantity, status: p.status }));
 }
