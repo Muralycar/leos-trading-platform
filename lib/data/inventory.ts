@@ -7,14 +7,30 @@
 // read cookies from. Every export is async and wrapped in React's cache()
 // so multiple components (Header, Footer, CategoryGrid, ...) independently
 // calling the same lookup only hit the database once per request.
+//
+// getBrands/getEquipmentCategories/getSiteSettings/getAllPublishedProducts
+// are additionally wrapped in unstable_cache — React's cache() only
+// dedupes within one request, which is invisible on statically-generated
+// pages (the data is fetched once at build time regardless) but does
+// nothing for dynamic routes: /api/search re-fetched the entire 2,200+
+// product catalog from Supabase on every single request (measured ~1s,
+// every time, never faster) before this change. unstable_cache persists
+// the result across requests, tagged "catalog" so it invalidates in
+// lockstep with the exact same admin actions that already call
+// revalidatePublicProductPaths()/revalidateTag("catalog") — freshness
+// behavior for admins is unchanged, only repeat public requests get faster.
 
 import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { createAnonSupabaseClient } from "@/lib/supabase/server";
 import { selectAllPaginated } from "@/lib/supabase/paginate";
 import { normalizePartNumber } from "@/lib/part-number";
 import { getPublicMediaUrl } from "@/lib/supabase/storage";
 import type { Database } from "@/lib/supabase/types";
 import type { Brand, EquipmentCategory, Product, SiteSettings } from "@/lib/types";
+
+/** Exported so lib/admin/revalidate.ts can invalidate this exact tag rather than duplicating the string. */
+export const CATALOG_CACHE_TAG = "catalog";
 
 type ProductViewRow = Database["public"]["Views"]["product_public_view"]["Row"];
 
@@ -39,12 +55,18 @@ function mapViewRowToProduct(row: ProductViewRow): Product {
   };
 }
 
-export const getBrands = cache(async (): Promise<Brand[]> => {
-  const supabase = createAnonSupabaseClient();
-  const { data, error } = await supabase.from("brands").select("id, name, slug").eq("status", "active").order("name");
-  if (error) throw error;
-  return data;
-});
+export const getBrands = cache(
+  unstable_cache(
+    async (): Promise<Brand[]> => {
+      const supabase = createAnonSupabaseClient();
+      const { data, error } = await supabase.from("brands").select("id, name, slug").eq("status", "active").order("name");
+      if (error) throw error;
+      return data;
+    },
+    ["public-brands"],
+    { tags: [CATALOG_CACHE_TAG] },
+  ),
+);
 
 export const getBrandBySlug = cache(async (slug: string): Promise<Brand | undefined> => {
   const brands = await getBrands();
@@ -68,47 +90,59 @@ const CATEGORY_ORDER = Object.keys(CATEGORY_DISPLAY);
 // "Live" vs "sourcing" is never hardcoded — it's computed from whether the
 // category actually has published SKUs, so a category goes live the moment
 // real inventory is imported for it, with no code change.
-export const getEquipmentCategories = cache(async (): Promise<EquipmentCategory[]> => {
-  const supabase = createAnonSupabaseClient();
-  const { data: categories, error } = await supabase.from("equipment_categories").select("id, name, slug");
-  if (error) throw error;
+export const getEquipmentCategories = cache(
+  unstable_cache(
+    async (): Promise<EquipmentCategory[]> => {
+      const supabase = createAnonSupabaseClient();
+      const { data: categories, error } = await supabase.from("equipment_categories").select("id, name, slug");
+      if (error) throw error;
 
-  const sorted = [...categories].sort((a, b) => CATEGORY_ORDER.indexOf(a.slug) - CATEGORY_ORDER.indexOf(b.slug));
+      const sorted = [...categories].sort((a, b) => CATEGORY_ORDER.indexOf(a.slug) - CATEGORY_ORDER.indexOf(b.slug));
 
-  return Promise.all(
-    sorted.map(async (c) => {
-      const { count, error: countError } = await supabase
-        .from("product_public_view")
-        .select("*", { count: "exact", head: true })
-        .eq("equipment_category_slug", c.slug);
-      if (countError) throw countError;
+      return Promise.all(
+        sorted.map(async (c) => {
+          const { count, error: countError } = await supabase
+            .from("product_public_view")
+            .select("*", { count: "exact", head: true })
+            .eq("equipment_category_slug", c.slug);
+          if (countError) throw countError;
 
-      const display = CATEGORY_DISPLAY[c.slug];
+          const display = CATEGORY_DISPLAY[c.slug];
+          return {
+            id: c.id,
+            name: c.name,
+            slug: c.slug,
+            status: (count ?? 0) > 0 ? "live" : "sourcing",
+            brandsLabel: display?.brandsLabel ?? "Multi-brand sourcing network",
+            skuCount: count ?? 0,
+            imagePath: display?.imagePath ?? null,
+          } satisfies EquipmentCategory;
+        }),
+      );
+    },
+    ["public-equipment-categories"],
+    { tags: [CATALOG_CACHE_TAG] },
+  ),
+);
+
+export const getSiteSettings = cache(
+  unstable_cache(
+    async (): Promise<SiteSettings> => {
+      const supabase = createAnonSupabaseClient();
+      const { data, error } = await supabase.from("settings").select("*").single();
+      if (error) throw error;
       return {
-        id: c.id,
-        name: c.name,
-        slug: c.slug,
-        status: (count ?? 0) > 0 ? "live" : "sourcing",
-        brandsLabel: display?.brandsLabel ?? "Multi-brand sourcing network",
-        skuCount: count ?? 0,
-        imagePath: display?.imagePath ?? null,
-      } satisfies EquipmentCategory;
-    }),
-  );
-});
-
-export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
-  const supabase = createAnonSupabaseClient();
-  const { data, error } = await supabase.from("settings").select("*").single();
-  if (error) throw error;
-  return {
-    phonePrimary: data.phone_primary,
-    phoneSecondary: data.phone_secondary ?? "",
-    whatsappNumber: data.whatsapp_number,
-    email: data.email,
-    address: data.address,
-  };
-});
+        phonePrimary: data.phone_primary,
+        phoneSecondary: data.phone_secondary ?? "",
+        whatsappNumber: data.whatsapp_number,
+        email: data.email,
+        address: data.address,
+      };
+    },
+    ["public-site-settings"],
+    { tags: [CATALOG_CACHE_TAG] },
+  ),
+);
 
 export const getProductByBrandAndSku = cache(async (brandSlug: string, skuParam: string): Promise<Product | undefined> => {
   const supabase = createAnonSupabaseClient();
@@ -138,13 +172,19 @@ export const getProductsByBrand = cache(async (brandSlug: string): Promise<Produ
 });
 
 /** Every published product, for /api/search to filter/rank in memory. */
-export const getAllPublishedProducts = cache(async (): Promise<Product[]> => {
-  const supabase = createAnonSupabaseClient();
-  const rows = await selectAllPaginated<ProductViewRow>((from, to) =>
-    supabase.from("product_public_view").select("*").order("id", { ascending: true }).range(from, to),
-  );
-  return rows.map(mapViewRowToProduct);
-});
+export const getAllPublishedProducts = cache(
+  unstable_cache(
+    async (): Promise<Product[]> => {
+      const supabase = createAnonSupabaseClient();
+      const rows = await selectAllPaginated<ProductViewRow>((from, to) =>
+        supabase.from("product_public_view").select("*").order("id", { ascending: true }).range(from, to),
+      );
+      return rows.map(mapViewRowToProduct);
+    },
+    ["public-all-published-products"],
+    { tags: [CATALOG_CACHE_TAG] },
+  ),
+);
 
 /** brand/sku pairs for generateStaticParams — one per published product. */
 export async function getAllProductParams(): Promise<{ brand: string; sku: string }[]> {

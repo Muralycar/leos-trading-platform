@@ -1,4 +1,5 @@
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { CATALOG_CACHE_TAG } from "@/lib/data/inventory";
 
 /**
  * Every admin mutation that touches a product, its batches, or its media
@@ -8,6 +9,12 @@ import { revalidatePath } from "next/cache";
  * after an edit until the next full rebuild. `'page'` mode revalidates
  * every page matching the dynamic segment pattern in one call, so callers
  * don't need to know the specific brand/sku to invalidate the right one.
+ *
+ * Also invalidates the "catalog" unstable_cache tag (lib/data/inventory.ts)
+ * — getAllPublishedProducts/getBrands/getEquipmentCategories/getSiteSettings
+ * now persist across requests for performance, so without this a change
+ * would still show up on rebuilt static pages but not on dynamic routes
+ * like /api/search until the cache's own revalidate window passed.
  */
 export function revalidatePublicProductPaths() {
   revalidatePath("/", "page");
@@ -15,4 +22,5 @@ export function revalidatePublicProductPaths() {
   revalidatePath("/brands", "page");
   revalidatePath("/brands/[brand]", "page");
   revalidatePath("/parts/[brand]/[sku]", "page");
+  revalidateTag(CATALOG_CACHE_TAG);
 }

@@ -2,10 +2,11 @@
 
 import { createHash } from "node:crypto";
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { requireRole } from "@/lib/admin/auth";
 import { parseWorkbook } from "@/lib/admin/import/parseSheet";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { CATALOG_CACHE_TAG } from "@/lib/data/inventory";
 
 const BUCKET = "import-uploads";
 const MAX_FILE_BYTES = 10 * 1024 * 1024;
@@ -50,6 +51,10 @@ async function resolveBrandId(
     newImportError(message);
   }
 
+  // getBrands() now persists across requests (lib/data/inventory.ts) —
+  // without this, a freshly created brand wouldn't appear in public/admin
+  // brand dropdowns until the cache's own revalidate window passed.
+  revalidateTag(CATALOG_CACHE_TAG);
   return data.id;
 }
 
