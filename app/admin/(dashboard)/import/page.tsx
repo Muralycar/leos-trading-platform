@@ -4,6 +4,8 @@ import { requireRole } from "@/lib/admin/auth";
 import { listImportJobs } from "@/lib/admin/import/jobs";
 import type { ImportJobStatus } from "@/lib/supabase/types";
 
+const MAPPABLE_STATUSES: ImportJobStatus[] = ["mapped", "validated"];
+
 export const metadata: Metadata = {
   title: "Import Jobs — Admin",
   robots: { index: false, follow: false },
@@ -86,7 +88,15 @@ export default async function AdminImportListPage({ searchParams }: PageProps) {
             {jobs.map((job) => (
               <tr key={job.id} className="border-b border-line bg-bg-0 last:border-0 hover:bg-bg-1">
                 <td className="whitespace-nowrap px-4 py-3 text-text-1">{job.brandName}</td>
-                <td className="whitespace-nowrap px-4 py-3 font-mono text-text-0">{job.fileName}</td>
+                <td className="whitespace-nowrap px-4 py-3 font-mono text-text-0">
+                  {MAPPABLE_STATUSES.includes(job.status) ? (
+                    <Link href={`/admin/import/${job.id}/map`} className="text-brass hover:underline">
+                      {job.fileName}
+                    </Link>
+                  ) : (
+                    job.fileName
+                  )}
+                </td>
                 <td className="whitespace-nowrap px-4 py-3">
                   <span className="tag">{STATUS_LABEL[job.status]}</span>
                 </td>

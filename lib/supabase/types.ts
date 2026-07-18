@@ -131,6 +131,7 @@ export interface Database {
         Row: {
           id: string;
           brand_id: string | null;
+          equipment_category_id: string | null;
           uploaded_by: string | null;
           file_name: string;
           file_checksum: string | null;
@@ -143,6 +144,7 @@ export interface Database {
         Insert: {
           id?: string;
           brand_id?: string | null;
+          equipment_category_id?: string | null;
           uploaded_by?: string | null;
           file_name: string;
           file_checksum?: string | null;

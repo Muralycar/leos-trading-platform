@@ -3,17 +3,36 @@ import type { Database, ImportJobStatus } from "@/lib/supabase/types";
 
 type ImportJobRow = Database["public"]["Tables"]["import_jobs"]["Row"];
 
+export interface ImportRowErrorSample {
+  rowNumber: number;
+  reason: string;
+}
+
+export interface RepeatedPartNumber {
+  partNumber: string;
+  count: number;
+}
+
 export interface ImportJobListItem {
   id: string;
   brandId: string | null;
   brandName: string;
+  equipmentCategoryId: string | null;
   fileName: string;
+  storagePath: string;
   status: ImportJobStatus;
   rowCount: number | null;
   headers: string[] | null;
   duplicateOfFileName: string | null;
   duplicateOfCreatedAt: string | null;
   parseError: string | null;
+  /** Header text -> target field key, set once mapping (Checkpoint 3) has run. */
+  mapping: Record<string, string> | null;
+  validCount: number | null;
+  duplicateCount: number | null;
+  errorCount: number | null;
+  errorSamples: ImportRowErrorSample[] | null;
+  repeatedPartNumbers: RepeatedPartNumber[] | null;
   createdAt: string;
 }
 
@@ -23,13 +42,21 @@ function mapRow(row: ImportJobRow, brandNameById: Map<string, string>): ImportJo
     id: row.id,
     brandId: row.brand_id,
     brandName: row.brand_id ? (brandNameById.get(row.brand_id) ?? "Unknown brand") : "Unknown brand",
+    equipmentCategoryId: row.equipment_category_id,
     fileName: row.file_name,
+    storagePath: row.storage_path,
     status: row.status,
     rowCount: row.row_count,
     headers: Array.isArray(report.headers) ? (report.headers as string[]) : null,
     duplicateOfFileName: typeof report.duplicateOfFileName === "string" ? report.duplicateOfFileName : null,
     duplicateOfCreatedAt: typeof report.duplicateOfCreatedAt === "string" ? report.duplicateOfCreatedAt : null,
     parseError: typeof report.error === "string" ? report.error : null,
+    mapping: report.mapping && typeof report.mapping === "object" ? (report.mapping as Record<string, string>) : null,
+    validCount: typeof report.validCount === "number" ? report.validCount : null,
+    duplicateCount: typeof report.duplicateCount === "number" ? report.duplicateCount : null,
+    errorCount: typeof report.errorCount === "number" ? report.errorCount : null,
+    errorSamples: Array.isArray(report.errorSamples) ? (report.errorSamples as ImportRowErrorSample[]) : null,
+    repeatedPartNumbers: Array.isArray(report.repeatedPartNumbers) ? (report.repeatedPartNumbers as RepeatedPartNumber[]) : null,
     createdAt: row.created_at,
   };
 }
