@@ -4,15 +4,14 @@ export function Hero() {
   return (
     <section className="relative flex min-h-[92vh] items-end overflow-hidden border-b border-line">
       <Image
-        src="/images/marketing/hero-industrial.png"
+        src="/images/marketing/hero-industrial-new.png"
         alt=""
         fill
         priority
         sizes="100vw"
-        className="object-cover object-center"
+        className="object-cover object-[35%_50%] min-[901px]:object-[45%_50%]"
       />
-      <div className="absolute inset-0 z-[1] bg-[linear-gradient(160deg,theme(colors.bg.2)_0%,theme(colors.bg.0)_70%)] opacity-80 mix-blend-multiply" />
-      <div className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(11,12,14,.55)_0%,rgba(11,12,14,.8)_55%,#0b0c0e_100%)]" />
+      <div className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(11,12,14,.35)_0%,rgba(11,12,14,.5)_45%,rgba(11,12,14,.82)_100%)]" />
       <div className="wrap relative z-[2] w-full pb-16">
         <div className="eyebrow text-brass-glow">UAE · GLOBAL INDUSTRIAL SUPPLY</div>
         <h1 className="mt-4 max-w-[15ch]">
