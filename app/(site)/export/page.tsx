@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { IconList } from "@/components/shared/IconList";
 import { StepList } from "@/components/shared/StepList";
-import { ImagePlaceholder } from "@/components/shared/ImagePlaceholder";
 import { CtaBanner } from "@/components/home/CtaBanner";
 
 export const metadata: Metadata = {
@@ -42,7 +42,16 @@ export default function ExportPage() {
               <IconList items={CAPABILITIES} />
             </div>
           </div>
-          <ImagePlaceholder label="Export packing / logistics operations" />
+          <div className="relative aspect-[4/3] overflow-hidden rounded-m border border-line-strong bg-bg-2">
+            <Image
+              src="/images/marketing/warehouse-export.png"
+              alt="Export packing and logistics operations"
+              fill
+              sizes="(min-width: 901px) 50vw, 100vw"
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,12,14,.1)_0%,rgba(11,12,14,.6)_100%)]" />
+          </div>
         </div>
       </section>
 

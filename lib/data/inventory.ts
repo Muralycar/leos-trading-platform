@@ -78,11 +78,11 @@ export const getBrandBySlug = cache(async (slug: string): Promise<Brand | undefi
 // display order too, matching the site's established category ordering
 // (the 3 live categories, then the 3 sourcing ones) rather than DB order.
 const CATEGORY_DISPLAY: Record<string, { brandsLabel: string; imagePath: string | null }> = {
-  "truck-parts": { brandsLabel: "Iveco", imagePath: null },
-  "construction-equipment-parts": { brandsLabel: "Kobelco", imagePath: null },
+  "truck-parts": { brandsLabel: "Iveco", imagePath: "/images/marketing/trucks.jpg" },
+  "construction-equipment-parts": { brandsLabel: "Kobelco", imagePath: "/images/marketing/construction-equipment.png" },
   "generator-parts": { brandsLabel: "Kohler", imagePath: "/categories/generator-parts.png" },
-  "mining-industrial-parts": { brandsLabel: "Multi-brand sourcing network", imagePath: null },
-  "marine-parts": { brandsLabel: "Multi-brand sourcing network", imagePath: null },
+  "mining-industrial-parts": { brandsLabel: "Multi-brand sourcing network", imagePath: "/images/marketing/mining-equipment.png" },
+  "marine-parts": { brandsLabel: "Multi-brand sourcing network", imagePath: "/images/marketing/marine-engine.png" },
   "tyres-batteries-accessories": { brandsLabel: "Multi-brand sourcing network", imagePath: null },
 };
 const CATEGORY_ORDER = Object.keys(CATEGORY_DISPLAY);

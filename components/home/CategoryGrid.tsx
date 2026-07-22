@@ -27,6 +27,7 @@ export async function CategoryGrid() {
                     src={c.imagePath}
                     alt={c.name}
                     fill
+                    sizes="(min-width: 901px) 33vw, 100vw"
                     className={`object-contain p-6 ${isLive ? "" : "opacity-55"}`}
                   />
                 ) : (
