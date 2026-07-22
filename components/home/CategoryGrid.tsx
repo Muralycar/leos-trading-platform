@@ -7,7 +7,7 @@ export async function CategoryGrid() {
 
   return (
     <section className="py-16">
-      <div className="wrap">
+      <div className="mx-auto max-w-[1440px] px-8 max-[1180px]:px-5">
         <div className="mb-12 max-w-[640px]">
           <div className="eyebrow">Products</div>
           <h2 className="mt-3.5">Categories</h2>
@@ -15,9 +15,7 @@ export async function CategoryGrid() {
             Live inventory in Generator Parts, Truck Parts and Construction Equipment Parts today, with the same architecture onboarding every other category.
           </p>
         </div>
-      </div>
-      <div className="wrap">
-        <div className="grid grid-cols-1 gap-6 min-[901px]:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 min-[640px]:grid-cols-2 min-[901px]:grid-cols-3">
           {categories.map((c) => {
             const isLive = c.status === "live";
             return (
@@ -25,13 +23,13 @@ export async function CategoryGrid() {
                 key={c.slug}
                 className={`group relative flex flex-col overflow-hidden rounded-m border border-line bg-bg-1 shadow-[0_12px_32px_rgba(0,0,0,.35)] transition-colors hover:border-line-strong ${isLive ? "" : "opacity-90"}`}
               >
-                <div className="relative h-[240px]">
+                <div className="relative h-[220px] min-[640px]:h-[280px]">
                   {c.imagePath ? (
                     <Image
                       src={c.imagePath}
                       alt={c.name}
                       fill
-                      sizes="(min-width: 901px) 33vw, 100vw"
+                      sizes="(min-width: 901px) 33vw, (min-width: 640px) 50vw, 100vw"
                       className={`object-contain object-center p-6 ${isLive ? "" : "opacity-55"}`}
                     />
                   ) : (
