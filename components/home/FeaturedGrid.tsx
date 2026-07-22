@@ -19,11 +19,17 @@ export async function FeaturedGrid() {
           <Link
             key={p.id}
             href={`/parts/${p.brandSlug}/${p.oemPartNumber.toLowerCase()}`}
-            className="flex flex-col bg-bg-0"
+            className="group flex flex-col bg-bg-0"
           >
-            <div className="relative flex aspect-square items-center justify-center bg-bg-2 p-5">
+            <div className="relative flex aspect-square items-center justify-center overflow-hidden bg-bg-2 p-5">
               {p.imagePath ? (
-                <Image src={p.imagePath} alt={p.description} fill className="object-contain p-5" />
+                <Image
+                  src={p.imagePath}
+                  alt={p.description}
+                  fill
+                  sizes="(min-width: 901px) 25vw, 100vw"
+                  className="object-contain object-center p-3 transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+                />
               ) : (
                 <span className="px-4 text-center font-mono text-[11px] text-text-2">{p.description}</span>
               )}
