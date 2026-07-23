@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { IconList } from "@/components/shared/IconList";
 import { StepList } from "@/components/shared/StepList";
-import { ImagePlaceholder } from "@/components/shared/ImagePlaceholder";
 import { StatStrip } from "@/components/home/StatStrip";
 import { CtaBanner } from "@/components/home/CtaBanner";
 
@@ -36,7 +36,16 @@ export default function AboutPage() {
 
       <section className="py-16">
         <div className="wrap grid grid-cols-1 items-center gap-10 min-[901px]:grid-cols-2 min-[901px]:gap-16">
-          <ImagePlaceholder label="Warehouse operations — bin-tracked racking" />
+          <div className="relative aspect-[4/3] overflow-hidden rounded-m border border-line-strong bg-bg-2">
+            <Image
+              src="/images/marketing/supply-sourcing-export.png"
+              alt="Warehouse, port and export operations"
+              fill
+              sizes="(min-width: 901px) 50vw, 100vw"
+              className="object-cover object-center"
+            />
+            <div className="absolute inset-0 bg-black/[.12]" />
+          </div>
           <div>
             <div className="eyebrow">What We Do</div>
             <h2 className="mt-3.5">Supply, sourcing and export — under one operation</h2>
