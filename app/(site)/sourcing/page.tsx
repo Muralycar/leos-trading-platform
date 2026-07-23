@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { StepList } from "@/components/shared/StepList";
-import { ImagePlaceholder } from "@/components/shared/ImagePlaceholder";
 import { CtaBanner } from "@/components/home/CtaBanner";
 import { RfqForm } from "@/components/rfq/RfqForm";
 
@@ -52,13 +52,29 @@ export default function SourcingPage() {
               sourcing network extends beyond what&apos;s in our own warehousing.
             </p>
           </div>
-          <ImagePlaceholder label="Hard-to-find parts — warehouse search" />
+          <div className="group relative aspect-[4/3] overflow-hidden rounded-m border border-line-strong bg-bg-2">
+            <Image
+              src="/images/marketing/hard-to-find-parts-search.png"
+              alt="Industrial part-number search and global sourcing"
+              fill
+              sizes="(min-width: 901px) 50vw, 100vw"
+              className="object-cover object-center transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+            />
+          </div>
         </div>
       </section>
 
       <section id="obsolete" className="border-t border-line py-16">
         <div className="wrap grid grid-cols-1 items-center gap-10 min-[901px]:grid-cols-2 min-[901px]:gap-16">
-          <ImagePlaceholder label="Obsolete / dead-stock inventory" className="min-[901px]:order-2" />
+          <div className="group relative aspect-[4/3] overflow-hidden rounded-m border border-line-strong bg-bg-2 min-[901px]:order-2">
+            <Image
+              src="/images/marketing/obsolete-parts-inventory.png"
+              alt="Obsolete and discontinued industrial parts inventory"
+              fill
+              sizes="(min-width: 901px) 50vw, 100vw"
+              className="object-cover object-center transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+            />
+          </div>
           <div>
             <div className="eyebrow">Obsolete Parts</div>
             <h2 className="mt-3.5">Dead-stock and discontinued inventory</h2>
