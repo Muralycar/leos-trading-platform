@@ -35,6 +35,7 @@ export type ImportRowStatus =
 export type ImportRowOutcome = "create" | "update" | "unchanged" | "skip" | "needs_review" | "error";
 export type UserRole = "admin" | "editor" | "viewer";
 export type AvailabilityStatus = "in_stock" | "limited_stock" | "out_of_stock";
+export type ListingDraftStatus = "draft" | "reviewed" | "approved" | "published";
 
 export interface Database {
   public: {
@@ -441,6 +442,40 @@ export interface Database {
         Update: Partial<Database["public"]["Tables"]["settings"]["Insert"]>;
         Relationships: [];
       };
+      listing_drafts: {
+        Row: {
+          id: string;
+          product_id: string;
+          version: number;
+          is_current: boolean;
+          status: ListingDraftStatus;
+          review_data: Record<string, unknown>;
+          generated_outputs: Record<string, unknown>;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+          reviewed_at: string | null;
+          approved_at: string | null;
+          published_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          product_id: string;
+          version?: number;
+          is_current?: boolean;
+          status?: ListingDraftStatus;
+          review_data?: Record<string, unknown>;
+          generated_outputs?: Record<string, unknown>;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          reviewed_at?: string | null;
+          approved_at?: string | null;
+          published_at?: string | null;
+        };
+        Update: Partial<Database["public"]["Tables"]["listing_drafts"]["Insert"]>;
+        Relationships: [];
+      };
     };
     Views: {
       product_public_availability: {
@@ -515,6 +550,17 @@ export interface Database {
         Args: { updates: Record<string, string | number | null>[] };
         Returns: void;
       };
+      // migrations/0011_listing_drafts.sql — atomically flips the old
+      // is_current draft off and inserts the new version in one statement.
+      revise_listing_draft: {
+        Args: {
+          p_product_id: string;
+          p_review_data: Record<string, unknown>;
+          p_generated_outputs: Record<string, unknown>;
+          p_created_by: string | null;
+        };
+        Returns: Database["public"]["Tables"]["listing_drafts"]["Row"];
+      };
     };
     Enums: {
       product_status: ProductStatus;
@@ -527,6 +573,7 @@ export interface Database {
       import_row_status: ImportRowStatus;
       import_row_outcome: ImportRowOutcome;
       user_role: UserRole;
+      listing_draft_status: ListingDraftStatus;
     };
     CompositeTypes: Record<string, never>;
   };
