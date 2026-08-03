@@ -15,7 +15,17 @@ export type ProductCondition = "genuine_oem" | "aftermarket" | "obsolete_dead_st
 export type BrandStatus = "active" | "archived";
 export type IdentifierType = "alternative" | "superseded" | "cross_reference";
 export type RfqSource = "product_page" | "sourcing_request" | "contact" | "search_no_result";
-export type RfqStatus = "new" | "in_progress" | "quoted" | "closed";
+export type RfqStatus =
+  | "new"
+  | "reviewing"
+  | "waiting_supplier"
+  | "quotation_preparation"
+  | "quotation_ready"
+  | "sent"
+  | "accepted"
+  | "revision_requested"
+  | "lost"
+  | "closed";
 export type ImportJobStatus =
   | "pending"
   | "mapped"
@@ -476,6 +486,50 @@ export interface Database {
         Update: Partial<Database["public"]["Tables"]["listing_drafts"]["Insert"]>;
         Relationships: [];
       };
+      rfq_status_history: {
+        Row: {
+          id: string;
+          rfq_id: string;
+          old_status: RfqStatus;
+          new_status: RfqStatus;
+          changed_by: string | null;
+          changed_by_email: string | null;
+          changed_at: string;
+        };
+        Insert: {
+          id?: string;
+          rfq_id: string;
+          old_status: RfqStatus;
+          new_status: RfqStatus;
+          changed_by?: string | null;
+          changed_by_email?: string | null;
+          changed_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["rfq_status_history"]["Insert"]>;
+        Relationships: [];
+      };
+      rfq_internal_notes: {
+        Row: {
+          id: string;
+          rfq_id: string;
+          author_id: string | null;
+          author_email: string | null;
+          body: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          rfq_id: string;
+          author_id?: string | null;
+          author_email?: string | null;
+          body: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["rfq_internal_notes"]["Insert"]>;
+        Relationships: [];
+      };
     };
     Views: {
       product_public_availability: {
@@ -560,6 +614,17 @@ export interface Database {
           p_created_by: string | null;
         };
         Returns: Database["public"]["Tables"]["listing_drafts"]["Row"];
+      };
+      // migrations/0012_rfq_management.sql — atomically updates the status
+      // and logs the transition to rfq_status_history in one statement.
+      change_rfq_status: {
+        Args: {
+          p_rfq_id: string;
+          p_new_status: RfqStatus;
+          p_changed_by: string | null;
+          p_changed_by_email: string | null;
+        };
+        Returns: Database["public"]["Tables"]["rfq_enquiries"]["Row"];
       };
     };
     Enums: {

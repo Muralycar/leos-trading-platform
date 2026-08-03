@@ -9,12 +9,43 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const STATUSES: RfqStatus[] = ["new", "in_progress", "quoted", "closed"];
+const STATUSES: RfqStatus[] = [
+  "new",
+  "reviewing",
+  "waiting_supplier",
+  "quotation_preparation",
+  "quotation_ready",
+  "sent",
+  "accepted",
+  "revision_requested",
+  "lost",
+  "closed",
+];
+
 const STATUS_LABEL: Record<RfqStatus, string> = {
   new: "New",
-  in_progress: "In Progress",
-  quoted: "Quoted",
+  reviewing: "Reviewing",
+  waiting_supplier: "Waiting for Supplier",
+  quotation_preparation: "Preparing Quotation",
+  quotation_ready: "Quotation Ready",
+  sent: "Sent",
+  accepted: "Accepted",
+  revision_requested: "Revision Requested",
+  lost: "Lost",
   closed: "Closed",
+};
+
+const STATUS_COLOR: Record<RfqStatus, string> = {
+  new: "text-brass",
+  reviewing: "text-text-1",
+  waiting_supplier: "text-warn",
+  quotation_preparation: "text-text-1",
+  quotation_ready: "text-brass",
+  sent: "text-text-0",
+  accepted: "text-ok",
+  revision_requested: "text-warn",
+  lost: "text-safety",
+  closed: "text-text-2",
 };
 
 interface PageProps {
@@ -32,6 +63,11 @@ function pageHref(page: number, status: string | undefined, q: string | undefine
   if (page > 1) params.set("page", String(page));
   const qs = params.toString();
   return qs ? `/admin/rfq?${qs}` : "/admin/rfq";
+}
+
+function messagePreview(message: string | null): string | null {
+  if (!message) return null;
+  return message.length > 80 ? `${message.slice(0, 77).trimEnd()}…` : message;
 }
 
 const inputClass =
@@ -82,16 +118,20 @@ export default async function AdminRfqListPage({ searchParams }: PageProps) {
               <th className="px-4 py-3 font-medium">Name / Company</th>
               <th className="px-4 py-3 font-medium">Contact</th>
               <th className="px-4 py-3 font-medium">Part Number</th>
+              <th className="px-4 py-3 font-medium">Message</th>
               <th className="px-4 py-3 font-medium">Source</th>
               <th className="px-4 py-3 font-medium">Status</th>
+              <th className="px-4 py-3 font-medium">Updated</th>
             </tr>
           </thead>
           <tbody>
             {rows.map((r) => (
-              <tr key={r.id} className="border-b border-line bg-bg-0 last:border-0 hover:bg-bg-1">
+              <tr key={r.id} className="relative border-b border-line bg-bg-0 last:border-0 hover:bg-bg-1">
                 <td className="whitespace-nowrap px-4 py-3 text-text-2">{new Date(r.createdAt).toLocaleDateString()}</td>
                 <td className="px-4 py-3">
-                  <Link href={`/admin/rfq/${r.id}`} className="text-text-0 hover:text-brass">
+                  {/* Stretched-link pattern: this anchor covers the whole row, so any
+                      cell click navigates, while inner text stays selectable. */}
+                  <Link href={`/admin/rfq/${r.id}`} className="text-text-0 after:absolute after:inset-0 hover:text-brass">
                     {r.name}
                   </Link>
                   {r.company ? <div className="text-text-2">{r.company}</div> : null}
@@ -101,15 +141,17 @@ export default async function AdminRfqListPage({ searchParams }: PageProps) {
                   {r.phone ? <div className="text-text-2">{r.phone}</div> : null}
                 </td>
                 <td className="whitespace-nowrap px-4 py-3 font-mono text-brass">{r.partNumber ?? "—"}</td>
+                <td className="max-w-[260px] px-4 py-3 text-text-2">{messagePreview(r.message) ?? "—"}</td>
                 <td className="px-4 py-3 text-text-2">{r.source}</td>
                 <td className="whitespace-nowrap px-4 py-3">
-                  <span className="tag">{STATUS_LABEL[r.status]}</span>
+                  <span className={`tag ${STATUS_COLOR[r.status]}`}>{STATUS_LABEL[r.status]}</span>
                 </td>
+                <td className="whitespace-nowrap px-4 py-3 text-text-2">{new Date(r.updatedAt).toLocaleDateString()}</td>
               </tr>
             ))}
             {rows.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-4 py-10 text-center text-text-2">
+                <td colSpan={8} className="px-4 py-10 text-center text-text-2">
                   No enquiries match.
                 </td>
               </tr>

@@ -1,8 +1,11 @@
 import { cache } from "react";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import type { Database, RfqStatus } from "@/lib/supabase/types";
+import { getProductById, type AdminProduct } from "@/lib/admin/products";
 
 type RfqRow = Database["public"]["Tables"]["rfq_enquiries"]["Row"];
+type StatusHistoryRow = Database["public"]["Tables"]["rfq_status_history"]["Row"];
+type NoteRow = Database["public"]["Tables"]["rfq_internal_notes"]["Row"];
 
 export interface RfqEnquiry {
   id: string;
@@ -15,6 +18,7 @@ export interface RfqEnquiry {
   brand: string | null;
   partNumber: string | null;
   productId: string | null;
+  linkedProduct: AdminProduct | null;
   quantityRequired: string | null;
   message: string | null;
   attachmentUrl: string | null;
@@ -25,7 +29,7 @@ export interface RfqEnquiry {
   updatedAt: string;
 }
 
-function mapRow(row: RfqRow): RfqEnquiry {
+function mapRow(row: RfqRow): Omit<RfqEnquiry, "linkedProduct"> {
   return {
     id: row.id,
     name: row.name,
@@ -57,7 +61,7 @@ export interface RfqListParams {
 }
 
 export interface RfqListResult {
-  rows: RfqEnquiry[];
+  rows: Array<Omit<RfqEnquiry, "linkedProduct">>;
   total: number;
   page: number;
   pageSize: number;
@@ -97,5 +101,128 @@ export const getRfqEnquiryById = cache(async (id: string): Promise<RfqEnquiry | 
   const supabase = await createServerSupabaseClient();
   const { data, error } = await supabase.from("rfq_enquiries").select("*").eq("id", id).maybeSingle();
   if (error) throw error;
-  return data ? mapRow(data) : undefined;
+  if (!data) return undefined;
+
+  const mapped = mapRow(data);
+  const linkedProduct = mapped.productId ? ((await getProductById(mapped.productId)) ?? null) : null;
+  return { ...mapped, linkedProduct };
 });
+
+export interface RfqStatusHistoryEntry {
+  id: string;
+  oldStatus: RfqStatus;
+  newStatus: RfqStatus;
+  changedByEmail: string | null;
+  changedAt: string;
+}
+
+function mapStatusHistoryRow(row: StatusHistoryRow): RfqStatusHistoryEntry {
+  return {
+    id: row.id,
+    oldStatus: row.old_status,
+    newStatus: row.new_status,
+    changedByEmail: row.changed_by_email,
+    changedAt: row.changed_at,
+  };
+}
+
+export async function listRfqStatusHistory(rfqId: string): Promise<RfqStatusHistoryEntry[]> {
+  const supabase = await createServerSupabaseClient();
+  const { data, error } = await supabase
+    .from("rfq_status_history")
+    .select("*")
+    .eq("rfq_id", rfqId)
+    .order("changed_at", { ascending: true });
+  if (error) throw error;
+  return (data ?? []).map(mapStatusHistoryRow);
+}
+
+/** Atomically updates status and logs the transition, via migrations/0012's change_rfq_status(). */
+export async function changeRfqStatus(
+  rfqId: string,
+  newStatus: RfqStatus,
+  changedBy: string | null,
+  changedByEmail: string | null,
+): Promise<void> {
+  const supabase = await createServerSupabaseClient();
+  const { error } = await supabase.rpc("change_rfq_status", {
+    p_rfq_id: rfqId,
+    p_new_status: newStatus,
+    p_changed_by: changedBy,
+    p_changed_by_email: changedByEmail,
+  });
+  if (error) throw error;
+}
+
+export interface RfqNote {
+  id: string;
+  authorEmail: string | null;
+  body: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+function mapNoteRow(row: NoteRow): RfqNote {
+  return {
+    id: row.id,
+    authorEmail: row.author_email,
+    body: row.body,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
+export async function listRfqNotes(rfqId: string): Promise<RfqNote[]> {
+  const supabase = await createServerSupabaseClient();
+  const { data, error } = await supabase
+    .from("rfq_internal_notes")
+    .select("*")
+    .eq("rfq_id", rfqId)
+    .order("created_at", { ascending: true });
+  if (error) throw error;
+  return (data ?? []).map(mapNoteRow);
+}
+
+export async function addRfqNote(
+  rfqId: string,
+  authorId: string | null,
+  authorEmail: string | null,
+  body: string,
+): Promise<void> {
+  const supabase = await createServerSupabaseClient();
+  const { error } = await supabase
+    .from("rfq_internal_notes")
+    .insert({ rfq_id: rfqId, author_id: authorId, author_email: authorEmail, body });
+  if (error) throw error;
+}
+
+export async function updateRfqNote(noteId: string, body: string): Promise<void> {
+  const supabase = await createServerSupabaseClient();
+  const { error } = await supabase.from("rfq_internal_notes").update({ body }).eq("id", noteId);
+  if (error) throw error;
+}
+
+export async function deleteRfqNote(noteId: string): Promise<void> {
+  const supabase = await createServerSupabaseClient();
+  const { error } = await supabase.from("rfq_internal_notes").delete().eq("id", noteId);
+  if (error) throw error;
+}
+
+export type RfqTimelineEvent =
+  | { type: "received"; at: string }
+  | { type: "status_change"; at: string; entry: RfqStatusHistoryEntry }
+  | { type: "note_added"; at: string; note: RfqNote };
+
+/** Merges the received event, status history, and notes into one chronological (oldest-first) timeline. */
+export function buildRfqTimeline(
+  createdAt: string,
+  history: RfqStatusHistoryEntry[],
+  notes: RfqNote[],
+): RfqTimelineEvent[] {
+  const events: RfqTimelineEvent[] = [
+    { type: "received", at: createdAt },
+    ...history.map((entry): RfqTimelineEvent => ({ type: "status_change", at: entry.changedAt, entry })),
+    ...notes.map((note): RfqTimelineEvent => ({ type: "note_added", at: note.createdAt, note })),
+  ];
+  return events.sort((a, b) => new Date(a.at).getTime() - new Date(b.at).getTime());
+}

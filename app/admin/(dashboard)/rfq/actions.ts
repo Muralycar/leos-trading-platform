@@ -2,33 +2,60 @@
 
 import { revalidatePath } from "next/cache";
 import { requireRole } from "@/lib/admin/auth";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { changeRfqStatus, addRfqNote, updateRfqNote, deleteRfqNote } from "@/lib/admin/rfq";
 import type { RfqStatus } from "@/lib/supabase/types";
 
-const VALID_STATUSES: RfqStatus[] = ["new", "in_progress", "quoted", "closed"];
+const VALID_STATUSES: RfqStatus[] = [
+  "new",
+  "reviewing",
+  "waiting_supplier",
+  "quotation_preparation",
+  "quotation_ready",
+  "sent",
+  "accepted",
+  "revision_requested",
+  "lost",
+  "closed",
+];
 
-export async function updateRfqStatus(id: string, formData: FormData) {
-  await requireRole("admin");
+export async function updateRfqStatusAction(id: string, formData: FormData) {
+  const profile = await requireRole("admin");
 
   const status = String(formData.get("status") ?? "");
   if (!VALID_STATUSES.includes(status as RfqStatus)) return;
 
-  const supabase = await createServerSupabaseClient();
-  const { error } = await supabase.from("rfq_enquiries").update({ status: status as RfqStatus }).eq("id", id);
-  if (error) throw error;
+  await changeRfqStatus(id, status as RfqStatus, profile.id, profile.email || null);
 
   revalidatePath("/admin/rfq");
   revalidatePath(`/admin/rfq/${id}`);
 }
 
-export async function updateRfqNotes(id: string, formData: FormData) {
-  await requireRole("admin");
+export async function addRfqNoteAction(id: string, formData: FormData) {
+  const profile = await requireRole("admin");
 
-  const notes = String(formData.get("notes") ?? "").trim();
+  const body = String(formData.get("body") ?? "").trim();
+  if (!body) return;
 
-  const supabase = await createServerSupabaseClient();
-  const { error } = await supabase.from("rfq_enquiries").update({ internal_notes: notes || null }).eq("id", id);
-  if (error) throw error;
+  await addRfqNote(id, profile.id, profile.email || null, body);
 
   revalidatePath(`/admin/rfq/${id}`);
+}
+
+export async function updateRfqNoteAction(noteId: string, rfqId: string, formData: FormData) {
+  await requireRole("admin");
+
+  const body = String(formData.get("body") ?? "").trim();
+  if (!body) return;
+
+  await updateRfqNote(noteId, body);
+
+  revalidatePath(`/admin/rfq/${rfqId}`);
+}
+
+export async function deleteRfqNoteAction(noteId: string, rfqId: string) {
+  await requireRole("admin");
+
+  await deleteRfqNote(noteId);
+
+  revalidatePath(`/admin/rfq/${rfqId}`);
 }
