@@ -62,7 +62,10 @@ export type QuotationActivityType =
   | "status_changed"
   | "revision_created"
   | "line_added"
-  | "line_removed";
+  | "line_removed"
+  | "email_sent"
+  | "email_failed";
+export type QuotationEmailStatus = "queued" | "sent" | "delivered" | "bounced" | "failed";
 
 export interface Database {
   public: {
@@ -732,6 +735,66 @@ export interface Database {
         Update: Partial<Database["public"]["Tables"]["quotation_activity"]["Insert"]>;
         Relationships: [];
       };
+      quotation_access_tokens: {
+        Row: {
+          id: string;
+          quotation_id: string;
+          token_hash: string;
+          created_by: string | null;
+          created_by_email: string | null;
+          created_at: string;
+          expires_at: string | null;
+          revoked_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          quotation_id: string;
+          token_hash: string;
+          created_by?: string | null;
+          created_by_email?: string | null;
+          created_at?: string;
+          expires_at?: string | null;
+          revoked_at?: string | null;
+        };
+        Update: Partial<Database["public"]["Tables"]["quotation_access_tokens"]["Insert"]>;
+        Relationships: [];
+      };
+      quotation_email_log: {
+        Row: {
+          id: string;
+          quotation_id: string;
+          quotation_revision: number;
+          recipient: string;
+          sender: string;
+          subject: string;
+          provider: string;
+          provider_message_id: string | null;
+          delivery_status: QuotationEmailStatus;
+          sent_by: string | null;
+          sent_by_email: string | null;
+          sent_at: string | null;
+          error_message: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          quotation_id: string;
+          quotation_revision: number;
+          recipient: string;
+          sender: string;
+          subject: string;
+          provider?: string;
+          provider_message_id?: string | null;
+          delivery_status?: QuotationEmailStatus;
+          sent_by?: string | null;
+          sent_by_email?: string | null;
+          sent_at?: string | null;
+          error_message?: string | null;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["quotation_email_log"]["Insert"]>;
+        Relationships: [];
+      };
     };
     Views: {
       product_public_availability: {
@@ -875,6 +938,7 @@ export interface Database {
       listing_draft_status: ListingDraftStatus;
       quotation_status: QuotationStatus;
       quotation_activity_type: QuotationActivityType;
+      quotation_email_status: QuotationEmailStatus;
     };
     CompositeTypes: Record<string, never>;
   };

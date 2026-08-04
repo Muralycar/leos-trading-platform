@@ -117,6 +117,7 @@ function timelineLabel(event: RfqTimelineEvent): string {
       const newLabel = q.newStatus ? (QUOTATION_STATUS_LABEL[q.newStatus] ?? q.newStatus) : "?";
       return `Quotation ${q.revisionLabel} status changed: ${oldLabel} → ${newLabel}`;
     }
+    if (q.eventType === "email_sent") return `Quotation ${q.revisionLabel} emailed to customer`;
     return `Quotation ${q.revisionLabel} updated`;
   }
   return "Internal note added";

@@ -667,7 +667,7 @@ export async function listQuotationActivityForRfq(rfqId: string): Promise<RfqLin
     .from("quotation_activity")
     .select("*")
     .in("quotation_id", quotationIds)
-    .in("event_type", ["quotation_created", "status_changed", "revision_created"])
+    .in("event_type", ["quotation_created", "status_changed", "revision_created", "email_sent"])
     .order("created_at", { ascending: true });
   if (error) throw error;
 
@@ -694,4 +694,37 @@ export async function reorderQuotationItems(quotationId: string, orderedItemIds:
         .eq("quotation_id", quotationId),
     ),
   );
+}
+
+export interface QuotationEmailLogEntry {
+  id: string;
+  recipient: string;
+  subject: string;
+  deliveryStatus: Database["public"]["Tables"]["quotation_email_log"]["Row"]["delivery_status"];
+  providerMessageId: string | null;
+  sentByEmail: string | null;
+  sentAt: string | null;
+  errorMessage: string | null;
+  createdAt: string;
+}
+
+export async function listQuotationEmailLog(quotationId: string): Promise<QuotationEmailLogEntry[]> {
+  const supabase = await createServerSupabaseClient();
+  const { data, error } = await supabase
+    .from("quotation_email_log")
+    .select("*")
+    .eq("quotation_id", quotationId)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    recipient: row.recipient,
+    subject: row.subject,
+    deliveryStatus: row.delivery_status,
+    providerMessageId: row.provider_message_id,
+    sentByEmail: row.sent_by_email,
+    sentAt: row.sent_at,
+    errorMessage: row.error_message,
+    createdAt: row.created_at,
+  }));
 }

@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import type { QuotationHeader, QuotationLineItem, QuotationActivityEntry } from "@/lib/admin/quotations";
+import type { QuotationHeader, QuotationLineItem, QuotationActivityEntry, QuotationEmailLogEntry } from "@/lib/admin/quotations";
+import type { QuotationAccessTokenSummary } from "@/lib/quotations/customer-access";
 import { calcLineItem, calcQuotationTotals, isQuotationEditable } from "@/lib/quotations/types";
 import type { ProductCondition, QuotationStatus } from "@/lib/supabase/types";
 import {
@@ -16,6 +17,8 @@ import {
   duplicateItemAction,
   reorderItemsAction,
 } from "./actions";
+import { revokeQuotationAccessTokenAction } from "./send-actions";
+import { SendQuotationButton } from "./SendQuotationButton";
 
 const STATUSES: QuotationStatus[] = [
   "draft",
@@ -80,9 +83,20 @@ interface Props {
   activity: QuotationActivityEntry[];
   revisions: QuotationHeader[];
   rfqId: string;
+  emailLog: QuotationEmailLogEntry[];
+  accessTokens: QuotationAccessTokenSummary[];
 }
 
-export function QuotationEditor({ quotationId, quotation, items, activity, revisions, rfqId }: Props) {
+export function QuotationEditor({
+  quotationId,
+  quotation,
+  items,
+  activity,
+  revisions,
+  rfqId,
+  emailLog,
+  accessTokens,
+}: Props) {
   const router = useRouter();
   const editable = isQuotationEditable(quotation.status);
   const [busy, setBusy] = useState(false);
@@ -706,6 +720,78 @@ export function QuotationEditor({ quotationId, quotation, items, activity, revis
             </button>
           </div>
 
+          {/* Send to customer */}
+          <div className="rounded-m border border-line bg-bg-1 p-6">
+            <h3 className="text-[16px]">Send to Customer</h3>
+            <div className="mt-4">
+              <SendQuotationButton
+                quotationId={quotationId}
+                quotationNumber={quotation.quotationNumber}
+                revisionLabel={quotation.revisionLabel}
+                customerEmail={quotation.customerEmail}
+                currency={quotation.currency}
+                grandTotal={quotation.grandTotal}
+                validUntil={quotation.validUntil}
+                status={quotation.status}
+              />
+              {quotation.status !== "approved" && quotation.status !== "sent" ? (
+                <p className="text-[12px] text-text-2">Only an approved (or already-sent) quotation can be emailed.</p>
+              ) : null}
+            </div>
+
+            {emailLog.length > 0 ? (
+              <div className="mt-5 border-t border-line pt-4">
+                <div className={labelClass}>Email History</div>
+                <ul className="mt-2 flex flex-col gap-2">
+                  {emailLog.map((entry) => (
+                    <li key={entry.id} className="text-[12px]">
+                      <span
+                        className={
+                          entry.deliveryStatus === "sent" || entry.deliveryStatus === "delivered"
+                            ? "text-ok"
+                            : entry.deliveryStatus === "failed" || entry.deliveryStatus === "bounced"
+                              ? "text-safety"
+                              : "text-warn"
+                        }
+                      >
+                        {entry.deliveryStatus}
+                      </span>
+                      {" — "}
+                      {entry.recipient} · {new Date(entry.createdAt).toLocaleString()}
+                      {entry.errorMessage ? <div className="text-safety">{entry.errorMessage}</div> : null}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+
+            {accessTokens.length > 0 ? (
+              <div className="mt-5 border-t border-line pt-4">
+                <div className={labelClass}>Customer Access Links</div>
+                <ul className="mt-2 flex flex-col gap-2">
+                  {accessTokens.map((tok) => (
+                    <li key={tok.id} className="flex items-center justify-between gap-2 text-[12px] text-text-2">
+                      <span>
+                        Created {new Date(tok.createdAt).toLocaleString()}
+                        {tok.revokedAt ? " — revoked" : tok.expiresAt ? ` — expires ${new Date(tok.expiresAt).toLocaleDateString()}` : ""}
+                      </span>
+                      {!tok.revokedAt ? (
+                        <button
+                          type="button"
+                          onClick={() => runAction(() => revokeQuotationAccessTokenAction(tok.id, quotationId), "Link revoked.")}
+                          disabled={busy}
+                          className="text-safety hover:underline"
+                        >
+                          Revoke
+                        </button>
+                      ) : null}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+          </div>
+
           {/* Activity */}
           <div className="rounded-m border border-line bg-bg-1 p-6">
             <h3 className="text-[16px]">Activity</h3>
@@ -742,6 +828,10 @@ function activityLabel(event: QuotationActivityEntry): string {
       return `Line added: ${String(event.details.part_number ?? event.details.description ?? "")}`;
     case "line_removed":
       return `Line removed: ${String(event.details.part_number ?? event.details.description ?? "")}`;
+    case "email_sent":
+      return `Emailed to ${String(event.details.recipient ?? "customer")}`;
+    case "email_failed":
+      return `Email send failed: ${String(event.details.error ?? "unknown error")}`;
     default:
       return event.eventType;
   }
