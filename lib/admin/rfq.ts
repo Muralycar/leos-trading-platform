@@ -2,6 +2,7 @@ import { cache } from "react";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import type { Database, RfqStatus } from "@/lib/supabase/types";
 import { getProductById, type AdminProduct } from "@/lib/admin/products";
+import type { RfqLinkedQuotationEvent } from "@/lib/admin/quotations";
 
 type RfqRow = Database["public"]["Tables"]["rfq_enquiries"]["Row"];
 type StatusHistoryRow = Database["public"]["Tables"]["rfq_status_history"]["Row"];
@@ -209,18 +210,21 @@ export async function deleteRfqNote(noteId: string): Promise<void> {
 export type RfqTimelineEvent =
   | { type: "received"; at: string }
   | { type: "status_change"; at: string; entry: RfqStatusHistoryEntry }
-  | { type: "note_added"; at: string; note: RfqNote };
+  | { type: "note_added"; at: string; note: RfqNote }
+  | { type: "quotation_event"; at: string; event: RfqLinkedQuotationEvent };
 
-/** Merges the received event, status history, and notes into one chronological (oldest-first) timeline. */
+/** Merges the received event, status history, notes, and linked-quotation events into one chronological (oldest-first) timeline. */
 export function buildRfqTimeline(
   createdAt: string,
   history: RfqStatusHistoryEntry[],
   notes: RfqNote[],
+  quotationEvents: RfqLinkedQuotationEvent[] = [],
 ): RfqTimelineEvent[] {
   const events: RfqTimelineEvent[] = [
     { type: "received", at: createdAt },
     ...history.map((entry): RfqTimelineEvent => ({ type: "status_change", at: entry.changedAt, entry })),
     ...notes.map((note): RfqTimelineEvent => ({ type: "note_added", at: note.createdAt, note })),
+    ...quotationEvents.map((event): RfqTimelineEvent => ({ type: "quotation_event", at: event.createdAt, event })),
   ];
   return events.sort((a, b) => new Date(a.at).getTime() - new Date(b.at).getTime());
 }

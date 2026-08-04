@@ -9,8 +9,15 @@ import {
   buildRfqTimeline,
   type RfqTimelineEvent,
 } from "@/lib/admin/rfq";
+import { getCurrentQuotationForRfq, listQuotationActivityForRfq } from "@/lib/admin/quotations";
 import type { RfqStatus } from "@/lib/supabase/types";
-import { updateRfqStatusAction, addRfqNoteAction, updateRfqNoteAction, deleteRfqNoteAction } from "../actions";
+import {
+  updateRfqStatusAction,
+  addRfqNoteAction,
+  updateRfqNoteAction,
+  deleteRfqNoteAction,
+  createQuotationAction,
+} from "../actions";
 
 export const metadata: Metadata = {
   title: "RFQ Detail — Admin",
@@ -84,10 +91,33 @@ function StatusBadge({ status }: { status: RfqStatus }) {
   return <span className={`tag ${STATUS_COLOR[status]}`}>{STATUS_LABEL[status]}</span>;
 }
 
+const QUOTATION_STATUS_LABEL: Record<string, string> = {
+  draft: "Draft",
+  under_review: "Under Review",
+  approved: "Approved",
+  sent: "Sent",
+  accepted: "Accepted",
+  revision_requested: "Revision Requested",
+  rejected: "Rejected",
+  expired: "Expired",
+  cancelled: "Cancelled",
+};
+
 function timelineLabel(event: RfqTimelineEvent): string {
   if (event.type === "received") return "RFQ received";
   if (event.type === "status_change") {
     return `Status changed: ${STATUS_LABEL[event.entry.oldStatus]} → ${STATUS_LABEL[event.entry.newStatus]}`;
+  }
+  if (event.type === "quotation_event") {
+    const q = event.event;
+    if (q.eventType === "quotation_created") return `Quotation ${q.revisionLabel} created`;
+    if (q.eventType === "revision_created") return `Quotation revision ${q.revisionLabel} created`;
+    if (q.eventType === "status_changed") {
+      const oldLabel = q.oldStatus ? (QUOTATION_STATUS_LABEL[q.oldStatus] ?? q.oldStatus) : "?";
+      const newLabel = q.newStatus ? (QUOTATION_STATUS_LABEL[q.newStatus] ?? q.newStatus) : "?";
+      return `Quotation ${q.revisionLabel} status changed: ${oldLabel} → ${newLabel}`;
+    }
+    return `Quotation ${q.revisionLabel} updated`;
   }
   return "Internal note added";
 }
@@ -95,6 +125,7 @@ function timelineLabel(event: RfqTimelineEvent): string {
 function timelineActor(event: RfqTimelineEvent): string | null {
   if (event.type === "status_change") return event.entry.changedByEmail;
   if (event.type === "note_added") return event.note.authorEmail;
+  if (event.type === "quotation_event") return event.event.actorEmail;
   return null;
 }
 
@@ -104,8 +135,13 @@ export default async function AdminRfqDetailPage({ params }: PageProps) {
   const rfq = await getRfqEnquiryById(id);
   if (!rfq) notFound();
 
-  const [history, notes] = await Promise.all([listRfqStatusHistory(id), listRfqNotes(id)]);
-  const timeline = buildRfqTimeline(rfq.createdAt, history, notes);
+  const [history, notes, existingQuotation, quotationEvents] = await Promise.all([
+    listRfqStatusHistory(id),
+    listRfqNotes(id),
+    getCurrentQuotationForRfq(id),
+    listQuotationActivityForRfq(id),
+  ]);
+  const timeline = buildRfqTimeline(rfq.createdAt, history, notes, quotationEvents);
 
   return (
     <div>
@@ -119,7 +155,20 @@ export default async function AdminRfqDetailPage({ params }: PageProps) {
           <h1 className="mt-3.5 text-[28px]">{rfq.name}</h1>
           {rfq.company ? <p className="mt-1 text-text-1">{rfq.company}</p> : null}
         </div>
-        <StatusBadge status={rfq.status} />
+        <div className="flex items-center gap-3">
+          <StatusBadge status={rfq.status} />
+          {existingQuotation ? (
+            <Link href={`/admin/quotations/${existingQuotation.id}`} className="btn btn-ghost btn-sm">
+              Open Quotation
+            </Link>
+          ) : (
+            <form action={createQuotationAction.bind(null, rfq.id)}>
+              <button type="submit" className="btn btn-primary btn-sm">
+                Create Quotation
+              </button>
+            </form>
+          )}
+        </div>
       </div>
 
       <div className="mt-8 grid grid-cols-1 gap-8 min-[901px]:grid-cols-[1.3fr_1fr]">

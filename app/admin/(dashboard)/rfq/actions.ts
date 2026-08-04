@@ -1,8 +1,10 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { requireRole } from "@/lib/admin/auth";
-import { changeRfqStatus, addRfqNote, updateRfqNote, deleteRfqNote } from "@/lib/admin/rfq";
+import { changeRfqStatus, addRfqNote, updateRfqNote, deleteRfqNote, getRfqEnquiryById } from "@/lib/admin/rfq";
+import { getCurrentQuotationForRfq, createQuotationFromRfq } from "@/lib/admin/quotations";
 import type { RfqStatus } from "@/lib/supabase/types";
 
 const VALID_STATUSES: RfqStatus[] = [
@@ -58,4 +60,28 @@ export async function deleteRfqNoteAction(noteId: string, rfqId: string) {
   await deleteRfqNote(noteId);
 
   revalidatePath(`/admin/rfq/${rfqId}`);
+}
+
+/**
+ * Creates the quotation (or reuses the existing current one) for an RFQ and
+ * redirects straight into its editor — no intermediate "new quotation" form,
+ * since every field auto-fills from the RFQ per Phase 2.1's requirements.
+ */
+export async function createQuotationAction(rfqId: string) {
+  const profile = await requireRole("admin");
+
+  const existing = await getCurrentQuotationForRfq(rfqId);
+  if (existing) {
+    redirect(`/admin/quotations/${existing.id}`);
+  }
+
+  const rfq = await getRfqEnquiryById(rfqId);
+  if (!rfq) {
+    throw new Error("RFQ not found");
+  }
+
+  const quotation = await createQuotationFromRfq(rfq, profile.id, profile.email || null);
+
+  revalidatePath(`/admin/rfq/${rfqId}`);
+  redirect(`/admin/quotations/${quotation.id}`);
 }

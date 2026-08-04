@@ -11,6 +11,7 @@ const NAV_LINKS = [
   { label: "Products", href: "/admin/products" },
   { label: "Import", href: "/admin/import" },
   { label: "RFQ Enquiries", href: "/admin/rfq" },
+  { label: "Quotations", href: "/admin/quotations" },
   { label: "Listing Generator", href: "/admin/listing-generator" },
 ];
 

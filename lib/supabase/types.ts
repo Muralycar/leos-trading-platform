@@ -46,6 +46,23 @@ export type ImportRowOutcome = "create" | "update" | "unchanged" | "skip" | "nee
 export type UserRole = "admin" | "editor" | "viewer";
 export type AvailabilityStatus = "in_stock" | "limited_stock" | "out_of_stock";
 export type ListingDraftStatus = "draft" | "reviewed" | "approved" | "published";
+export type QuotationStatus =
+  | "draft"
+  | "under_review"
+  | "approved"
+  | "sent"
+  | "accepted"
+  | "revision_requested"
+  | "rejected"
+  | "expired"
+  | "cancelled";
+export type QuotationActivityType =
+  | "quotation_created"
+  | "quotation_updated"
+  | "status_changed"
+  | "revision_created"
+  | "line_added"
+  | "line_removed";
 
 export interface Database {
   public: {
@@ -530,6 +547,191 @@ export interface Database {
         Update: Partial<Database["public"]["Tables"]["rfq_internal_notes"]["Insert"]>;
         Relationships: [];
       };
+      quotation_number_counters: {
+        Row: { year: number; last_number: number };
+        Insert: { year: number; last_number?: number };
+        Update: Partial<Database["public"]["Tables"]["quotation_number_counters"]["Insert"]>;
+        Relationships: [];
+      };
+      quotations: {
+        Row: {
+          id: string;
+          rfq_id: string;
+          quotation_number: string;
+          revision: number;
+          revision_label: string;
+          is_current: boolean;
+          status: QuotationStatus;
+          customer_name: string;
+          company_name: string | null;
+          customer_email: string;
+          customer_phone: string | null;
+          customer_address: string | null;
+          country: string | null;
+          customer_reference: string | null;
+          po_number: string | null;
+          quotation_date: string;
+          valid_until: string | null;
+          expected_delivery: string | null;
+          currency: string | null;
+          exchange_rate: number | null;
+          salesperson: string | null;
+          prepared_by: string | null;
+          approved_by: string | null;
+          incoterm: string | null;
+          delivery_terms: string | null;
+          payment_terms: string | null;
+          shipment_terms: string | null;
+          warranty: string | null;
+          country_of_origin_note: string | null;
+          shipping_method: string | null;
+          port_of_loading: string | null;
+          port_of_destination: string | null;
+          bank_details: string | null;
+          swift_code: string | null;
+          iban: string | null;
+          signature_reference: string | null;
+          notes: string | null;
+          internal_notes: string | null;
+          freight: number;
+          packing_charges: number;
+          insurance: number;
+          other_charges: number;
+          rounding_adjustment: number;
+          subtotal: number;
+          total_discount: number;
+          tax_total: number;
+          grand_total: number;
+          created_by: string | null;
+          created_by_email: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          rfq_id: string;
+          quotation_number: string;
+          revision?: number;
+          is_current?: boolean;
+          status?: QuotationStatus;
+          customer_name: string;
+          company_name?: string | null;
+          customer_email: string;
+          customer_phone?: string | null;
+          customer_address?: string | null;
+          country?: string | null;
+          customer_reference?: string | null;
+          po_number?: string | null;
+          quotation_date?: string;
+          valid_until?: string | null;
+          expected_delivery?: string | null;
+          currency?: string | null;
+          exchange_rate?: number | null;
+          salesperson?: string | null;
+          prepared_by?: string | null;
+          approved_by?: string | null;
+          incoterm?: string | null;
+          delivery_terms?: string | null;
+          payment_terms?: string | null;
+          shipment_terms?: string | null;
+          warranty?: string | null;
+          country_of_origin_note?: string | null;
+          shipping_method?: string | null;
+          port_of_loading?: string | null;
+          port_of_destination?: string | null;
+          bank_details?: string | null;
+          swift_code?: string | null;
+          iban?: string | null;
+          signature_reference?: string | null;
+          notes?: string | null;
+          internal_notes?: string | null;
+          freight?: number;
+          packing_charges?: number;
+          insurance?: number;
+          other_charges?: number;
+          rounding_adjustment?: number;
+          created_by?: string | null;
+          created_by_email?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["quotations"]["Insert"]>;
+        Relationships: [];
+      };
+      quotation_items: {
+        Row: {
+          id: string;
+          quotation_id: string;
+          sort_order: number;
+          product_id: string | null;
+          part_number: string | null;
+          description: string;
+          brand: string | null;
+          quantity: number;
+          unit: string | null;
+          unit_price: number;
+          discount_percent: number;
+          tax_percent: number;
+          lead_time: string | null;
+          country_of_origin: string | null;
+          condition: ProductCondition | null;
+          remarks: string | null;
+          line_subtotal: number;
+          line_discount_amount: number;
+          line_tax_amount: number;
+          line_total: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          quotation_id: string;
+          sort_order: number;
+          product_id?: string | null;
+          part_number?: string | null;
+          description: string;
+          brand?: string | null;
+          quantity?: number;
+          unit?: string | null;
+          unit_price?: number;
+          discount_percent?: number;
+          tax_percent?: number;
+          lead_time?: string | null;
+          country_of_origin?: string | null;
+          condition?: ProductCondition | null;
+          remarks?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["quotation_items"]["Insert"]>;
+        Relationships: [];
+      };
+      quotation_activity: {
+        Row: {
+          id: string;
+          quotation_id: string;
+          event_type: QuotationActivityType;
+          old_status: QuotationStatus | null;
+          new_status: QuotationStatus | null;
+          details: Record<string, unknown>;
+          actor_id: string | null;
+          actor_email: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          quotation_id: string;
+          event_type: QuotationActivityType;
+          old_status?: QuotationStatus | null;
+          new_status?: QuotationStatus | null;
+          details?: Record<string, unknown>;
+          actor_id?: string | null;
+          actor_email?: string | null;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["quotation_activity"]["Insert"]>;
+        Relationships: [];
+      };
     };
     Views: {
       product_public_availability: {
@@ -626,6 +828,38 @@ export interface Database {
         };
         Returns: Database["public"]["Tables"]["rfq_enquiries"]["Row"];
       };
+      // migrations/0014_quotations.sql — atomically allocates the next
+      // sequential number for the year and creates revision 0.
+      create_quotation_from_rfq: {
+        Args: {
+          p_rfq_id: string;
+          p_currency: string | null;
+          p_created_by: string | null;
+          p_created_by_email: string | null;
+        };
+        Returns: Database["public"]["Tables"]["quotations"]["Row"];
+      };
+      // migrations/0014_quotations.sql — atomically retires the current
+      // revision and creates the next one, copying header + line items.
+      create_quotation_revision: {
+        Args: {
+          p_quotation_id: string;
+          p_created_by: string | null;
+          p_created_by_email: string | null;
+        };
+        Returns: Database["public"]["Tables"]["quotations"]["Row"];
+      };
+      // migrations/0014_quotations.sql — atomically updates the status and
+      // logs the transition to quotation_activity in one statement.
+      change_quotation_status: {
+        Args: {
+          p_quotation_id: string;
+          p_new_status: QuotationStatus;
+          p_changed_by: string | null;
+          p_changed_by_email: string | null;
+        };
+        Returns: Database["public"]["Tables"]["quotations"]["Row"];
+      };
     };
     Enums: {
       product_status: ProductStatus;
@@ -639,6 +873,8 @@ export interface Database {
       import_row_outcome: ImportRowOutcome;
       user_role: UserRole;
       listing_draft_status: ListingDraftStatus;
+      quotation_status: QuotationStatus;
+      quotation_activity_type: QuotationActivityType;
     };
     CompositeTypes: Record<string, never>;
   };
