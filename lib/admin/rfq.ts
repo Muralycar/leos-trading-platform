@@ -22,7 +22,6 @@ export interface RfqEnquiry {
   quantityRequired: string | null;
   message: string | null;
   attachmentUrl: string | null;
-  internalNotes: string | null;
   source: string;
   status: RfqStatus;
   createdAt: string;
@@ -44,7 +43,6 @@ function mapRow(row: RfqRow): Omit<RfqEnquiry, "linkedProduct"> {
     quantityRequired: row.quantity_required,
     message: row.message,
     attachmentUrl: row.attachment_url,
-    internalNotes: row.internal_notes,
     source: row.source,
     status: row.status,
     createdAt: row.created_at,
