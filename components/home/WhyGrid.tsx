@@ -23,21 +23,21 @@ const WHY_ITEMS = [
 
 export function WhyGrid() {
   return (
-    <section className="py-16">
+    <section className="bg-paper-0 py-16">
       <div className="wrap">
         <div className="mb-12 max-w-[640px]">
-          <div className="eyebrow">Why Leos</div>
-          <h2 className="mt-3.5">Built for parts that are hard to move</h2>
+          <div className="font-mono text-[12px] uppercase tracking-[.14em] text-yellow">Why Leos</div>
+          <h2 className="mt-3.5 text-ink-0">Built for parts that are hard to move</h2>
         </div>
       </div>
-      <div className="grid grid-cols-1 gap-px border border-line bg-line min-[901px]:grid-cols-4">
+      <div className="grid grid-cols-1 gap-px border border-paper-line bg-paper-line min-[901px]:grid-cols-4">
         {WHY_ITEMS.map((item) => (
-          <div key={item.title} className="bg-bg-0 p-7">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="mb-5 h-6 w-6 text-brass">
+          <div key={item.title} className="bg-paper-1 p-7">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="mb-5 h-6 w-6 text-yellow">
               <path d={item.path} />
             </svg>
-            <h3 className="mb-2.5 text-lg">{item.title}</h3>
-            <p className="text-sm">{item.body}</p>
+            <h3 className="mb-2.5 font-sans text-lg normal-case text-ink-0">{item.title}</h3>
+            <p className="text-sm text-ink-1">{item.body}</p>
           </div>
         ))}
       </div>

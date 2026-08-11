@@ -30,6 +30,34 @@ const config: Config = {
           dim: "oklch(0.52 0.08 78)",
           glow: "oklch(0.86 0.09 85)",
         },
+        // New black/industrial-yellow/white system — additive only. `brass`
+        // above is untouched and keeps driving every page not yet migrated
+        // to this palette (Products, Search, Brands, Sourcing, Export,
+        // About, admin). Deliberately a punchier, more saturated hue than
+        // `warn` so the brand accent never reads as a stock-warning color
+        // or vice versa. Hex, not oklch() — this codebase has a known
+        // Tailwind v3 bug where opacity-modifier syntax (bg-yellow/40)
+        // silently no-ops on oklch()-defined tokens; hex keeps it working.
+        yellow: {
+          DEFAULT: "#f7b500",
+          dim: "#b98a00",
+          glow: "#ffcb3d",
+        },
+        // Light-section tokens for the new system's white/off-white blocks
+        // (Categories, Inventory, Brands). `bg`/`text`/`line` above remain
+        // the dark-mode scale used everywhere else.
+        paper: {
+          0: "#f7f6f3",
+          1: "#ffffff",
+          2: "#edebe6",
+        },
+        ink: {
+          0: "#15171a",
+          1: "#4b4f56",
+          2: "#8a8f97",
+        },
+        "paper-line": "rgba(15,17,20,.10)",
+        "paper-line-strong": "rgba(15,17,20,.18)",
         safety: "oklch(0.68 0.17 45)",
         ok: "oklch(0.68 0.13 150)",
         warn: "oklch(0.75 0.15 85)",

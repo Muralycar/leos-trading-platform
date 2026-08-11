@@ -8,7 +8,7 @@ import Image from "next/image";
  */
 export function InventoryBanner() {
   return (
-    <div className="relative mb-10 aspect-[4/3] w-full overflow-hidden rounded-m border border-line-strong bg-bg-2 min-[640px]:aspect-[16/8] min-[901px]:mb-12 min-[901px]:aspect-[21/7]">
+    <div className="relative mb-10 aspect-[4/3] w-full overflow-hidden rounded-m border border-paper-line-strong bg-bg-2 min-[640px]:aspect-[16/8] min-[901px]:mb-12 min-[901px]:aspect-[21/7]">
       <Image
         src="/images/inventory/showcase.png"
         alt="Organized OEM spare parts — filters, bearings, gears and hydraulic components in Leos Trading's warehouse"

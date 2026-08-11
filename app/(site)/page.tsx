@@ -5,19 +5,21 @@ import { WhyGrid } from "@/components/home/WhyGrid";
 import { DepthSplit } from "@/components/home/DepthSplit";
 import { BrandStrip } from "@/components/home/BrandStrip";
 import { FeaturedGrid } from "@/components/home/FeaturedGrid";
+import { GlobalSourcing } from "@/components/home/GlobalSourcing";
 import { CtaBanner } from "@/components/home/CtaBanner";
 
 export default function HomePage() {
   return (
     <>
       <Hero />
-      <StatStrip />
-      <CategoryGrid />
+      <CategoryGrid variant="light" />
+      <StatStrip variant="dark-accent" />
       <WhyGrid />
       <DepthSplit />
-      <BrandStrip />
       <FeaturedGrid />
-      <CtaBanner />
+      <BrandStrip />
+      <GlobalSourcing />
+      <CtaBanner variant="dark-accent" />
     </>
   );
 }

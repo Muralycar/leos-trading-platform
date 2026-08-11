@@ -28,7 +28,7 @@ export async function Header() {
         </Link>
 
         <nav className="hidden flex-1 items-center gap-7 min-[1181px]:flex">
-          <Link href="/" className="py-7 text-[13px] font-semibold tracking-[.03em] text-brass">
+          <Link href="/" className="py-7 text-[13px] font-semibold tracking-[.03em] text-yellow">
             Home
           </Link>
           {dropdowns.map((group) => (
@@ -36,13 +36,13 @@ export async function Header() {
               {group.href ? (
                 <Link
                   href={group.href}
-                  className="flex items-center gap-1.5 py-7 text-[13px] font-semibold tracking-[.03em] text-text-1 group-hover:text-text-0"
+                  className="flex items-center gap-1.5 py-7 text-[13px] font-semibold tracking-[.03em] text-text-1 group-hover:text-yellow"
                 >
                   {group.label}
                   <ChevronDownIcon className="h-[11px] w-[11px] opacity-60" />
                 </Link>
               ) : (
-                <span className="flex cursor-pointer items-center gap-1.5 py-7 text-[13px] font-semibold tracking-[.03em] text-text-1 group-hover:text-text-0">
+                <span className="flex cursor-pointer items-center gap-1.5 py-7 text-[13px] font-semibold tracking-[.03em] text-text-1 group-hover:text-yellow">
                   {group.label}
                   <ChevronDownIcon className="h-[11px] w-[11px] opacity-60" />
                 </span>
@@ -52,7 +52,7 @@ export async function Header() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="rounded-s px-3 py-2.5 text-[13.5px] font-medium text-text-1 hover:bg-bg-3 hover:text-text-0"
+                    className="rounded-s px-3 py-2.5 text-[13.5px] font-medium text-text-1 hover:bg-bg-3 hover:text-yellow"
                   >
                     {link.label}
                   </Link>
@@ -60,11 +60,11 @@ export async function Header() {
               </div>
             </div>
           ))}
-          <Link href="/brands" className="py-7 text-[13px] font-semibold tracking-[.03em] text-text-1 hover:text-text-0">
+          <Link href="/brands" className="py-7 text-[13px] font-semibold tracking-[.03em] text-text-1 hover:text-yellow">
             Brands
           </Link>
           <div className="group relative">
-            <span className="flex cursor-pointer items-center gap-1.5 py-7 text-[13px] font-semibold tracking-[.03em] text-text-1 group-hover:text-text-0">
+            <span className="flex cursor-pointer items-center gap-1.5 py-7 text-[13px] font-semibold tracking-[.03em] text-text-1 group-hover:text-yellow">
               Sourcing
               <ChevronDownIcon className="h-[11px] w-[11px] opacity-60" />
             </span>
@@ -73,7 +73,7 @@ export async function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="rounded-s px-3 py-2.5 text-[13.5px] font-medium text-text-1 hover:bg-bg-3 hover:text-text-0"
+                  className="rounded-s px-3 py-2.5 text-[13.5px] font-medium text-text-1 hover:bg-bg-3 hover:text-yellow"
                 >
                   {link.label}
                 </Link>
@@ -81,7 +81,7 @@ export async function Header() {
             </div>
           </div>
           {TOP_LEVEL_LINKS.filter((l) => l.label !== "Brands").map((link) => (
-            <Link key={link.href} href={link.href} className="py-7 text-[13px] font-semibold tracking-[.03em] text-text-1 hover:text-text-0">
+            <Link key={link.href} href={link.href} className="py-7 text-[13px] font-semibold tracking-[.03em] text-text-1 hover:text-yellow">
               {link.label}
             </Link>
           ))}
@@ -91,7 +91,7 @@ export async function Header() {
           <a
             href={phoneHref}
             aria-label="Call"
-            className="flex h-[46px] w-[46px] items-center justify-center rounded-s border border-line-strong text-text-1 transition-colors hover:border-brass hover:text-brass"
+            className="flex h-[46px] w-[46px] items-center justify-center rounded-s border border-line-strong text-text-1 transition-colors hover:border-yellow hover:text-yellow"
           >
             <PhoneIcon className="h-5 w-5" />
           </a>
@@ -104,7 +104,10 @@ export async function Header() {
           >
             <WhatsAppIcon className="h-5 w-5" />
           </a>
-          <Link href="/contact" className="btn btn-primary hidden h-[46px] min-[1181px]:inline-flex">
+          <Link
+            href="/contact"
+            className="hidden h-[46px] items-center justify-center rounded-s bg-yellow px-6 text-[13px] font-semibold tracking-[.02em] text-black transition-colors hover:bg-yellow-glow min-[1181px]:inline-flex"
+          >
             Request Quotation
           </Link>
         </div>

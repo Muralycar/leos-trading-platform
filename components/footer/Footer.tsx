@@ -7,7 +7,7 @@ export async function Footer() {
   const liveCategories = categories.filter((c) => c.status === "live");
 
   return (
-    <footer className="border-t border-line bg-bg-1 pt-16">
+    <footer className="border-t border-line bg-bg-0 pt-16">
       <div className="mx-auto grid max-w-container grid-cols-2 gap-8 px-5 pb-12 min-[1181px]:grid-cols-[1.4fr_1fr_1fr_1.2fr] min-[1181px]:gap-12 min-[1181px]:px-8">
         <div>
           <div className="mb-3.5 flex items-center gap-2.5">
@@ -19,22 +19,22 @@ export async function Footer() {
           </p>
         </div>
         <div>
-          <h4 className="mb-4 font-mono text-[11px] uppercase tracking-[.1em] text-text-2">Products</h4>
+          <h4 className="mb-4 font-mono text-[11px] uppercase tracking-[.1em] text-yellow">Products</h4>
           {liveCategories.map((c) => (
-            <Link key={c.slug} href={`/search?cat=${encodeURIComponent(c.slug)}`} className="mb-2.5 block text-sm text-text-1 hover:text-brass">
+            <Link key={c.slug} href={`/search?cat=${encodeURIComponent(c.slug)}`} className="mb-2.5 block text-sm text-text-1 hover:text-yellow">
               {c.name}
             </Link>
           ))}
         </div>
         <div>
-          <h4 className="mb-4 font-mono text-[11px] uppercase tracking-[.1em] text-text-2">Company</h4>
-          <Link href="/about" className="mb-2.5 block text-sm text-text-1 hover:text-brass">About</Link>
-          <Link href="/sourcing" className="mb-2.5 block text-sm text-text-1 hover:text-brass">Sourcing</Link>
-          <Link href="/export" className="mb-2.5 block text-sm text-text-1 hover:text-brass">Export</Link>
-          <Link href="/brands" className="mb-2.5 block text-sm text-text-1 hover:text-brass">Brands</Link>
+          <h4 className="mb-4 font-mono text-[11px] uppercase tracking-[.1em] text-yellow">Company</h4>
+          <Link href="/about" className="mb-2.5 block text-sm text-text-1 hover:text-yellow">About</Link>
+          <Link href="/sourcing" className="mb-2.5 block text-sm text-text-1 hover:text-yellow">Sourcing</Link>
+          <Link href="/export" className="mb-2.5 block text-sm text-text-1 hover:text-yellow">Export</Link>
+          <Link href="/brands" className="mb-2.5 block text-sm text-text-1 hover:text-yellow">Brands</Link>
         </div>
         <div>
-          <h4 className="mb-4 font-mono text-[11px] uppercase tracking-[.1em] text-text-2">Contact</h4>
+          <h4 className="mb-4 font-mono text-[11px] uppercase tracking-[.1em] text-yellow">Contact</h4>
           <div className="mb-2.5 text-sm text-text-1">{settings.address}</div>
           <div className="mb-2.5 text-sm text-text-1">{settings.phonePrimary}</div>
           <div className="mb-2.5 text-sm text-text-1">{settings.phoneSecondary}</div>

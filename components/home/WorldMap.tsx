@@ -77,7 +77,7 @@ function MapLabel({
   return (
     <span
       className={`pointer-events-none absolute whitespace-nowrap font-mono text-[10.5px] tracking-[.02em] min-[1181px]:text-[11.5px] ${
-        strong ? "text-[12px] font-semibold text-[#f0d5a3] min-[1181px]:text-[13px]" : "text-[#b7bcc3]"
+        strong ? "text-[12px] font-semibold text-[#ffd966] min-[1181px]:text-[13px]" : "text-[#b7bcc3]"
       }`}
       style={{
         left: `${((x - box.x) / box.w) * 100}%`,
@@ -139,21 +139,21 @@ export function WorldMap({ compact = false }: { compact?: boolean }) {
           <polygon points="426,130 445,98 472,78 505,66 542,62 575,78 598,108 600,145 582,178 552,198 518,212 495,235 478,268 462,298 448,262 432,215 420,170" />
         </g>
 
-        {/* route lines — dim base + slow travelling highlight, brass, low-contrast on purpose */}
+        {/* route lines — dim base + slow travelling highlight, industrial yellow, low-contrast on purpose */}
         {regions.map((r) => (
           <g key={r.key}>
-            <path d={r.path} fill="none" stroke="rgba(200,168,112,.32)" strokeWidth="1.25" />
+            <path d={r.path} fill="none" stroke="rgba(245,184,0,.3)" strokeWidth="1.25" />
             <path
               d={r.path}
               fill="none"
-              stroke="rgba(222,192,148,.88)"
+              stroke="rgba(255,201,44,.9)"
               strokeWidth="1.25"
               strokeDasharray="4 14"
               strokeLinecap="round"
               className="motion-safe:[animation:leos-map-route-flow_var(--dur)_linear_infinite]"
               style={{ "--dur": r.duration } as CSSProperties}
             />
-            <circle cx={r.x} cy={r.y} r="3" fill="rgba(222,192,148,.92)" />
+            <circle cx={r.x} cy={r.y} r="3" fill="rgba(255,201,44,.92)" />
           </g>
         ))}
 
@@ -163,12 +163,12 @@ export function WorldMap({ compact = false }: { compact?: boolean }) {
           cy={UAE_HUB.y}
           r={hubRingR}
           fill="none"
-          stroke="#dcb47c"
+          stroke="#f5b800"
           strokeWidth="1.75"
           className="motion-safe:[animation:leos-map-hub-pulse_3.2s_ease-out_infinite]"
         />
-        <circle cx={UAE_HUB.x} cy={UAE_HUB.y} r={hubDotR} fill="#e4bf88" />
-        <circle cx={UAE_HUB.x} cy={UAE_HUB.y} r={hubDotR * 0.4} fill="#fff5e4" />
+        <circle cx={UAE_HUB.x} cy={UAE_HUB.y} r={hubDotR} fill="#ffc72c" />
+        <circle cx={UAE_HUB.x} cy={UAE_HUB.y} r={hubDotR * 0.4} fill="#fff3d0" />
       </svg>
 
       {/* HTML label overlay — kept out of the SVG viewBox so text size never
