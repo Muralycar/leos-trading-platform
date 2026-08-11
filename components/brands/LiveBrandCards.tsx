@@ -23,7 +23,7 @@ export async function LiveBrandCards() {
       {cards.map(({ brand, skuCount, categoryName }) => (
         <div
           key={brand.slug}
-          className="group relative flex flex-col overflow-hidden rounded-[18px] border border-white/5 bg-[#17191d] p-5 shadow-[0_12px_35px_rgba(0,0,0,.45),inset_0_1px_0_rgba(255,255,255,.05)] transition-all duration-300 ease-out hover:-translate-y-2 hover:border-[rgba(196,162,106,.45)] hover:shadow-[0_20px_50px_rgba(0,0,0,.55),inset_0_1px_0_rgba(255,255,255,.08),0_0_28px_rgba(196,162,106,.18)]"
+          className="group relative flex flex-col overflow-hidden rounded-[18px] border border-white/5 bg-[#17191d] p-4 shadow-[0_12px_35px_rgba(0,0,0,.45),inset_0_1px_0_rgba(255,255,255,.05)] transition-all duration-300 ease-out hover:-translate-y-2 hover:border-[rgba(196,162,106,.45)] hover:shadow-[0_20px_50px_rgba(0,0,0,.55),inset_0_1px_0_rgba(255,255,255,.08),0_0_28px_rgba(196,162,106,.18)]"
         >
           <div className="pointer-events-none absolute inset-x-0 top-0 h-[2px] bg-[linear-gradient(to_right,transparent,rgba(196,162,106,.7),transparent)] opacity-40 transition-opacity duration-300 group-hover:opacity-100" />
 
@@ -31,11 +31,11 @@ export async function LiveBrandCards() {
             <span className="h-1.5 w-1.5 rounded-full bg-ok" />
             {skuCount.toLocaleString()} SKUs In Stock
           </span>
-          <h3 className="mt-4 text-[22px]">{brand.name}</h3>
-          {categoryName ? <p className="mt-2 flex-1 text-sm text-text-1">{categoryName}</p> : <div className="flex-1" />}
+          <h3 className="mt-3 text-[22px]">{brand.name}</h3>
+          {categoryName ? <p className="mt-1.5 flex-1 text-sm text-text-1">{categoryName}</p> : <div className="flex-1" />}
           <span
             aria-hidden="true"
-            className="btn btn-ghost btn-sm mt-5 self-start gap-2 transition-all duration-300 group-hover:border-brass group-hover:text-brass group-hover:shadow-[0_0_16px_rgba(196,162,106,.25)]"
+            className="btn btn-ghost btn-sm mt-4 self-start gap-2 transition-all duration-300 group-hover:border-brass group-hover:text-brass group-hover:shadow-[0_0_16px_rgba(196,162,106,.25)]"
           >
             View Inventory
             <span className="inline-block transition-transform duration-300 group-hover:translate-x-1.5">→</span>

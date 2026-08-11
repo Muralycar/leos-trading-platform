@@ -16,7 +16,7 @@ export default function BrandsPage() {
       <div className="border-b border-line bg-bg-1 py-14">
         <div className="wrap">
           <div className="eyebrow">Brands</div>
-          <h1 className="mt-3.5">Live inventory and global sourcing, by manufacturer</h1>
+          <h1 className="mt-3.5 text-[clamp(35px,5.25vw,66px)]">Live inventory and global sourcing, by manufacturer</h1>
           <p className="mt-4 max-w-[60ch] text-[16px]">
             Genuine OEM stock held in UAE warehousing today, plus the manufacturers we source on request through our
             global procurement network.

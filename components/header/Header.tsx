@@ -12,8 +12,8 @@ export async function Header() {
   const productLinks = buildProductLinks(categories);
   const inventoryLinks = buildInventoryLinks(brands);
   const mobileLinks = buildMobileLinks(categories);
-  const dropdowns = [
-    { label: "Products", links: productLinks },
+  const dropdowns: { label: string; href?: string; links: typeof productLinks }[] = [
+    { label: "Products", href: "/products", links: productLinks },
     { label: "Inventory", links: inventoryLinks },
   ];
 
@@ -33,10 +33,20 @@ export async function Header() {
           </Link>
           {dropdowns.map((group) => (
             <div key={group.label} className="group relative">
-              <span className="flex cursor-pointer items-center gap-1.5 py-7 text-[13px] font-semibold tracking-[.03em] text-text-1 group-hover:text-text-0">
-                {group.label}
-                <ChevronDownIcon className="h-[11px] w-[11px] opacity-60" />
-              </span>
+              {group.href ? (
+                <Link
+                  href={group.href}
+                  className="flex items-center gap-1.5 py-7 text-[13px] font-semibold tracking-[.03em] text-text-1 group-hover:text-text-0"
+                >
+                  {group.label}
+                  <ChevronDownIcon className="h-[11px] w-[11px] opacity-60" />
+                </Link>
+              ) : (
+                <span className="flex cursor-pointer items-center gap-1.5 py-7 text-[13px] font-semibold tracking-[.03em] text-text-1 group-hover:text-text-0">
+                  {group.label}
+                  <ChevronDownIcon className="h-[11px] w-[11px] opacity-60" />
+                </span>
+              )}
               <div className="absolute left-[-16px] top-full hidden min-w-[230px] flex-col gap-0.5 rounded-m border border-line-strong bg-bg-2 p-2.5 shadow-[0_20px_40px_rgba(0,0,0,.5)] group-hover:flex">
                 {group.links.map((link) => (
                   <Link

@@ -4,9 +4,12 @@ import { SOURCING_BRAND_GROUPS } from "@/lib/brand-directory";
 /**
  * Compact chips grouped by industry category — deliberately not premium
  * cards (30+ of those would be visual noise and would overstate what's
- * genuinely sourced-on-request vs. held as physical stock). Each chip
- * links straight into the existing sourcing RFQ flow with the brand name
- * pre-filled — no new backend, reuses RfqForm's existing prefill prop.
+ * genuinely sourced-on-request vs. held as physical stock). Sourcing-only
+ * chips link into the existing sourcing RFQ flow with the brand name
+ * pre-filled (no new backend, reuses RfqForm's existing prefill prop);
+ * chips for brands with real live inventory (liveSlug set) link straight
+ * to that brand's inventory page instead, with a small green indicator so
+ * the distinction is visible, not just the different destination.
  */
 export function SourcingBrandGroups() {
   return (
@@ -18,11 +21,21 @@ export function SourcingBrandGroups() {
             {group.brands.map((b) => (
               <Link
                 key={b.name}
-                href={`/sourcing?brand=${encodeURIComponent(b.name)}#request`}
-                className="rounded-s border border-line-strong px-3.5 py-2 text-sm text-text-1 transition-colors hover:border-brass hover:text-brass"
+                href={b.liveSlug ? `/brands/${b.liveSlug}` : `/sourcing?brand=${encodeURIComponent(b.name)}#request`}
+                className={`inline-flex items-center gap-2 rounded-s border px-3.5 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass focus-visible:ring-offset-2 focus-visible:ring-offset-bg-0 ${
+                  b.liveSlug
+                    ? "border-[rgba(108,196,140,.35)] bg-[#0f1f16] text-text-0 hover:border-ok"
+                    : "border-line-strong text-text-1 hover:border-brass hover:bg-[rgba(196,162,106,.06)] hover:text-brass hover:shadow-[0_0_0_1px_rgba(196,162,106,.2)]"
+                }`}
               >
                 {b.name}
-                {b.note ? <span className="ml-1.5 text-[11px] text-text-2">({b.note})</span> : null}
+                {b.liveSlug ? (
+                  <span className="inline-flex items-center gap-1 font-mono text-[9.5px] font-semibold uppercase tracking-[.05em] text-ok">
+                    <span className="h-1.5 w-1.5 rounded-full bg-ok" />
+                    Live Stock
+                  </span>
+                ) : null}
+                {b.note ? <span className="text-[11px] text-text-2">({b.note})</span> : null}
               </Link>
             ))}
           </div>

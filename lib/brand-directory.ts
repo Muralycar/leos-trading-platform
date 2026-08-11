@@ -21,6 +21,14 @@ export interface SourcingBrand {
   name: string;
   /** Short qualifier shown after the name, e.g. distinguishing Kohler's marine line from its live generator-parts inventory. */
   note?: string;
+  /**
+   * Set only for brands that also have real, searchable live inventory
+   * (the `brands` table slug). When present, the chip links to that
+   * brand's /brands/[slug] page instead of the sourcing RFQ flow, and
+   * carries a "Live Stock" indicator — never set alongside `note`, since
+   * a noted entry (e.g. Kohler's marine line) is explicitly sourced-only.
+   */
+  liveSlug?: string;
 }
 
 export interface SourcingBrandGroup {
@@ -28,19 +36,28 @@ export interface SourcingBrandGroup {
   brands: SourcingBrand[];
 }
 
-// Grouped for the /brands page. Deliberately not identical to BRAND_TICKER:
-// Iveco/Kobelco's live-inventory lines aren't repeated here (they have their
-// own Live Inventory cards on that page), while Kohler reappears under
-// Marine for its separate, sourced-on-request marine-genset line. Yamaha
-// and Mercury are marine outboard-engine brands not in the ticker.
+// Grouped for the /brands page. Iveco/Kobelco/Kohler each appear once more
+// here (marked liveSlug, linking to real inventory) alongside the brands
+// genuinely sourced on request — Kohler additionally appears under Marine
+// for its separate, sourced-on-request marine-genset line (`note`, no
+// liveSlug there: that line isn't physically stocked). Yamaha and Mercury
+// are marine outboard-engine brands not in the BRAND_TICKER above.
 export const SOURCING_BRAND_GROUPS: SourcingBrandGroup[] = [
   {
     title: "Trucks & Commercial Vehicles",
-    brands: [{ name: "MAN" }, { name: "Scania" }, { name: "Mercedes-Benz" }, { name: "Hino" }, { name: "Astra" }],
+    brands: [
+      { name: "Iveco", liveSlug: "iveco" },
+      { name: "MAN" },
+      { name: "Scania" },
+      { name: "Mercedes-Benz" },
+      { name: "Hino" },
+      { name: "Astra" },
+    ],
   },
   {
     title: "Construction & Earthmoving",
     brands: [
+      { name: "Kobelco", liveSlug: "kobelco" },
       { name: "Caterpillar" },
       { name: "Komatsu" },
       { name: "Volvo" },
@@ -56,7 +73,15 @@ export const SOURCING_BRAND_GROUPS: SourcingBrandGroup[] = [
   },
   {
     title: "Engines & Power Generation",
-    brands: [{ name: "Cummins" }, { name: "Perkins" }, { name: "Deutz" }, { name: "MTU" }, { name: "FPT" }, { name: "John Deere" }],
+    brands: [
+      { name: "Kohler", liveSlug: "kohler" },
+      { name: "Cummins" },
+      { name: "Perkins" },
+      { name: "Deutz" },
+      { name: "MTU" },
+      { name: "FPT" },
+      { name: "John Deere" },
+    ],
   },
   {
     title: "Marine",
