@@ -17,7 +17,13 @@ const PROCUREMENT_STEPS = [
   { number: "04", title: "Quotation Issued", description: "RFQ delivered with export terms." },
 ];
 
-export default function SourcingPage() {
+interface PageProps {
+  searchParams: Promise<{ brand?: string }>;
+}
+
+export default async function SourcingPage({ searchParams }: PageProps) {
+  const { brand } = await searchParams;
+
   return (
     <>
       <PageHeader
@@ -37,7 +43,7 @@ export default function SourcingPage() {
             </p>
           </div>
           <div className="rounded-m border border-line bg-bg-1 p-8">
-            <RfqForm variant="sourcing" />
+            <RfqForm variant="sourcing" prefillPartNumber={brand ?? ""} />
           </div>
         </div>
       </section>
