@@ -13,17 +13,17 @@ export function DepthSplit() {
       <div className="wrap grid grid-cols-1 items-center gap-8 min-[901px]:grid-cols-2 min-[901px]:gap-16">
         <div className="relative aspect-[4/3] overflow-hidden rounded-m border border-line-strong bg-bg-2">
           <Image
-            src="/images/marketing/warehouse-export.png"
-            alt="Warehouse racking and export-ready inventory"
+            src="/images/inventory/Depth/parts-warehouse.png"
+            alt="Warehouse racking and organized spare parts inventory"
             fill
             sizes="(min-width: 901px) 50vw, 100vw"
-            className="object-cover"
+            className="object-cover object-center"
           />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,12,14,.1)_0%,rgba(11,12,14,.6)_100%)]" />
         </div>
         <div>
           <div className="eyebrow">Inventory Depth</div>
-          <h2 className="mt-3.5">Thousands of part numbers, held and shelf-ready</h2>
+          <h2 className="mt-3.5">Thousands of part numbers, stocked and shelf-ready</h2>
           <p className="mt-4 text-base">
             If it carries an OEM part number, chances are we can locate it — in our own racking, or through our supplier network.
           </p>
