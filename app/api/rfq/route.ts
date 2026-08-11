@@ -16,6 +16,9 @@ interface RfqPayload {
   company?: string;
   email: string;
   phone?: string;
+  whatsapp?: string;
+  country?: string;
+  brand?: string;
   partNumber?: string;
   quantity?: string;
   message?: string;
@@ -56,6 +59,9 @@ export async function POST(request: Request) {
     company: nullIfEmpty(body.company),
     email: body.email.trim(),
     phone: nullIfEmpty(body.phone),
+    whatsapp: nullIfEmpty(body.whatsapp),
+    country: nullIfEmpty(body.country),
+    brand: nullIfEmpty(body.brand),
     part_number: nullIfEmpty(body.partNumber),
     quantity_required: nullIfEmpty(body.quantity),
     message: nullIfEmpty(body.message),

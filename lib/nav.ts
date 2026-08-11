@@ -30,11 +30,11 @@ export function buildInventoryLinks(brands: Brand[]): NavLink[] {
 }
 
 export const SOURCING_LINKS: NavLink[] = [
+  { label: "How Sourcing Works", href: "/sourcing#journey" },
   { label: "Request a Part", href: "/sourcing#request" },
   { label: "Hard-to-Find Parts", href: "/sourcing#hard-to-find" },
   { label: "Obsolete Parts", href: "/sourcing#obsolete" },
   { label: "Genuine & Aftermarket Supply", href: "/sourcing#genuine-aftermarket" },
-  { label: "Global Procurement", href: "/sourcing#procurement" },
 ];
 
 export const TOP_LEVEL_LINKS: NavLink[] = [
@@ -46,6 +46,7 @@ export const TOP_LEVEL_LINKS: NavLink[] = [
 export function buildMobileLinks(categories: EquipmentCategory[]): NavLink[] {
   return [
     { label: "Home", href: "/" },
+    { label: "Products", href: "/products" },
     ...buildProductLinks(categories),
     { label: "Search All Stock", href: "/search" },
     { label: "Brands", href: "/brands" },

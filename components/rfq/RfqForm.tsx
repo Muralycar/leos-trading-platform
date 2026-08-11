@@ -19,6 +19,13 @@ const PART_NUMBER_LABEL: Record<RfqVariant, string> = {
   "search-no-result": "Part Number",
 };
 
+const MESSAGE_LABEL: Record<RfqVariant, string> = {
+  product: "Message",
+  sourcing: "Description / Requirement",
+  contact: "Message",
+  "search-no-result": "Message",
+};
+
 interface RfqFormProps {
   variant: RfqVariant;
   prefillPartNumber?: string;
@@ -38,6 +45,7 @@ export function RfqForm({
 }: RfqFormProps) {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const showExtendedFields = variant === "sourcing";
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -51,6 +59,9 @@ export function RfqForm({
       company: String(data.get("company") ?? ""),
       email: String(data.get("email") ?? ""),
       phone: String(data.get("phone") ?? ""),
+      whatsapp: String(data.get("whatsapp") ?? ""),
+      country: String(data.get("country") ?? ""),
+      brand: String(data.get("brand") ?? ""),
       partNumber: String(data.get("partNumber") ?? ""),
       quantity: String(data.get("quantity") ?? ""),
       message: String(data.get("message") ?? ""),
@@ -97,6 +108,48 @@ export function RfqForm({
     <form onSubmit={handleSubmit} className={`flex flex-col gap-5 ${className}`}>
       <div className="grid grid-cols-1 gap-5 min-[601px]:grid-cols-2">
         <label className="flex flex-col gap-2">
+          <span className={labelClass}>{PART_NUMBER_LABEL[variant]}</span>
+          <input
+            name="partNumber"
+            type="text"
+            defaultValue={prefillPartNumber}
+            placeholder={variant === "product" ? undefined : "Part number, or make / model / equipment details"}
+            className={inputClass}
+          />
+          {showExtendedFields ? (
+            <span className="text-[12px] text-text-2">
+              No part number? Describe the equipment, model or requirement instead.
+            </span>
+          ) : null}
+        </label>
+        {showExtendedFields ? (
+          <label className="flex flex-col gap-2">
+            <span className={labelClass}>Brand</span>
+            <input name="brand" type="text" placeholder="e.g. Caterpillar, Cummins, Kobelco" className={inputClass} />
+          </label>
+        ) : (
+          <label className="flex flex-col gap-2">
+            <span className={labelClass}>Quantity Required</span>
+            <input name="quantity" type="text" placeholder="e.g. 2 units" className={inputClass} />
+          </label>
+        )}
+      </div>
+
+      {showExtendedFields ? (
+        <div className="grid grid-cols-1 gap-5 min-[601px]:grid-cols-2">
+          <label className="flex flex-col gap-2">
+            <span className={labelClass}>Quantity Required</span>
+            <input name="quantity" type="text" placeholder="e.g. 2 units" className={inputClass} />
+          </label>
+          <label className="flex flex-col gap-2">
+            <span className={labelClass}>Country</span>
+            <input name="country" type="text" placeholder="Destination country" className={inputClass} />
+          </label>
+        </div>
+      ) : null}
+
+      <div className="grid grid-cols-1 gap-5 min-[601px]:grid-cols-2">
+        <label className="flex flex-col gap-2">
           <span className={labelClass}>Name</span>
           <input name="name" type="text" required className={inputClass} />
         </label>
@@ -115,29 +168,25 @@ export function RfqForm({
           <input name="phone" type="tel" className={inputClass} />
         </label>
       </div>
-      <div className="grid grid-cols-1 gap-5 min-[601px]:grid-cols-2">
+
+      {showExtendedFields ? (
         <label className="flex flex-col gap-2">
-          <span className={labelClass}>{PART_NUMBER_LABEL[variant]}</span>
-          <input
-            name="partNumber"
-            type="text"
-            defaultValue={prefillPartNumber}
-            placeholder={variant === "product" ? undefined : "Part number, or make / model / equipment details"}
-            className={inputClass}
-          />
+          <span className={labelClass}>WhatsApp Number</span>
+          <input name="whatsapp" type="tel" placeholder="If different from phone" className={inputClass} />
         </label>
-        <label className="flex flex-col gap-2">
-          <span className={labelClass}>Quantity Required</span>
-          <input name="quantity" type="text" placeholder="e.g. 2 units" className={inputClass} />
-        </label>
-      </div>
+      ) : null}
+
       <label className="flex flex-col gap-2">
-        <span className={labelClass}>Message</span>
+        <span className={labelClass}>{MESSAGE_LABEL[variant]}</span>
         <textarea
           name="message"
           rows={4}
           defaultValue={prefillMessage}
-          placeholder="Quantity, urgency, destination country"
+          placeholder={
+            showExtendedFields
+              ? "Machine/model, application, urgency, or destination — anything that helps us source the right part."
+              : "Quantity, urgency, destination country"
+          }
           className={inputClass}
         />
       </label>
