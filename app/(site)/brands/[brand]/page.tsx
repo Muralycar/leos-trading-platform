@@ -62,7 +62,7 @@ export default async function BrandPage({ params }: PageProps) {
       <section className="py-16">
         <div className="wrap">
           {products.length > 0 ? (
-            <div className="flex flex-col gap-px overflow-hidden rounded-m border border-line bg-line">
+            <div className="flex flex-col overflow-hidden rounded-m border border-line">
               {products.map((p) => (
                 <ResultRow key={p.id} product={p} brandName={b.name} />
               ))}

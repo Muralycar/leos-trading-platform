@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { SearchClient } from "@/components/search/SearchClient";
-import { getSiteSettings } from "@/lib/data/inventory";
+import { getSiteSettings, getTotalSkuCount, getTotalUnitCount, getLiveBrandCount } from "@/lib/data/inventory";
 
 export const metadata: Metadata = {
   title: "Inventory Search — Leos Trading FZE",
@@ -20,7 +20,7 @@ function ResultsSkeleton() {
   return (
     <div className="border-b border-line bg-bg-1 py-10">
       <div className="wrap">
-        <div className="eyebrow">Inventory Search</div>
+        <div className="eyebrow">Live Parts Inventory</div>
         <div className="mt-3.5 h-10 max-w-[560px] animate-pulse rounded-s bg-bg-2" />
         <div className="mt-6 h-[58px] max-w-[820px] animate-pulse rounded-m bg-bg-2" />
       </div>
@@ -34,10 +34,19 @@ function ResultsSkeleton() {
 }
 
 export default async function SearchPage() {
-  const settings = await getSiteSettings();
+  // Network-wide stats — independent of the query/filters a visitor picks,
+  // so they're fetched once per page load here (all already-cached reads)
+  // rather than recomputed by /api/search on every keystroke.
+  const [settings, totalSkus, totalUnits, liveBrandCount] = await Promise.all([
+    getSiteSettings(),
+    getTotalSkuCount(),
+    getTotalUnitCount(),
+    getLiveBrandCount(),
+  ]);
+
   return (
     <Suspense fallback={<ResultsSkeleton />}>
-      <SearchClient settings={settings} />
+      <SearchClient settings={settings} stats={{ totalSkus, totalUnits, liveBrandCount }} />
     </Suspense>
   );
 }

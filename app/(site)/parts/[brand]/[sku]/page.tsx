@@ -103,30 +103,6 @@ export default async function ProductPage({ params }: PageProps) {
             </span>
             Condition and exact fitment confirmed at RFQ stage — send your equipment serial number for cross-reference.
           </div>
-
-          <details className="mt-10 rounded-m border border-dashed border-line-strong px-5 py-4">
-            <summary className="cursor-pointer font-mono text-[11.5px] uppercase tracking-[.06em] text-text-2">
-              Page SEO Metadata
-            </summary>
-            <div className="mt-4 flex flex-col gap-2.5 text-[13px]">
-              <div>
-                <span className="block font-mono text-[10.5px] uppercase text-text-2">Meta Title</span>
-                <p className="text-text-0">
-                  {product.oemPartNumber} — {product.description} | {product.brandName} | Leos Trading FZE
-                </p>
-              </div>
-              <div>
-                <span className="block font-mono text-[10.5px] uppercase text-text-2">Meta Description</span>
-                <p className="text-text-0">{desc}</p>
-              </div>
-              <div>
-                <span className="block font-mono text-[10.5px] uppercase text-text-2">URL Slug</span>
-                <p className="text-text-0">
-                  /parts/{product.brandSlug}/{product.oemPartNumber.toLowerCase()}
-                </p>
-              </div>
-            </div>
-          </details>
         </div>
       </div>
 

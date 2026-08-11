@@ -78,12 +78,12 @@ export const getBrandBySlug = cache(async (slug: string): Promise<Brand | undefi
 // display order too, matching the site's established category ordering
 // (the 3 live categories, then the 3 sourcing ones) rather than DB order.
 const CATEGORY_DISPLAY: Record<string, { brandsLabel: string; imagePath: string | null }> = {
-  "truck-parts": { brandsLabel: "Iveco", imagePath: "/images/marketing/trucks.png" },
-  "construction-equipment-parts": { brandsLabel: "Kobelco", imagePath: "/images/marketing/construction-equipment.png" },
-  "generator-parts": { brandsLabel: "Kohler", imagePath: "/categories/generator-parts.png" },
-  "mining-industrial-parts": { brandsLabel: "Multi-brand sourcing network", imagePath: "/images/marketing/mining-equipment.png" },
-  "marine-parts": { brandsLabel: "Multi-brand sourcing network", imagePath: "/images/marketing/marine-engine.png" },
-  "tyres-batteries-accessories": { brandsLabel: "Multi-brand sourcing network", imagePath: "/images/marketing/tyres-batteries-accessories.png" },
+  "truck-parts": { brandsLabel: "Iveco", imagePath: "/categories/category-truck-parts.png" },
+  "construction-equipment-parts": { brandsLabel: "Kobelco", imagePath: "/categories/category-construction-parts.png" },
+  "generator-parts": { brandsLabel: "Kohler", imagePath: "/categories/category-generator-parts.png" },
+  "mining-industrial-parts": { brandsLabel: "Multi-brand sourcing network", imagePath: "/categories/category-mining-industrial.png" },
+  "marine-parts": { brandsLabel: "Multi-brand sourcing network", imagePath: "/categories/category-marine-parts.png" },
+  "tyres-batteries-accessories": { brandsLabel: "Multi-brand sourcing network", imagePath: "/categories/category-tyres-batteries.png" },
 };
 const CATEGORY_ORDER = Object.keys(CATEGORY_DISPLAY);
 
@@ -254,7 +254,14 @@ export const getTotalUnitCount = cache(async (): Promise<number> => {
   return products.reduce((sum, p) => sum + p.quantity, 0);
 });
 
+/**
+ * Distinct brands actually represented in published inventory — not simply
+ * every active row in the brands table (a brand can exist there for nav/
+ * footer purposes before it has any stock). Derived from the same cached
+ * getAllPublishedProducts() every other stat reads, so this adds no new
+ * Supabase query.
+ */
 export const getLiveBrandCount = cache(async (): Promise<number> => {
-  const brands = await getBrands();
-  return brands.length;
+  const products = await getAllPublishedProducts();
+  return new Set(products.map((p) => p.brandSlug)).size;
 });

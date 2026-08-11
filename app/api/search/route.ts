@@ -6,6 +6,13 @@ import { AVAILABILITY_LABEL, type AvailabilityStatus } from "@/lib/types";
 const AVAILABILITY_ORDER: AvailabilityStatus[] = ["in_stock", "limited_stock", "out_of_stock"];
 const SORT_OPTIONS: SortOption[] = ["relevance", "part-number", "stock"];
 
+// Server-side response pagination — searchProducts() still ranks the full
+// matched set in one pass (cheap at today's ~2,200 products, and stays
+// cheap into the tens of thousands per the redesign's pagination proposal),
+// but only one page of that ranked array is ever serialized into the HTTP
+// response. The browser never receives the other matches for a broad query.
+const PAGE_SIZE = 30;
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("q") ?? "";
@@ -16,6 +23,8 @@ export async function GET(request: Request) {
   );
   const sortParam = searchParams.get("sort");
   const sort: SortOption = SORT_OPTIONS.includes(sortParam as SortOption) ? (sortParam as SortOption) : "relevance";
+  const pageParam = parseInt(searchParams.get("page") ?? "1", 10);
+  const page = Number.isFinite(pageParam) && pageParam > 0 ? pageParam : 1;
 
   const [products, brands, categories] = await Promise.all([
     getAllPublishedProducts(),
@@ -25,7 +34,11 @@ export async function GET(request: Request) {
   const brandNameBySlug = Object.fromEntries(brands.map((b) => [b.slug, b.name]));
   const liveCategories = categories.filter((c) => c.status === "live");
 
-  const results = searchProducts({ query, brandSlugs, equipmentCategorySlugs, availabilityStatuses, sort }, brandNameBySlug, products);
+  const matches = searchProducts({ query, brandSlugs, equipmentCategorySlugs, availabilityStatuses, sort }, brandNameBySlug, products);
+  const matchedCount = matches.length;
+  const totalPages = Math.max(1, Math.ceil(matchedCount / PAGE_SIZE));
+  const start = (page - 1) * PAGE_SIZE;
+  const results = matches.slice(start, start + PAGE_SIZE);
 
   // Facet counts reflect the current query text plus every *other* selected
   // filter — never the facet's own selection — matching the Phase 2 UX.
@@ -63,7 +76,10 @@ export async function GET(request: Request) {
 
   return NextResponse.json({
     results,
-    total: products.length,
+    matchedCount,
+    page,
+    pageSize: PAGE_SIZE,
+    totalPages,
     brandOptions,
     categoryOptions,
     availabilityOptions,
