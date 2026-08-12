@@ -13,8 +13,8 @@ export function DepthSplit() {
       <div className="wrap grid grid-cols-1 items-center gap-8 min-[901px]:grid-cols-2 min-[901px]:gap-16">
         <div className="relative aspect-[4/3] overflow-hidden rounded-m border border-paper-line-strong bg-paper-2">
           <Image
-            src="/images/inventory/Depth/parts-warehouse.png"
-            alt="Warehouse racking and organized spare parts inventory"
+            src="/images/inventory/warehouse-live-01.png"
+            alt="Warehouse racking with forklifts moving stock in organized aisles"
             fill
             sizes="(min-width: 901px) 50vw, 100vw"
             className="object-cover object-center"
