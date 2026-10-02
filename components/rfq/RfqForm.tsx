@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CheckIcon } from "@/components/ui/Icons";
+import { HONEYPOT_FIELD } from "@/lib/rfq/spam-guard";
 
 export type RfqVariant = "product" | "sourcing" | "contact" | "search-no-result";
 
@@ -46,6 +47,16 @@ export function RfqForm({
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const showExtendedFields = variant === "sourcing";
+  // Bot protection (checked server-side in lib/rfq/spam-guard.ts): when the
+  // form appeared, and whether a real keyboard/pointer/touch event happened.
+  const startedAtRef = useRef<number | null>(null);
+  const interactedRef = useRef(false);
+  useEffect(() => {
+    startedAtRef.current = Date.now();
+  }, []);
+  const markInteracted = () => {
+    interactedRef.current = true;
+  };
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -66,6 +77,9 @@ export function RfqForm({
       quantity: String(data.get("quantity") ?? ""),
       message: String(data.get("message") ?? ""),
       source: SOURCE_BY_VARIANT[variant],
+      startedAt: startedAtRef.current,
+      interacted: interactedRef.current,
+      [HONEYPOT_FIELD]: String(data.get(HONEYPOT_FIELD) ?? ""),
     };
 
     try {
@@ -105,7 +119,20 @@ export function RfqForm({
     "w-full rounded-s border border-line-strong bg-bg-1 px-3.5 py-3 text-[14px] text-text-0 placeholder:text-text-2 focus:border-brass focus:outline-none";
 
   return (
-    <form onSubmit={handleSubmit} className={`flex flex-col gap-5 ${className}`}>
+    <form
+      onSubmit={handleSubmit}
+      onKeyDown={markInteracted}
+      onPointerDown={markInteracted}
+      onTouchStart={markInteracted}
+      className={`flex flex-col gap-5 ${className}`}
+    >
+      {/* Honeypot: hidden from people and screen readers; bots fill it in. */}
+      <div aria-hidden="true" style={{ position: "absolute", left: "-10000px", width: 1, height: 1, overflow: "hidden" }}>
+        <label>
+          Leave this field empty
+          <input type="text" name={HONEYPOT_FIELD} tabIndex={-1} autoComplete="off" defaultValue="" />
+        </label>
+      </div>
       <div className="grid grid-cols-1 gap-5 min-[601px]:grid-cols-2">
         <label className="flex flex-col gap-2">
           <span className={labelClass}>{PART_NUMBER_LABEL[variant]}</span>
