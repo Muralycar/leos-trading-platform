@@ -4,7 +4,7 @@ export function Gallery({ imagePath, description }: { imagePath: string | null; 
   return (
     <div className="relative flex aspect-square items-center justify-center rounded-m border border-line bg-bg-2 p-10">
       {imagePath ? (
-        <Image src={imagePath} alt={description} fill className="object-contain p-10" />
+        <Image src={imagePath} alt={description} fill sizes="(min-width: 901px) 50vw, 100vw" className="object-contain p-10" />
       ) : (
         <span className="px-6 text-center font-mono text-[13px] text-text-2">{description} — photography pending</span>
       )}
