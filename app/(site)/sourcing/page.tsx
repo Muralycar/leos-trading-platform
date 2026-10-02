@@ -180,7 +180,7 @@ export default async function SourcingPage({ searchParams }: PageProps) {
           </div>
           <div className="group relative aspect-[4/3] overflow-hidden rounded-m border border-line-strong bg-bg-2">
             <Image
-              src="/images/marketing/hard-to-find-parts-search.png"
+              src="/images/marketing/hard-to-find-parts-search.webp"
               alt="Industrial part-number search and global sourcing"
               fill
               sizes="(min-width: 901px) 50vw, 100vw"
@@ -194,7 +194,7 @@ export default async function SourcingPage({ searchParams }: PageProps) {
         <div className="wrap grid grid-cols-1 items-center gap-10 min-[901px]:grid-cols-2 min-[901px]:gap-16">
           <div className="group relative aspect-[4/3] overflow-hidden rounded-m border border-line-strong bg-bg-2 min-[901px]:order-2">
             <Image
-              src="/images/marketing/obsolete-parts-inventory.png"
+              src="/images/marketing/obsolete-parts-inventory.webp"
               alt="Obsolete and discontinued industrial parts inventory"
               fill
               sizes="(min-width: 901px) 50vw, 100vw"
