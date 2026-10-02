@@ -67,6 +67,7 @@ function BrandLogo({ name }: { name: string }) {
         alt={name}
         width={logo.width}
         height={logo.height}
+        sizes="240px"
         className={`w-auto object-contain opacity-70 grayscale transition-all duration-300 ease-out group-hover/logo:opacity-100 group-hover/logo:grayscale-0 ${heightClasses}`}
       />
     </div>
@@ -110,6 +111,7 @@ export function BrandStrip() {
               alt={name}
               width={logo.width}
               height={logo.height}
+              sizes="240px"
               className={`w-auto object-contain opacity-70 grayscale ${ENLARGED_BRANDS.has(name) ? "h-[81px]" : "h-[50px]"}`}
             />
           );
