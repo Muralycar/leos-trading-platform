@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { createAnonSupabaseClient } from "@/lib/supabase/server";
+import { createAnonSupabaseClient, createServiceRoleClient } from "@/lib/supabase/server";
+import { checkRfqSpam, HONEYPOT_FIELD } from "@/lib/rfq/spam-guard";
 
 // Backs every RFQ / Request-a-Part / Contact / search-no-result form.
 // Persists to rfq_enquiries via the anon-key client — RLS's "anyone can
@@ -23,7 +24,14 @@ interface RfqPayload {
   quantity?: string;
   message?: string;
   source: RfqSource;
+  startedAt?: number;
+  interacted?: boolean;
+  [HONEYPOT_FIELD]?: string;
 }
+
+// Same email submitting more than this many times in the window = flood.
+const RATE_LIMIT_MAX = 3;
+const RATE_LIMIT_WINDOW_MS = 30 * 60 * 1000;
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -53,7 +61,46 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "Name, a valid email, and source are required." }, { status: 400 });
   }
 
-  const supabase = createAnonSupabaseClient();
+  const verdict = checkRfqSpam({
+    honeypot: body[HONEYPOT_FIELD],
+    startedAt: body.startedAt,
+    interacted: body.interacted,
+    name: body.name,
+    company: body.company,
+    email: body.email,
+    partNumber: body.partNumber,
+    message: body.message,
+  });
+  if (!verdict.ok) {
+    console.warn(`[rfq_enquiry] blocked: ${verdict.reason}`);
+    if (verdict.visible) {
+      return NextResponse.json(
+        { ok: false, error: "This form has expired. Please refresh the page and try again." },
+        { status: 400 },
+      );
+    }
+    // Pretend success so bots get no signal to adapt.
+    return NextResponse.json({ ok: true });
+  }
+
+  // Service-role client when configured (lets the public anon INSERT policy
+  // be closed — see migrations/0016), anon client as a fallback.
+  const hasServiceRole = Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY);
+  const supabase = hasServiceRole ? createServiceRoleClient() : createAnonSupabaseClient();
+
+  if (hasServiceRole) {
+    const since = new Date(Date.now() - RATE_LIMIT_WINDOW_MS).toISOString();
+    const { count } = await supabase
+      .from("rfq_enquiries")
+      .select("id", { count: "exact", head: true })
+      .eq("email", body.email.trim())
+      .gte("created_at", since);
+    if ((count ?? 0) >= RATE_LIMIT_MAX) {
+      console.warn("[rfq_enquiry] blocked: rate_limit");
+      return NextResponse.json({ ok: true });
+    }
+  }
+
   const { error } = await supabase.from("rfq_enquiries").insert({
     name: body.name.trim(),
     company: nullIfEmpty(body.company),
