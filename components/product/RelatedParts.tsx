@@ -22,7 +22,7 @@ export function RelatedParts({ products }: { products: Product[] }) {
         <Link key={p.id} href={`/parts/${p.brandSlug}/${p.oemPartNumber.toLowerCase()}`} className="flex flex-col bg-bg-0">
           <div className="relative flex aspect-square items-center justify-center bg-bg-2 p-5">
             {p.imagePath ? (
-              <Image src={p.imagePath} alt={p.description} fill className="object-contain p-5" />
+              <Image src={p.imagePath} alt={p.description} fill sizes="(min-width: 901px) 25vw, 50vw" className="object-contain p-5" />
             ) : (
               <span className="px-3 text-center font-mono text-[10px] text-text-2">{p.description}</span>
             )}
