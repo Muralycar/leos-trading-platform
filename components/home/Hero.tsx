@@ -23,7 +23,7 @@ export function Hero() {
   return (
     <section className="relative flex items-center overflow-hidden border-b border-line min-[901px]:min-h-[600px]">
       <Image
-        src="/images/Hero/hero-industrial-yellow.png"
+        src="/images/Hero/hero-industrial-yellow.webp"
         alt=""
         fill
         priority
