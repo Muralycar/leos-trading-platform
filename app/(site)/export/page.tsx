@@ -44,7 +44,7 @@ export default function ExportPage() {
           </div>
           <div className="relative aspect-[4/3] overflow-hidden rounded-m border border-line-strong bg-bg-2">
             <Image
-              src="/images/marketing/warehouse-export.png"
+              src="/images/marketing/warehouse-export.webp"
               alt="Export packing and logistics operations"
               fill
               sizes="(min-width: 901px) 50vw, 100vw"
