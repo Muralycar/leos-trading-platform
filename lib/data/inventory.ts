@@ -78,12 +78,12 @@ export const getBrandBySlug = cache(async (slug: string): Promise<Brand | undefi
 // display order too, matching the site's established category ordering
 // (the 3 live categories, then the 3 sourcing ones) rather than DB order.
 const CATEGORY_DISPLAY: Record<string, { brandsLabel: string; imagePath: string | null }> = {
-  "truck-parts": { brandsLabel: "Iveco", imagePath: "/categories/category-truck-parts.png" },
-  "construction-equipment-parts": { brandsLabel: "Kobelco", imagePath: "/categories/category-construction-parts.png" },
-  "generator-parts": { brandsLabel: "Kohler", imagePath: "/categories/category-generator-parts.png" },
-  "mining-industrial-parts": { brandsLabel: "Multi-brand sourcing network", imagePath: "/categories/category-mining-industrial.png" },
-  "marine-parts": { brandsLabel: "Multi-brand sourcing network", imagePath: "/categories/category-marine-parts.png" },
-  "tyres-batteries-accessories": { brandsLabel: "Multi-brand sourcing network", imagePath: "/categories/category-tyres-batteries.png" },
+  "truck-parts": { brandsLabel: "Iveco", imagePath: "/categories/category-truck-parts.webp" },
+  "construction-equipment-parts": { brandsLabel: "Kobelco", imagePath: "/categories/category-construction-parts.webp" },
+  "generator-parts": { brandsLabel: "Kohler", imagePath: "/categories/category-generator-parts.webp" },
+  "mining-industrial-parts": { brandsLabel: "Multi-brand sourcing network", imagePath: "/categories/category-mining-industrial.webp" },
+  "marine-parts": { brandsLabel: "Multi-brand sourcing network", imagePath: "/categories/category-marine-parts.webp" },
+  "tyres-batteries-accessories": { brandsLabel: "Multi-brand sourcing network", imagePath: "/categories/category-tyres-batteries.webp" },
 };
 const CATEGORY_ORDER = Object.keys(CATEGORY_DISPLAY);
 
