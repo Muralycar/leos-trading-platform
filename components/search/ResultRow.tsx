@@ -50,7 +50,7 @@ export function ResultRow({ product, brandName }: { product: Product; brandName:
       <Link href={href} className="flex min-w-0 items-center gap-3">
         {product.imagePath ? (
           <span className="relative h-8 w-8 flex-shrink-0 overflow-hidden rounded-s bg-bg-2">
-            <Image src={product.imagePath} alt="" fill className="object-contain p-1" />
+            <Image src={product.imagePath} alt="" fill sizes="32px" className="object-contain p-1" />
           </span>
         ) : null}
         <span className="min-w-0">
