@@ -23,7 +23,7 @@ export async function StatStrip({ variant = "default" }: { variant?: "default" |
       <div className="relative overflow-hidden border-b border-line bg-bg-0">
         <div className="absolute inset-y-0 left-0 w-[38%] opacity-25">
           <Image
-            src="/images/inventory/Depth/warehouse.png"
+            src="/images/inventory/Depth/warehouse.webp"
             alt=""
             fill
             sizes="40vw"
