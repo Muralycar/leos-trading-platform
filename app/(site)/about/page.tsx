@@ -38,7 +38,7 @@ export default function AboutPage() {
         <div className="wrap grid grid-cols-1 items-center gap-10 min-[901px]:grid-cols-2 min-[901px]:gap-16">
           <div className="relative aspect-[4/3] overflow-hidden rounded-m border border-line-strong bg-bg-2">
             <Image
-              src="/images/marketing/supply-sourcing-export.png"
+              src="/images/marketing/supply-sourcing-export.webp"
               alt="Warehouse, port and export operations"
               fill
               sizes="(min-width: 901px) 50vw, 100vw"
