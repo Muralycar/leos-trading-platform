@@ -32,6 +32,7 @@ export async function Footer() {
           <Link href="/sourcing" className="mb-2.5 block text-sm text-text-1 hover:text-yellow">Sourcing</Link>
           <Link href="/export" className="mb-2.5 block text-sm text-text-1 hover:text-yellow">Export</Link>
           <Link href="/brands" className="mb-2.5 block text-sm text-text-1 hover:text-yellow">Brands</Link>
+          <Link href="/machinery" className="mb-2.5 block text-sm text-text-1 hover:text-yellow">Machinery</Link>
         </div>
         <div>
           <h4 className="mb-4 font-mono text-[11px] uppercase tracking-[.1em] text-yellow">Contact</h4>

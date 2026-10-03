@@ -18,6 +18,7 @@ const VALID_STATUSES: RfqStatus[] = [
   "revision_requested",
   "lost",
   "closed",
+  "spam",
 ];
 
 export async function updateRfqStatusAction(id: string, formData: FormData) {

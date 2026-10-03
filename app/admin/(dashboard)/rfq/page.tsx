@@ -20,6 +20,7 @@ const STATUSES: RfqStatus[] = [
   "revision_requested",
   "lost",
   "closed",
+  "spam",
 ];
 
 const STATUS_LABEL: Record<RfqStatus, string> = {
@@ -33,6 +34,7 @@ const STATUS_LABEL: Record<RfqStatus, string> = {
   revision_requested: "Revision Requested",
   lost: "Lost",
   closed: "Closed",
+  spam: "Spam",
 };
 
 const STATUS_COLOR: Record<RfqStatus, string> = {
@@ -46,6 +48,7 @@ const STATUS_COLOR: Record<RfqStatus, string> = {
   revision_requested: "text-warn",
   lost: "text-safety",
   closed: "text-text-2",
+  spam: "text-safety",
 };
 
 interface PageProps {
@@ -96,7 +99,7 @@ export default async function AdminRfqListPage({ searchParams }: PageProps) {
           className={`min-w-[280px] flex-1 ${inputClass}`}
         />
         <select name="status" defaultValue={status ?? ""} className={inputClass}>
-          <option value="">All statuses</option>
+          <option value="">All (spam hidden)</option>
           {STATUSES.map((s) => (
             <option key={s} value={s}>
               {STATUS_LABEL[s]}
