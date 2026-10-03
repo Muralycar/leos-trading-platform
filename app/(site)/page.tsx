@@ -6,6 +6,7 @@ import { DepthSplit } from "@/components/home/DepthSplit";
 import { BrandStrip } from "@/components/home/BrandStrip";
 import { FeaturedGrid } from "@/components/home/FeaturedGrid";
 import { GlobalSourcing } from "@/components/home/GlobalSourcing";
+import { MachineryBanner } from "@/components/home/MachineryBanner";
 import { CtaBanner } from "@/components/home/CtaBanner";
 
 export default function HomePage() {
@@ -17,6 +18,7 @@ export default function HomePage() {
       <WhyGrid />
       <DepthSplit />
       <FeaturedGrid />
+      <MachineryBanner />
       <BrandStrip />
       <GlobalSourcing />
       <CtaBanner variant="dark-accent" />

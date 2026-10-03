@@ -78,6 +78,9 @@ export async function listRfqEnquiries(params: RfqListParams): Promise<RfqListRe
 
   if (params.status) {
     query = query.eq("status", params.status);
+  } else {
+    // Spam is hidden unless explicitly filtered for ("Spam" in the status dropdown).
+    query = query.neq("status", "spam");
   }
 
   const q = params.query?.trim();

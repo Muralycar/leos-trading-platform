@@ -9,7 +9,7 @@ import { checkRfqSpam, HONEYPOT_FIELD } from "@/lib/rfq/spam-guard";
 // the service-role client. Email notification (RESEND_API_KEY) is a
 // documented fast-follow, not required for persistence itself.
 
-const VALID_SOURCES = ["product_page", "sourcing_request", "contact", "search_no_result"] as const;
+const VALID_SOURCES = ["product_page", "sourcing_request", "contact", "search_no_result", "machinery"] as const;
 type RfqSource = (typeof VALID_SOURCES)[number];
 
 interface RfqPayload {
