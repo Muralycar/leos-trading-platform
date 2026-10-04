@@ -24,10 +24,3 @@ export function revalidatePublicProductPaths() {
   revalidatePath("/parts/[brand]/[sku]", "page");
   revalidateTag(CATALOG_CACHE_TAG);
 }
-
-/** Machinery equivalent: refresh the public machinery pages after any admin change. */
-export function revalidatePublicMachinePaths() {
-  revalidatePath("/", "page");
-  revalidatePath("/machinery", "page");
-  revalidatePath("/machinery/[slug]", "page");
-}

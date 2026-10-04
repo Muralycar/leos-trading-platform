@@ -39,7 +39,6 @@ export const SOURCING_LINKS: NavLink[] = [
 
 export const TOP_LEVEL_LINKS: NavLink[] = [
   { label: "Brands", href: "/brands" },
-  { label: "Machinery", href: "/machinery" },
   { label: "Export", href: "/export" },
   { label: "About", href: "/about" },
 ];
@@ -51,7 +50,6 @@ export function buildMobileLinks(categories: EquipmentCategory[]): NavLink[] {
     ...buildProductLinks(categories),
     { label: "Search All Stock", href: "/search" },
     { label: "Brands", href: "/brands" },
-    { label: "Machinery", href: "/machinery" },
     { label: "Request a Part", href: "/sourcing#request" },
     { label: "Sourcing", href: "/sourcing" },
     { label: "Export", href: "/export" },

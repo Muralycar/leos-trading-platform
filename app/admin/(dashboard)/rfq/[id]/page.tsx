@@ -35,7 +35,6 @@ const STATUSES: RfqStatus[] = [
   "revision_requested",
   "lost",
   "closed",
-  "spam",
 ];
 
 const STATUS_LABEL: Record<RfqStatus, string> = {
@@ -49,7 +48,6 @@ const STATUS_LABEL: Record<RfqStatus, string> = {
   revision_requested: "Revision Requested",
   lost: "Lost",
   closed: "Closed",
-  spam: "Spam",
 };
 
 const STATUS_COLOR: Record<RfqStatus, string> = {
@@ -63,7 +61,6 @@ const STATUS_COLOR: Record<RfqStatus, string> = {
   revision_requested: "text-warn",
   lost: "text-safety",
   closed: "text-text-2",
-  spam: "text-safety",
 };
 
 const SOURCE_LABEL: Record<string, string> = {
@@ -71,7 +68,6 @@ const SOURCE_LABEL: Record<string, string> = {
   sourcing_request: "Sourcing Request",
   contact: "Contact Form",
   search_no_result: "Search (No Result)",
-  machinery: "Machinery",
 };
 
 interface PageProps {
@@ -251,14 +247,6 @@ export default async function AdminRfqDetailPage({ params }: PageProps) {
                 Update Status
               </button>
             </form>
-            {rfq.status !== "spam" ? (
-              <form action={updateRfqStatusAction.bind(null, rfq.id)} className="mt-3">
-                <input type="hidden" name="status" value="spam" />
-                <button type="submit" className="btn btn-ghost btn-sm">
-                  Mark as spam
-                </button>
-              </form>
-            ) : null}
           </div>
 
           <div className="rounded-m border border-line bg-bg-1 p-6">

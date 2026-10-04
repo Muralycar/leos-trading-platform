@@ -4,14 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import { CheckIcon } from "@/components/ui/Icons";
 import { HONEYPOT_FIELD } from "@/lib/rfq/spam-guard";
 
-export type RfqVariant = "product" | "sourcing" | "contact" | "search-no-result" | "machinery";
+export type RfqVariant = "product" | "sourcing" | "contact" | "search-no-result";
 
 const SOURCE_BY_VARIANT: Record<RfqVariant, string> = {
   product: "product_page",
   sourcing: "sourcing_request",
   contact: "contact",
   "search-no-result": "search_no_result",
-  machinery: "machinery",
 };
 
 const PART_NUMBER_LABEL: Record<RfqVariant, string> = {
@@ -19,7 +18,6 @@ const PART_NUMBER_LABEL: Record<RfqVariant, string> = {
   sourcing: "Part Number or Equipment Details",
   contact: "Part Number or Equipment Details (optional)",
   "search-no-result": "Part Number",
-  machinery: "Machine / Model",
 };
 
 const MESSAGE_LABEL: Record<RfqVariant, string> = {
@@ -27,13 +25,11 @@ const MESSAGE_LABEL: Record<RfqVariant, string> = {
   sourcing: "Description / Requirement",
   contact: "Message",
   "search-no-result": "Message",
-  machinery: "Requirements",
 };
 
 interface RfqFormProps {
   variant: RfqVariant;
   prefillPartNumber?: string;
-  prefillBrand?: string;
   prefillMessage?: string;
   submitLabel?: string;
   className?: string;
@@ -44,14 +40,13 @@ type Status = "idle" | "submitting" | "success" | "error";
 export function RfqForm({
   variant,
   prefillPartNumber = "",
-  prefillBrand = "",
   prefillMessage = "",
   submitLabel = "Submit Request for Quotation",
   className = "",
 }: RfqFormProps) {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const showExtendedFields = variant === "sourcing" || variant === "machinery";
+  const showExtendedFields = variant === "sourcing";
   // Bot protection (checked server-side in lib/rfq/spam-guard.ts): when the
   // form appeared, and whether a real keyboard/pointer/touch event happened.
   const startedAtRef = useRef<number | null>(null);
@@ -145,13 +140,7 @@ export function RfqForm({
             name="partNumber"
             type="text"
             defaultValue={prefillPartNumber}
-            placeholder={
-              variant === "product"
-                ? undefined
-                : variant === "machinery"
-                  ? "e.g. Komatsu D475A, Tadano GR-500, Iveco Stralis"
-                  : "Part number, or make / model / equipment details"
-            }
+            placeholder={variant === "product" ? undefined : "Part number, or make / model / equipment details"}
             className={inputClass}
           />
           {showExtendedFields ? (
@@ -163,13 +152,7 @@ export function RfqForm({
         {showExtendedFields ? (
           <label className="flex flex-col gap-2">
             <span className={labelClass}>Brand</span>
-            <input
-              name="brand"
-              type="text"
-              defaultValue={prefillBrand}
-              placeholder={variant === "machinery" ? "e.g. Komatsu, Caterpillar, Volvo" : "e.g. Caterpillar, Cummins, Kobelco"}
-              className={inputClass}
-            />
+            <input name="brand" type="text" placeholder="e.g. Caterpillar, Cummins, Kobelco" className={inputClass} />
           </label>
         ) : (
           <label className="flex flex-col gap-2">
@@ -182,7 +165,7 @@ export function RfqForm({
       {showExtendedFields ? (
         <div className="grid grid-cols-1 gap-5 min-[601px]:grid-cols-2">
           <label className="flex flex-col gap-2">
-            <span className={labelClass}>{variant === "machinery" ? "Units Required" : "Quantity Required"}</span>
+            <span className={labelClass}>Quantity Required</span>
             <input name="quantity" type="text" placeholder="e.g. 2 units" className={inputClass} />
           </label>
           <label className="flex flex-col gap-2">
@@ -228,9 +211,7 @@ export function RfqForm({
           defaultValue={prefillMessage}
           placeholder={
             showExtendedFields
-              ? variant === "machinery"
-                ? "Year range, hours / mileage, new or used, budget, destination — anything that helps us find the right machine."
-                : "Machine/model, application, urgency, or destination — anything that helps us source the right part."
+              ? "Machine/model, application, urgency, or destination — anything that helps us source the right part."
               : "Quantity, urgency, destination country"
           }
           className={inputClass}

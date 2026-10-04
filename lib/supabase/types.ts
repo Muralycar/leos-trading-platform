@@ -14,9 +14,7 @@ export type ProductStatus = "draft" | "published" | "archived";
 export type ProductCondition = "genuine_oem" | "aftermarket" | "obsolete_dead_stock" | "used_serviceable";
 export type BrandStatus = "active" | "archived";
 export type IdentifierType = "alternative" | "superseded" | "cross_reference";
-export type RfqSource = "product_page" | "sourcing_request" | "contact" | "search_no_result" | "machinery";
-export type MachineStatus = "available" | "reserved" | "sold" | "sourcing";
-export type MachineCondition = "new" | "used";
+export type RfqSource = "product_page" | "sourcing_request" | "contact" | "search_no_result";
 export type RfqStatus =
   | "new"
   | "reviewing"
@@ -27,8 +25,7 @@ export type RfqStatus =
   | "accepted"
   | "revision_requested"
   | "lost"
-  | "closed"
-  | "spam";
+  | "closed";
 export type ImportJobStatus =
   | "pending"
   | "mapped"
@@ -431,52 +428,6 @@ export interface Database {
           updated_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["rfq_enquiries"]["Insert"]>;
-        Relationships: [];
-      };
-      machines: {
-        Row: {
-          id: string;
-          slug: string;
-          title: string;
-          category: string;
-          brand: string;
-          model: string | null;
-          condition: MachineCondition | null;
-          year: number | null;
-          hours_or_km: number | null;
-          capacity: string | null;
-          location: string | null;
-          price_aed: number | null;
-          description: string | null;
-          specs: Record<string, string>;
-          images: string[];
-          status: MachineStatus;
-          is_published: boolean;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          slug: string;
-          title: string;
-          category: string;
-          brand: string;
-          model?: string | null;
-          condition?: MachineCondition | null;
-          year?: number | null;
-          hours_or_km?: number | null;
-          capacity?: string | null;
-          location?: string | null;
-          price_aed?: number | null;
-          description?: string | null;
-          specs?: Record<string, string>;
-          images?: string[];
-          status?: MachineStatus;
-          is_published?: boolean;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: Partial<Database["public"]["Tables"]["machines"]["Insert"]>;
         Relationships: [];
       };
       pages: {

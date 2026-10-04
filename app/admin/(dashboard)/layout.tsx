@@ -9,7 +9,6 @@ import { signOut } from "./actions";
 const NAV_LINKS = [
   { label: "Dashboard", href: "/admin" },
   { label: "Products", href: "/admin/products" },
-  { label: "Machinery", href: "/admin/machines" },
   { label: "Import", href: "/admin/import" },
   { label: "RFQ Enquiries", href: "/admin/rfq" },
   { label: "Quotations", href: "/admin/quotations" },
