@@ -3,6 +3,7 @@ import Script from "next/script";
 import { Barlow_Condensed, Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { LeadEventTracker } from "@/components/analytics/LeadEventTracker";
 
 const GTM_ID = "GTM-P7F6FKQX";
 
@@ -61,6 +62,7 @@ export default function RootLayout({
             title="Google Tag Manager"
           />
         </noscript>
+        <LeadEventTracker />
         {children}
         <Script
           id="google-tag-manager"
