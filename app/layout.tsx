@@ -29,18 +29,18 @@ const plexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Leos Trading FZE — OEM Parts, Industrial Equipment & Global Sourcing",
+  title: "OEM & Aftermarket Spare Parts Supplier UAE | Leos Trading",
   description:
-    "UAE-based global supplier of OEM and aftermarket parts for trucks, construction equipment, generators, mining and marine applications. Search available stock or request global sourcing.",
+    "Leos Trading FZE supplies OEM, aftermarket, obsolete and hard-to-find spare parts for trucks, construction equipment, generators, marine and industrial applications worldwide from the UAE.",
   // "./" = each page's own URL (without ?filters), so search engines index one clean version of every page.
   alternates: { canonical: "./" },
   openGraph: {
     type: "website",
     siteName: SITE_NAME,
     locale: "en_AE",
-    title: "Leos Trading FZE — OEM Parts, Machinery & Global Sourcing from the UAE",
+    title: "OEM & Aftermarket Spare Parts Supplier UAE | Leos Trading",
     description:
-      "OEM and aftermarket parts, new and used machinery, trucks and forklifts — in stock or sourced to order, with export from the UAE.",
+      "OEM, aftermarket, obsolete and hard-to-find spare parts for trucks, construction equipment, generators, marine and industrial applications, supplied worldwide from the UAE.",
   },
 };
 
