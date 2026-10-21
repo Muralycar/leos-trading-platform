@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { CheckIcon } from "@/components/ui/Icons";
 import { HONEYPOT_FIELD } from "@/lib/rfq/spam-guard";
+import { pushLeadEvent } from "@/components/analytics/LeadEventTracker";
 
 export type RfqVariant = "product" | "sourcing" | "contact" | "search-no-result" | "machinery";
 
@@ -52,13 +53,13 @@ export function RfqForm({
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const showExtendedFields = variant === "sourcing" || variant === "machinery";
-  // Bot protection (checked server-side in lib/rfq/spam-guard.ts): when the
-  // form appeared, and whether a real keyboard/pointer/touch event happened.
   const startedAtRef = useRef<number | null>(null);
   const interactedRef = useRef(false);
+
   useEffect(() => {
     startedAtRef.current = Date.now();
   }, []);
+
   const markInteracted = () => {
     interactedRef.current = true;
   };
@@ -97,6 +98,12 @@ export function RfqForm({
         const body = await res.json().catch(() => null);
         throw new Error(body?.error ?? "Something went wrong. Please try again.");
       }
+
+      pushLeadEvent("rfq_submit", {
+        form_variant: variant,
+        lead_source: SOURCE_BY_VARIANT[variant],
+        page_path: window.location.pathname,
+      });
       setStatus("success");
     } catch (err) {
       setStatus("error");
@@ -106,10 +113,7 @@ export function RfqForm({
 
   if (status === "success") {
     return (
-      <div
-        role="status"
-        className={`rounded-m border border-ok/40 bg-ok/10 px-6 py-10 text-center ${className}`}
-      >
+      <div role="status" className={`rounded-m border border-ok/40 bg-ok/10 px-6 py-10 text-center ${className}`}>
         <CheckIcon className="mx-auto mb-4 h-10 w-10 text-ok" />
         <h3 className="text-text-0">Request received</h3>
         <p className="mx-auto mt-2 max-w-[40ch] text-sm text-text-1">
@@ -131,7 +135,6 @@ export function RfqForm({
       onTouchStart={markInteracted}
       className={`flex flex-col gap-5 ${className}`}
     >
-      {/* Honeypot: hidden from people and screen readers; bots fill it in. */}
       <div aria-hidden="true" style={{ position: "absolute", left: "-10000px", width: 1, height: 1, overflow: "hidden" }}>
         <label>
           Leave this field empty
