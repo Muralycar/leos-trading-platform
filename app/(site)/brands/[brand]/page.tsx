@@ -7,6 +7,53 @@ interface PageProps {
   params: Promise<{ brand: string }>;
 }
 
+const BRAND_SEO: Record<string, { title: string; description: string }> = {
+  iveco: {
+    title: "Iveco Truck Spare Parts UAE | Leos Trading",
+    description: "Search genuine Iveco truck spare parts inventory in the UAE by part number, with sourcing support for additional Iveco parts and export worldwide.",
+  },
+  kobelco: {
+    title: "Kobelco Excavator Spare Parts UAE | Leos Trading",
+    description: "Search genuine Kobelco excavator spare parts inventory in the UAE by part number, with sourcing support for hard-to-find Kobelco components.",
+  },
+  kohler: {
+    title: "Kohler Generator Spare Parts UAE | Leos Trading",
+    description: "Search genuine Kohler generator spare parts inventory in the UAE by part number, with sourcing support for additional Kohler engine and generator components.",
+  },
+  caterpillar: {
+    title: "Caterpillar CAT Spare Parts UAE | Leos Trading",
+    description: "Source Caterpillar CAT spare parts for construction, mining and engine applications from the UAE, including OEM, aftermarket and hard-to-find part numbers.",
+  },
+  cat: {
+    title: "Caterpillar CAT Spare Parts UAE | Leos Trading",
+    description: "Source Caterpillar CAT spare parts for construction, mining and engine applications from the UAE, including OEM, aftermarket and hard-to-find part numbers.",
+  },
+  komatsu: {
+    title: "Komatsu Spare Parts UAE | Leos Trading",
+    description: "Source Komatsu spare parts for excavators, dozers, loaders and mining equipment from the UAE, including OEM, aftermarket and hard-to-find components.",
+  },
+  cummins: {
+    title: "Cummins Engine Spare Parts Dubai UAE | Leos Trading",
+    description: "Source Cummins engine spare parts in Dubai and the UAE for generators, trucks, marine and industrial applications, including OEM and aftermarket options.",
+  },
+  yanmar: {
+    title: "Yanmar Marine & Engine Parts UAE | Leos Trading",
+    description: "Source Yanmar marine and diesel engine spare parts in the UAE, including genuine OEM, aftermarket and hard-to-find components for marine and industrial engines.",
+  },
+  perkins: {
+    title: "Perkins Engine Spare Parts UAE | Leos Trading",
+    description: "Source Perkins engine spare parts in the UAE for generators, construction and industrial applications, including OEM, aftermarket and obsolete part numbers.",
+  },
+  parker: {
+    title: "Parker Industrial & Hydraulic Parts UAE | Leos Trading",
+    description: "Source Parker hydraulic, pneumatic and industrial parts in the UAE for oilfield, marine and industrial applications, including hard-to-find part numbers.",
+  },
+  volvo: {
+    title: "Volvo Equipment & Truck Spare Parts UAE | Leos Trading",
+    description: "Source Volvo truck, construction equipment and engine spare parts in the UAE, including OEM, aftermarket and hard-to-find components.",
+  },
+};
+
 export async function generateStaticParams() {
   const brands = await getBrands();
   return brands.map((b) => ({ brand: b.slug }));
@@ -16,9 +63,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { brand } = await params;
   const b = await getBrandBySlug(brand);
   if (!b) return {};
-  return {
-    title: `${b.name} Inventory — Leos Trading FZE`,
-    description: `Search Leos Trading's live ${b.name} OEM parts inventory by part number.`,
+
+  const seo = BRAND_SEO[b.slug.toLowerCase()];
+  return seo ?? {
+    title: `${b.name} Spare Parts Supplier UAE | Leos Trading`,
+    description: `Search or source ${b.name} spare parts from the UAE by part number, including genuine OEM, aftermarket and hard-to-find components for worldwide supply.`,
   };
 }
 
