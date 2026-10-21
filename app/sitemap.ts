@@ -9,6 +9,12 @@ export const revalidate = 3600;
 const STATIC_PAGES: { path: string; priority: number }[] = [
   { path: "", priority: 1 },
   { path: "/products", priority: 0.9 },
+  { path: "/truck-parts", priority: 0.9 },
+  { path: "/construction-equipment-parts", priority: 0.9 },
+  { path: "/generator-parts", priority: 0.9 },
+  { path: "/marine-parts", priority: 0.9 },
+  { path: "/oilfield-industrial-parts", priority: 0.9 },
+  { path: "/caterpillar-parts", priority: 0.85 },
   { path: "/machinery", priority: 0.9 },
   { path: "/sourcing", priority: 0.8 },
   { path: "/brands", priority: 0.8 },
@@ -26,7 +32,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: p.priority,
   }));
 
-  // Each source is fetched defensively: if one fails, the rest of the sitemap still renders.
   try {
     const brands = await getBrands();
     for (const b of brands) {
