@@ -8,9 +8,9 @@ import { MACHINE_CATEGORIES, getPublishedMachines } from "@/lib/machinery";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "Machinery & Vehicles for Sale — Leos Trading FZE",
+  title: "Heavy Machinery & Trucks for Sale UAE | Leos Trading",
   description:
-    "New and used construction machinery, trucks and forklifts — Komatsu, Caterpillar, Tadano, Volvo, Iveco, Renault and more — sourced and supplied from the UAE.",
+    "New and used heavy machinery, construction equipment, trucks and forklifts for sale or sourcing from the UAE, including Komatsu, Caterpillar, Tadano, Volvo and Iveco.",
 };
 
 interface PageProps {

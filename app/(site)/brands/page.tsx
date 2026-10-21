@@ -5,9 +5,9 @@ import { RfqForm } from "@/components/rfq/RfqForm";
 import { CtaBanner } from "@/components/home/CtaBanner";
 
 export const metadata: Metadata = {
-  title: "Brands — Leos Trading FZE",
+  title: "OEM Spare Parts Brands UAE | CAT, Iveco, Komatsu, Cummins & More",
   description:
-    "Live Iveco, Kobelco and Kohler OEM inventory in the UAE, plus Caterpillar, Komatsu, Volvo, Cummins and 40+ other brands sourced on request through our global procurement network.",
+    "Browse OEM and aftermarket spare parts brands supplied from the UAE, including Iveco, Kobelco, Kohler, Caterpillar, Komatsu, Cummins, Perkins, Yanmar, Parker and more.",
 };
 
 export default function BrandsPage() {

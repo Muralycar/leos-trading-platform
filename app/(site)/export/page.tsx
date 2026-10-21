@@ -6,8 +6,9 @@ import { StepList } from "@/components/shared/StepList";
 import { CtaBanner } from "@/components/home/CtaBanner";
 
 export const metadata: Metadata = {
-  title: "Export — Leos Trading FZE",
-  description: "Leos Trading FZE exports OEM and aftermarket parts worldwide from Sharjah, UAE, with documentation support for customs clearance.",
+  title: "Spare Parts & Machinery Exporter from UAE | Leos Trading",
+  description:
+    "Leos Trading FZE exports OEM and aftermarket spare parts, machinery, trucks and equipment worldwide from the UAE with documentation and freight coordination support.",
 };
 
 const CAPABILITIES = [

@@ -5,9 +5,9 @@ import { CategoryGrid } from "@/components/home/CategoryGrid";
 import { CtaBanner } from "@/components/home/CtaBanner";
 
 export const metadata: Metadata = {
-  title: "Products — Leos Trading FZE",
+  title: "Industrial & Heavy Equipment Spare Parts UAE | Leos Trading",
   description:
-    "Genuine OEM and quality aftermarket parts across trucks, construction equipment, generators and more — sourced, stocked and exported from the UAE.",
+    "OEM and aftermarket spare parts for trucks, construction equipment, generators, engines, marine and industrial applications, stocked or sourced from the UAE.",
 };
 
 const SOURCING_CAPABILITY = [
