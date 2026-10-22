@@ -1,5 +1,6 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import { CATALOG_CACHE_TAG } from "@/lib/data/inventory";
+import { MACHINERY_CACHE_TAG } from "@/lib/machinery";
 
 /**
  * Every admin mutation that touches a product, its batches, or its media
@@ -11,10 +12,7 @@ import { CATALOG_CACHE_TAG } from "@/lib/data/inventory";
  * don't need to know the specific brand/sku to invalidate the right one.
  *
  * Also invalidates the "catalog" unstable_cache tag (lib/data/inventory.ts)
- * — getAllPublishedProducts/getBrands/getEquipmentCategories/getSiteSettings
- * now persist across requests for performance, so without this a change
- * would still show up on rebuilt static pages but not on dynamic routes
- * like /api/search until the cache's own revalidate window passed.
+ * so cached brand/product/detail reads refresh immediately after admin changes.
  */
 export function revalidatePublicProductPaths() {
   revalidatePath("/", "page");
@@ -25,9 +23,10 @@ export function revalidatePublicProductPaths() {
   revalidateTag(CATALOG_CACHE_TAG);
 }
 
-/** Machinery equivalent: refresh the public machinery pages after any admin change. */
+/** Machinery equivalent: refresh cached public machinery reads and pages after any admin change. */
 export function revalidatePublicMachinePaths() {
   revalidatePath("/", "page");
   revalidatePath("/machinery", "page");
   revalidatePath("/machinery/[slug]", "page");
+  revalidateTag(MACHINERY_CACHE_TAG);
 }
