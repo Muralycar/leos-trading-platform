@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getBrandBySlug, getBrands, getEquipmentCategories, getProductsByBrand } from "@/lib/data/inventory";
+import { getBrandBySlug, getBrands, getEquipmentCategories } from "@/lib/data/inventory";
+import { getCachedProductsByBrand } from "@/lib/data/inventory-cache";
 import { ResultRow } from "@/components/search/ResultRow";
 
 interface PageProps {
@@ -76,7 +77,7 @@ export default async function BrandPage({ params }: PageProps) {
   const b = await getBrandBySlug(brand);
   if (!b) notFound();
 
-  const [products, categories] = await Promise.all([getProductsByBrand(b.slug), getEquipmentCategories()]);
+  const [products, categories] = await Promise.all([getCachedProductsByBrand(b.slug), getEquipmentCategories()]);
   const totalUnits = products.reduce((sum, p) => sum + p.quantity, 0);
   const category = categories.find((c) => c.slug === products[0]?.equipmentCategorySlug);
 
