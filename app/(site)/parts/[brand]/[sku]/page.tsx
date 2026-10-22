@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getAllProductParams, getProductByBrandAndSku, getRelatedProducts, getSiteSettings } from "@/lib/data/inventory";
+import { getAllProductParams, getSiteSettings } from "@/lib/data/inventory";
+import { getCachedProductByBrandAndSku, getCachedRelatedProducts } from "@/lib/data/inventory-cache";
 import { waLink, mailtoLink } from "@/lib/whatsapp";
 import { AVAILABILITY_LABEL } from "@/lib/types";
 import { AvailabilityBadge } from "@/components/ui/AvailabilityBadge";
@@ -25,7 +26,7 @@ function descriptionSentence(brand: string): string {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { brand, sku } = await params;
-  const product = await getProductByBrandAndSku(brand, sku);
+  const product = await getCachedProductByBrandAndSku(brand, sku);
   if (!product) return {};
   return {
     title: `${product.oemPartNumber} — ${product.description} | ${product.brandName} | Leos Trading FZE`,
@@ -35,10 +36,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ProductPage({ params }: PageProps) {
   const { brand, sku } = await params;
-  const product = await getProductByBrandAndSku(brand, sku);
+  const product = await getCachedProductByBrandAndSku(brand, sku);
   if (!product) notFound();
 
-  const [related, settings] = await Promise.all([getRelatedProducts(product, 4), getSiteSettings()]);
+  const [related, settings] = await Promise.all([getCachedRelatedProducts(product, 4), getSiteSettings()]);
   const desc = descriptionSentence(product.brandName);
   const waMessage = `Inquiry — Part Number ${product.oemPartNumber} (${product.description})`;
 

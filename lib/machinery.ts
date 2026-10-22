@@ -1,3 +1,5 @@
+import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { createAnonSupabaseClient } from "@/lib/supabase/server";
 import { getPublicMediaUrl } from "@/lib/supabase/storage";
 import type { Database, MachineCondition, MachineStatus } from "@/lib/supabase/types";
@@ -5,6 +7,7 @@ import type { Database, MachineCondition, MachineStatus } from "@/lib/supabase/t
 type MachineRow = Database["public"]["Tables"]["machines"]["Row"];
 
 export const MACHINE_BUCKET = "machine-images";
+export const MACHINERY_CACHE_TAG = "machinery";
 
 export const MACHINE_CATEGORIES: { value: string; label: string }[] = [
   { value: "dozer", label: "Dozers" },
@@ -79,12 +82,7 @@ export function mapMachineRow(row: MachineRow): Machine {
   };
 }
 
-/**
- * Public reads use the anon client; RLS only ever returns published rows.
- * If the machines table hasn't been created yet (migration not run), the
- * pages degrade to "no machines" instead of crashing the site.
- */
-export async function getPublishedMachines(): Promise<Machine[]> {
+async function fetchPublishedMachines(): Promise<Machine[]> {
   const supabase = createAnonSupabaseClient();
   const { data, error } = await supabase
     .from("machines")
@@ -98,7 +96,7 @@ export async function getPublishedMachines(): Promise<Machine[]> {
   return (data ?? []).map(mapMachineRow);
 }
 
-export async function getMachineBySlug(slug: string): Promise<Machine | undefined> {
+async function fetchMachineBySlug(slug: string): Promise<Machine | undefined> {
   const supabase = createAnonSupabaseClient();
   const { data, error } = await supabase.from("machines").select("*").eq("slug", slug).eq("is_published", true).maybeSingle();
   if (error) {
@@ -107,6 +105,13 @@ export async function getMachineBySlug(slug: string): Promise<Machine | undefine
   }
   return data ? mapMachineRow(data) : undefined;
 }
+
+export const getPublishedMachines = cache(
+  unstable_cache(fetchPublishedMachines, ["public-machinery-list"], { tags: [MACHINERY_CACHE_TAG] }),
+);
+
+const cachedMachineBySlug = unstable_cache(fetchMachineBySlug, ["public-machinery-detail"], { tags: [MACHINERY_CACHE_TAG] });
+export const getMachineBySlug = cache(cachedMachineBySlug);
 
 export function formatPriceAed(price: number | null): string {
   return price === null ? "Price on request" : `AED ${price.toLocaleString("en-US")}`;
