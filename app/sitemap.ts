@@ -3,8 +3,11 @@ import { getAllProductParams, getBrands } from "@/lib/data/inventory";
 import { getPublishedMachines } from "@/lib/machinery";
 import { SITE_URL } from "@/lib/site";
 
-// Rebuilt at most once an hour, so new products and machines appear without a redeploy.
-export const revalidate = 3600;
+// Refresh the sitemap periodically so new products and machines are discoverable.
+// Do not emit synthetic lastModified timestamps: Google recommends lastmod only
+// when it reflects a real, significant page update. The site does not currently
+// store reliable public modified-at dates for every catalog page.
+export const revalidate = 21600;
 
 const STATIC_PAGES: { path: string; priority: number }[] = [
   { path: "", priority: 1 },
@@ -24,10 +27,8 @@ const STATIC_PAGES: { path: string; priority: number }[] = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const now = new Date();
   const entries: MetadataRoute.Sitemap = STATIC_PAGES.map((p) => ({
     url: `${SITE_URL}${p.path}`,
-    lastModified: now,
     changeFrequency: "weekly",
     priority: p.priority,
   }));
@@ -35,7 +36,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const brands = await getBrands();
     for (const b of brands) {
-      entries.push({ url: `${SITE_URL}/brands/${b.slug}`, lastModified: now, changeFrequency: "weekly", priority: 0.7 });
+      entries.push({ url: `${SITE_URL}/brands/${b.slug}`, changeFrequency: "weekly", priority: 0.7 });
     }
   } catch (err) {
     console.error("[sitemap] brands failed", err);
@@ -44,7 +45,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const machines = await getPublishedMachines();
     for (const m of machines) {
-      entries.push({ url: `${SITE_URL}/machinery/${m.slug}`, lastModified: new Date(m.createdAt), changeFrequency: "weekly", priority: 0.7 });
+      entries.push({ url: `${SITE_URL}/machinery/${m.slug}`, changeFrequency: "weekly", priority: 0.7 });
     }
   } catch (err) {
     console.error("[sitemap] machines failed", err);
@@ -55,7 +56,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     for (const p of products) {
       entries.push({
         url: `${SITE_URL}/parts/${p.brand}/${encodeURIComponent(p.sku)}`,
-        lastModified: now,
         changeFrequency: "monthly",
         priority: 0.5,
       });
