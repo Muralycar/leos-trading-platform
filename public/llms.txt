@@ -1,0 +1,32 @@
+# Leos Trading FZE
+
+> Leos Trading FZE is a UAE-based supplier of OEM, aftermarket, obsolete and hard-to-find spare parts for trucks, construction equipment, generators, marine, oilfield and industrial applications. It also sources new and used machinery, trucks and forklifts, and exports worldwide from the UAE. Registered office at SRTIP, Sharjah, UAE; office at 612 Al Kaabi, Al Nahda 1, Dubai, UAE. Quotations by request (RFQ): trade@leosdubai.com, +971 50 848 9640 (WhatsApp).
+
+Leos Trading is an independent supplier and is not an authorized distributor of any listed brand unless stated otherwise. Brand names are trademarks of their owners.
+
+## Spare parts by equipment type
+- [All products](https://www.leosdubai.com/products): overview of every parts category
+- [Truck parts](https://www.leosdubai.com/truck-parts)
+- [Construction equipment parts](https://www.leosdubai.com/construction-equipment-parts)
+- [Caterpillar parts](https://www.leosdubai.com/caterpillar-parts)
+- [Generator parts](https://www.leosdubai.com/generator-parts)
+- [Marine parts](https://www.leosdubai.com/marine-parts)
+- [Oilfield and industrial parts](https://www.leosdubai.com/oilfield-industrial-parts)
+
+## Brands
+- [All brands](https://www.leosdubai.com/brands)
+- [Iveco](https://www.leosdubai.com/brands/iveco)
+- [Kobelco](https://www.leosdubai.com/brands/kobelco)
+- [Kohler](https://www.leosdubai.com/brands/kohler)
+
+## Machinery, sourcing and export
+- [Machinery](https://www.leosdubai.com/machinery): new and used construction machinery, trucks and forklifts
+- [Sourcing](https://www.leosdubai.com/sourcing): how Leos sources genuine OEM, aftermarket, obsolete and hard-to-find parts
+- [Export](https://www.leosdubai.com/export): shipping from the UAE worldwide
+
+## Company
+- [About Leos Trading](https://www.leosdubai.com/about)
+- [Contact / request a quotation](https://www.leosdubai.com/contact)
+
+## Notes
+- Individual part pages follow the pattern https://www.leosdubai.com/parts/{brand}/{part-number} and are listed in https://www.leosdubai.com/sitemap.xml
