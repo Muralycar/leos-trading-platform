@@ -4,6 +4,7 @@ import { getAllProductParams, getSiteSettings } from "@/lib/data/inventory";
 import { getCachedProductByBrandAndSku, getCachedRelatedProducts } from "@/lib/data/inventory-cache";
 import { waLink, mailtoLink } from "@/lib/whatsapp";
 import { AVAILABILITY_LABEL } from "@/lib/types";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 import { AvailabilityBadge } from "@/components/ui/AvailabilityBadge";
 import { WhatsAppIcon } from "@/components/ui/Icons";
 import { Breadcrumb } from "@/components/product/Breadcrumb";
@@ -28,9 +29,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { brand, sku } = await params;
   const product = await getCachedProductByBrandAndSku(brand, sku);
   if (!product) return {};
+  const pageUrl = `${SITE_URL}/parts/${encodeURIComponent(brand)}/${encodeURIComponent(sku)}`;
   return {
     title: `${product.oemPartNumber} — ${product.description} | ${product.brandName} | Leos Trading FZE`,
     description: descriptionSentence(product.brandName),
+    alternates: { canonical: pageUrl },
   };
 }
 
@@ -43,8 +46,40 @@ export default async function ProductPage({ params }: PageProps) {
   const desc = descriptionSentence(product.brandName);
   const waMessage = `Inquiry — Part Number ${product.oemPartNumber} (${product.description})`;
 
+  // Structured data (JSON-LD): lets search engines and AI tools read the part facts reliably.
+  const pageUrl = `${SITE_URL}/parts/${encodeURIComponent(brand)}/${encodeURIComponent(sku)}`;
+  const imageUrl = product.imagePath
+    ? product.imagePath.startsWith("http")
+      ? product.imagePath
+      : `${SITE_URL}${product.imagePath.startsWith("/") ? "" : "/"}${product.imagePath}`
+    : undefined;
+  const inStock = product.status !== "on_request" && product.quantity > 0;
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "@id": `${pageUrl}#product`,
+    name: `${product.brandName} ${product.description} — ${product.oemPartNumber}`,
+    sku: product.oemPartNumber,
+    mpn: product.oemPartNumber,
+    brand: { "@type": "Brand", name: product.brandName },
+    category: product.equipmentCategoryName,
+    description: `${product.brandName} ${product.description}, part number ${product.oemPartNumber}. Supplied by ${SITE_NAME} (UAE) with worldwide export. Condition and exact fitment confirmed at quotation stage.`,
+    url: pageUrl,
+    ...(imageUrl ? { image: imageUrl } : {}),
+    offers: {
+      "@type": "Offer",
+      url: pageUrl,
+      ...(inStock ? { availability: "https://schema.org/InStock" } : {}),
+      seller: { "@id": `${SITE_URL}/#organization` },
+    },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd).replace(/</g, "\\u003c") }}
+      />
       <div className="wrap pt-6">
         <Breadcrumb
           categoryName={product.equipmentCategoryName}
