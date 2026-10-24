@@ -8,6 +8,8 @@ import { FeaturedGrid } from "@/components/home/FeaturedGrid";
 import { GlobalSourcing } from "@/components/home/GlobalSourcing";
 import { MachineryBanner } from "@/components/home/MachineryBanner";
 import { CtaBanner } from "@/components/home/CtaBanner";
+import { AboutBlock } from "@/components/home/AboutBlock";
+import { FaqSection } from "@/components/home/FaqSection";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 
 const ORGANIZATION_JSON_LD = {
@@ -70,7 +72,9 @@ export default function HomePage() {
       <FeaturedGrid />
       <MachineryBanner />
       <BrandStrip />
+      <AboutBlock />
       <GlobalSourcing />
+      <FaqSection />
       <CtaBanner variant="dark-accent" />
     </>
   );
