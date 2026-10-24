@@ -8,6 +8,8 @@ import { FeaturedGrid } from "@/components/home/FeaturedGrid";
 import { GlobalSourcing } from "@/components/home/GlobalSourcing";
 import { MachineryBanner } from "@/components/home/MachineryBanner";
 import { CtaBanner } from "@/components/home/CtaBanner";
+import { AboutBlock } from "@/components/home/AboutBlock";
+import { FaqSection } from "@/components/home/FaqSection";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 
 const ORGANIZATION_JSON_LD = {
@@ -27,7 +29,7 @@ const ORGANIZATION_JSON_LD = {
     {
       "@type": "PostalAddress",
       name: "Registered office",
-      streetAddress: "SRTIP",
+      streetAddress: "Block C, VL02-155, SRTIP",
       addressLocality: "Sharjah",
       addressCountry: "AE",
     },
@@ -70,7 +72,9 @@ export default function HomePage() {
       <FeaturedGrid />
       <MachineryBanner />
       <BrandStrip />
+      <AboutBlock />
       <GlobalSourcing />
+      <FaqSection />
       <CtaBanner variant="dark-accent" />
     </>
   );
