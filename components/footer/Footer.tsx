@@ -36,7 +36,14 @@ export async function Footer() {
         </div>
         <div>
           <h4 className="mb-4 font-mono text-[11px] uppercase tracking-[.1em] text-yellow">Contact</h4>
-          <div className="mb-2.5 text-sm text-text-1">{settings.address}</div>
+          <div className="mb-2.5 text-sm text-text-1">
+            <span className="block text-text-2">Registered office</span>
+            {settings.address}
+          </div>
+          <div className="mb-2.5 text-sm text-text-1">
+            <span className="block text-text-2">Dubai office</span>
+            612 Al Kaabi, Al Nahda 1, Dubai, United Arab Emirates
+          </div>
           <div className="mb-2.5 text-sm text-text-1">{settings.phonePrimary}</div>
           <div className="mb-2.5 text-sm text-text-1">{settings.phoneSecondary}</div>
           <div className="mb-2.5 text-sm text-text-1">{settings.email}</div>

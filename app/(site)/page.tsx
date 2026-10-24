@@ -29,7 +29,7 @@ const ORGANIZATION_JSON_LD = {
     {
       "@type": "PostalAddress",
       name: "Registered office",
-      streetAddress: "SRTIP",
+      streetAddress: "Block C, VL02-155, SRTIP",
       addressLocality: "Sharjah",
       addressCountry: "AE",
     },

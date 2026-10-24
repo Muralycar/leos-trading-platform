@@ -24,7 +24,7 @@ const FAQS: { q: string; a: string }[] = [
   },
   {
     q: "Where is Leos Trading based?",
-    a: "Our registered office is in Sharjah (SRTIP), with an office in Dubai (612 Al Kaabi, Al Nahda 1).",
+    a: "Our registered office is at Block C, VL02-155, SRTIP, Sharjah, United Arab Emirates, with an office in Dubai (612 Al Kaabi, Al Nahda 1).",
   },
   {
     q: "Which brands do you supply?",
