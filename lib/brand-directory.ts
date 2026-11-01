@@ -13,7 +13,7 @@ export const BRAND_TICKER: string[] = [
   "Cummins", "Perkins", "Yanmar", "MAN", "Scania", "Mercedes-Benz", "Hino",
   "Toyota", "Hyundai", "Kia", "JCB", "Doosan", "Develon", "Hitachi", "Dynapac",
   "Bomag", "Hamm", "Sakai", "Astra", "FPT", "Deutz", "MTU", "Baudouin",
-  "John Deere", "Rexroth", "Kawasaki", "Danfoss", "Parker", "SKF", "Timken",
+  "John Deere", "DENYO", "AIRMAN", "Rexroth", "Kawasaki", "Danfoss", "Parker", "SKF", "Timken",
   "Bosch", "Mahle", "Fleetguard", "Donaldson", "Varta", "Exide", "Yuasa",
 ];
 
@@ -81,6 +81,8 @@ export const SOURCING_BRAND_GROUPS: SourcingBrandGroup[] = [
       { name: "MTU" },
       { name: "FPT" },
       { name: "John Deere" },
+      { name: "DENYO" },
+      { name: "AIRMAN" },
     ],
   },
   {

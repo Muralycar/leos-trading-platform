@@ -8,9 +8,9 @@ import { getSiteSettings } from "@/lib/data/inventory";
 import { waLink, mailtoLink } from "@/lib/whatsapp";
 
 export const metadata: Metadata = {
-  title: "Hard-to-Find & Obsolete Spare Parts Supplier UAE | Leos Trading",
+  title: "Global Spare Parts Sourcing From UAE | Leos Trading",
   description:
-    "Source OEM, aftermarket, obsolete and hard-to-find spare parts in the UAE for trucks, heavy equipment, generators, marine and industrial applications through Leos Trading's global procurement network.",
+    "Send a part number or equipment details to Leos Trading for OEM, aftermarket and specialist spare-parts sourcing from the UAE, with worldwide export support.",
 };
 
 const CAPABILITY_GROUPS: CapabilityGroup[] = [

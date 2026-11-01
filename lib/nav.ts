@@ -32,8 +32,7 @@ export function buildInventoryLinks(brands: Brand[]): NavLink[] {
 export const SOURCING_LINKS: NavLink[] = [
   { label: "How Sourcing Works", href: "/sourcing#journey" },
   { label: "Request a Part", href: "/sourcing#request" },
-  { label: "Hard-to-Find Parts", href: "/sourcing#hard-to-find" },
-  { label: "Obsolete Parts", href: "/sourcing#obsolete" },
+  { label: "Obsolete & Hard-to-Find Parts", href: "/obsolete-hard-to-find-parts-uae" },
   { label: "Genuine & Aftermarket Supply", href: "/sourcing#genuine-aftermarket" },
 ];
 
@@ -48,6 +47,8 @@ export function buildMobileLinks(categories: EquipmentCategory[]): NavLink[] {
   return [
     { label: "Home", href: "/" },
     { label: "Products", href: "/products" },
+    { label: "Generator Spare Parts", href: "/generator-spare-parts-uae" },
+    { label: "Obsolete & Hard-to-Find Parts", href: "/obsolete-hard-to-find-parts-uae" },
     ...buildProductLinks(categories),
     { label: "Search All Stock", href: "/search" },
     { label: "Brands", href: "/brands" },

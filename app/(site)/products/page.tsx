@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { IconList } from "@/components/shared/IconList";
 import { CategoryGrid } from "@/components/home/CategoryGrid";
@@ -26,6 +27,41 @@ export default function ProductsPage() {
       />
 
       <CategoryGrid showHeading={false} />
+
+      <section className="border-t border-line py-16">
+        <div className="wrap">
+          <div className="mb-10 max-w-[680px]">
+            <div className="eyebrow">Specialist Sourcing</div>
+            <h2 className="mt-3.5">Parts support for more specific requirements</h2>
+          </div>
+          <div className="grid grid-cols-1 gap-5 min-[801px]:grid-cols-2">
+            <Link
+              href="/generator-spare-parts-uae"
+              className="group rounded-m border border-line bg-bg-1 p-7 transition-colors hover:border-brass"
+            >
+              <div className="eyebrow">Power Generation</div>
+              <h3 className="mt-3.5">Generator Spare Parts UAE</h3>
+              <p className="mt-3 text-sm">
+                Generator engine, alternator, control and electrical components for genuine OEM, aftermarket and
+                difficult-to-source requirements.
+              </p>
+              <span className="mt-5 inline-flex text-sm text-brass group-hover:underline">Explore generator parts →</span>
+            </Link>
+            <Link
+              href="/obsolete-hard-to-find-parts-uae"
+              className="group rounded-m border border-line bg-bg-1 p-7 transition-colors hover:border-brass"
+            >
+              <div className="eyebrow">Parts Sourcing</div>
+              <h3 className="mt-3.5">Obsolete &amp; Hard-to-Find Parts</h3>
+              <p className="mt-3 text-sm">
+                A focused search route for discontinued, superseded, old-stock and legacy part numbers across
+                industrial equipment categories.
+              </p>
+              <span className="mt-5 inline-flex text-sm text-brass group-hover:underline">Explore sourcing support →</span>
+            </Link>
+          </div>
+        </div>
+      </section>
 
       <section className="border-t border-line py-16">
         <div className="wrap">
