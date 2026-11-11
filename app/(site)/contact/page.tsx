@@ -4,11 +4,12 @@ import { RfqForm } from "@/components/rfq/RfqForm";
 import { LocationIcon, PhoneIcon, WhatsAppIcon, MailIcon } from "@/components/ui/Icons";
 import { getSiteSettings } from "@/lib/data/inventory";
 import { waLink, mailtoLink } from "@/lib/whatsapp";
+import { jsonLdHtml, webPageJsonLd } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Contact — Leos Trading FZE",
-  description: "Contact Leos Trading FZE — Sharjah, UAE. Phone, WhatsApp, email and request-a-quotation form.",
-};
+const TITLE = "Contact — Leos Trading FZE";
+const DESCRIPTION = "Contact Leos Trading FZE — Sharjah, UAE. Phone, WhatsApp, email and request-a-quotation form.";
+
+export const metadata: Metadata = { title: TITLE, description: DESCRIPTION };
 
 export default async function ContactPage() {
   const settings = await getSiteSettings();
@@ -39,6 +40,7 @@ export default async function ContactPage() {
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdHtml(webPageJsonLd("ContactPage", "/contact", TITLE, DESCRIPTION))} />
       <PageHeader eyebrow="Contact" title="Talk to our team" />
 
       <section className="py-16">

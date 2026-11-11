@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { Barlow_Condensed, Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
-import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { SITE_URL } from "@/lib/site";
+import { BASE_OPEN_GRAPH } from "@/lib/seo";
 import { LeadEventTracker } from "@/components/analytics/LeadEventTracker";
 
 const GTM_ID = "GTM-P7F6FKQX";
@@ -35,14 +36,9 @@ export const metadata: Metadata = {
     "Leos Trading FZE supplies OEM, aftermarket, obsolete and hard-to-find spare parts for trucks, construction equipment, generators, marine and industrial applications worldwide from the UAE.",
   // "./" = each page's own URL (without ?filters), so search engines index one clean version of every page.
   alternates: { canonical: "./" },
-  openGraph: {
-    type: "website",
-    siteName: SITE_NAME,
-    locale: "en_AE",
-    title: "OEM & Aftermarket Spare Parts Supplier UAE | Leos Trading",
-    description:
-      "OEM, aftermarket, obsolete and hard-to-find spare parts for trucks, construction equipment, generators, marine and industrial applications, supplied worldwide from the UAE.",
-  },
+  // Title/description deliberately omitted: each page's own title and description
+  // fill the og:/twitter: tags automatically (see lib/seo.ts).
+  openGraph: BASE_OPEN_GRAPH,
 };
 
 export default function RootLayout({

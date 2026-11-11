@@ -5,11 +5,13 @@ import { IconList } from "@/components/shared/IconList";
 import { StepList } from "@/components/shared/StepList";
 import { StatStrip } from "@/components/home/StatStrip";
 import { CtaBanner } from "@/components/home/CtaBanner";
+import { jsonLdHtml, webPageJsonLd } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "About — Leos Trading FZE",
-  description: "Leos Trading FZE is a UAE-based industrial trading and sourcing partner supplying OEM and aftermarket parts across generator, truck, construction, mining, marine and industrial applications.",
-};
+const TITLE = "About — Leos Trading FZE";
+const DESCRIPTION =
+  "Leos Trading FZE is a UAE-based industrial trading and sourcing partner supplying OEM and aftermarket parts across generator, truck, construction, mining, marine and industrial applications.";
+
+export const metadata: Metadata = { title: TITLE, description: DESCRIPTION };
 
 const WHAT_WE_DO = [
   "Genuine and aftermarket parts supply",
@@ -28,6 +30,7 @@ const HOW_WE_WORK_STEPS = [
 export default function AboutPage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdHtml(webPageJsonLd("AboutPage", "/about", TITLE, DESCRIPTION))} />
       <PageHeader
         eyebrow="About"
         title="A UAE-based industrial trading and sourcing partner"
