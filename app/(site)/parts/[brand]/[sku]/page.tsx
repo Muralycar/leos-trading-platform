@@ -5,6 +5,7 @@ import { getCachedProductByBrandAndSku, getCachedRelatedProducts } from "@/lib/d
 import { waLink, mailtoLink } from "@/lib/whatsapp";
 import { AVAILABILITY_LABEL } from "@/lib/types";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { breadcrumbJsonLd, categoryUrl, jsonLdHtml } from "@/lib/seo";
 import { AvailabilityBadge } from "@/components/ui/AvailabilityBadge";
 import { WhatsAppIcon } from "@/components/ui/Icons";
 import { Breadcrumb } from "@/components/product/Breadcrumb";
@@ -32,7 +33,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const pageUrl = `${SITE_URL}/parts/${encodeURIComponent(brand)}/${encodeURIComponent(sku)}`;
   return {
     title: `${product.oemPartNumber} — ${product.description} | ${product.brandName} | Leos Trading FZE`,
-    description: descriptionSentence(product.brandName),
+    // Part-specific (the visible sentence is the same for every part of a brand).
+    description: `${product.brandName} ${product.description}, part number ${product.oemPartNumber} (${product.equipmentCategoryName}), from Leos Trading's ${product.brandName} inventory, UAE. Condition and exact fitment confirmed at RFQ stage.`,
     alternates: { canonical: pageUrl },
   };
 }
@@ -53,7 +55,8 @@ export default async function ProductPage({ params }: PageProps) {
       ? product.imagePath
       : `${SITE_URL}${product.imagePath.startsWith("/") ? "" : "/"}${product.imagePath}`
     : undefined;
-  const inStock = product.status !== "on_request" && product.quantity > 0;
+  // No `offers`: prices are quote-only, and an Offer without price/priceCurrency is
+  // invalid for search engines. Stock status stays visible on the page itself.
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -66,20 +69,18 @@ export default async function ProductPage({ params }: PageProps) {
     description: `${product.brandName} ${product.description}, part number ${product.oemPartNumber}. Supplied by ${SITE_NAME} (UAE) with worldwide export. Condition and exact fitment confirmed at quotation stage.`,
     url: pageUrl,
     ...(imageUrl ? { image: imageUrl } : {}),
-    offers: {
-      "@type": "Offer",
-      url: pageUrl,
-      ...(inStock ? { availability: "https://schema.org/InStock" } : {}),
-      seller: { "@id": `${SITE_URL}/#organization` },
-    },
   };
+  // Mirrors the visible <Breadcrumb>: Home / category / brand / part number.
+  const breadcrumbLd = breadcrumbJsonLd([
+    { name: "Home", url: "/" },
+    { name: product.equipmentCategoryName, url: categoryUrl(product.equipmentCategorySlug) },
+    { name: product.brandName, url: `/brands/${product.brandSlug}` },
+    { name: product.oemPartNumber },
+  ]);
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd).replace(/</g, "\\u003c") }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdHtml([productJsonLd, breadcrumbLd])} />
       <div className="wrap pt-6">
         <Breadcrumb
           categoryName={product.equipmentCategoryName}

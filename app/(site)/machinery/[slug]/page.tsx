@@ -15,6 +15,7 @@ import {
   getMachineBySlug,
 } from "@/lib/machinery";
 import { waLink } from "@/lib/whatsapp";
+import { BASE_OPEN_GRAPH } from "@/lib/seo";
 
 export const revalidate = 60;
 
@@ -32,7 +33,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     description:
       machine.description?.slice(0, 160) ??
       `${machine.title} — ${onRequest ? "available on request" : "for sale"} from Leos Trading FZE, UAE.`,
-    openGraph: machine.imageUrls[0] ? { images: [machine.imageUrls[0]] } : undefined,
+    // Spread the shared defaults: a page-level openGraph replaces the inherited one entirely.
+    openGraph: machine.imageUrls[0] ? { ...BASE_OPEN_GRAPH, images: [machine.imageUrls[0]] } : undefined,
   };
 }
 
