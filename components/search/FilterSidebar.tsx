@@ -1,4 +1,7 @@
-import { CheckIcon } from "@/components/ui/Icons";
+"use client";
+
+import { useState } from "react";
+import { CheckIcon, ChevronDownIcon } from "@/components/ui/Icons";
 
 export interface FilterOption {
   slug: string;
@@ -64,15 +67,34 @@ export function FilterSidebar({
   onToggleCategory,
   onToggleAvailability,
 }: FilterSidebarProps) {
+  // Phones: filters collapse behind a toggle so results show first. Desktop: always open.
+  const [open, setOpen] = useState(false);
+  const activeCount = selectedCategories.length + selectedAvailability.length;
+
   return (
-    <aside className="border-b border-line pb-8 min-[901px]:sticky min-[901px]:top-24 min-[901px]:self-start min-[901px]:border-b-0 min-[901px]:border-r min-[901px]:pb-0 min-[901px]:pr-8">
-      <FilterGroup title="Category" options={categoryOptions} selected={selectedCategories} onToggle={onToggleCategory} />
-      <FilterGroup
-        title="Availability"
-        options={availabilityOptions}
-        selected={selectedAvailability}
-        onToggle={onToggleAvailability}
-      />
+    <aside className="min-[901px]:sticky min-[901px]:top-24 min-[901px]:self-start min-[901px]:border-r min-[901px]:border-line min-[901px]:pr-8">
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls="search-filters"
+        onClick={() => setOpen((o) => !o)}
+        className="flex h-12 w-full items-center justify-between rounded-s border border-line-strong bg-bg-1 px-4 font-mono text-[13px] font-semibold uppercase tracking-[.04em] text-text-0 min-[901px]:hidden"
+      >
+        <span>
+          Filters
+          {activeCount > 0 ? <span className="ml-2 text-brass">({activeCount})</span> : null}
+        </span>
+        <ChevronDownIcon className={`h-3 w-3 transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+      <div id="search-filters" className={`${open ? "block" : "hidden"} mt-6 min-[901px]:mt-0 min-[901px]:block`}>
+        <FilterGroup title="Category" options={categoryOptions} selected={selectedCategories} onToggle={onToggleCategory} />
+        <FilterGroup
+          title="Availability"
+          options={availabilityOptions}
+          selected={selectedAvailability}
+          onToggle={onToggleAvailability}
+        />
+      </div>
     </aside>
   );
 }
