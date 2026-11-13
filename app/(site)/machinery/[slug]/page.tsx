@@ -16,6 +16,7 @@ import {
 } from "@/lib/machinery";
 import { waLink } from "@/lib/whatsapp";
 import { BASE_OPEN_GRAPH } from "@/lib/seo";
+import { MobileActionBar } from "@/components/shared/MobileActionBar";
 
 export const revalidate = 60;
 
@@ -138,6 +139,15 @@ export default async function MachineDetailPage({ params }: PageProps) {
             />
           </div>
         </section>
+      ) : null}
+
+      {canEnquire ? (
+        <MobileActionBar
+          waHref={waLink(settings, waMessage)}
+          phoneHref={`tel:${settings.phonePrimary.replace(/\s+/g, "")}`}
+          quoteHref="#enquire"
+          quoteLabel={machine.status === "sourcing" ? "Request Machine" : "Request Quote"}
+        />
       ) : null}
     </>
   );

@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { PhoneIcon, WhatsAppIcon, ChevronDownIcon } from "@/components/ui/Icons";
 import { MobileNav } from "@/components/header/MobileNav";
-import { buildInventoryLinks, buildMobileLinks, buildProductLinks, SOURCING_LINKS, TOP_LEVEL_LINKS } from "@/lib/nav";
+import { buildInventoryLinks, buildMobileGroups, buildProductLinks, SOURCING_LINKS, TOP_LEVEL_LINKS } from "@/lib/nav";
 import { getBrands, getEquipmentCategories, getSiteSettings } from "@/lib/data/inventory";
 import { waLink } from "@/lib/whatsapp";
 
@@ -11,7 +11,7 @@ export async function Header() {
 
   const productLinks = buildProductLinks(categories);
   const inventoryLinks = buildInventoryLinks(brands);
-  const mobileLinks = buildMobileLinks(categories);
+  const mobileGroups = buildMobileGroups(categories);
   const dropdowns: { label: string; href?: string; links: typeof productLinks }[] = [
     { label: "Products", href: "/products", links: productLinks },
     { label: "Inventory", links: inventoryLinks },
@@ -112,7 +112,7 @@ export async function Header() {
           </Link>
         </div>
 
-        <MobileNav links={mobileLinks} />
+        <MobileNav groups={mobileGroups} />
       </div>
     </header>
   );

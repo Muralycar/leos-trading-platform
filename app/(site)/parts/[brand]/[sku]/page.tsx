@@ -13,6 +13,7 @@ import { Gallery } from "@/components/product/Gallery";
 import { SpecTable } from "@/components/product/SpecTable";
 import { RelatedParts } from "@/components/product/RelatedParts";
 import { RfqForm } from "@/components/rfq/RfqForm";
+import { MobileActionBar } from "@/components/shared/MobileActionBar";
 
 interface PageProps {
   params: Promise<{ brand: string; sku: string }>;
@@ -182,6 +183,12 @@ export default async function ProductPage({ params }: PageProps) {
           </div>
         </div>
       </section>
+
+      <MobileActionBar
+        waHref={waLink(settings, waMessage)}
+        phoneHref={`tel:${settings.phonePrimary.replace(/\s+/g, "")}`}
+        quoteHref="#rfq"
+      />
     </>
   );
 }

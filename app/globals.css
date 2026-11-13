@@ -60,6 +60,13 @@
     }
   }
 
+  /* Keep page content clear of the phone-only MobileActionBar. */
+  @media (max-width: 900px) {
+    body:has(.mobile-action-bar) {
+      padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px));
+    }
+  }
+
   .eyebrow {
     font-family: var(--font-plex-mono), monospace;
     font-size: 12px;

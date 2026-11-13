@@ -27,6 +27,10 @@ export function LeadEventTracker() {
           page_path: window.location.pathname,
           link_text: link.textContent?.trim().slice(0, 80) || "WhatsApp",
         });
+      } else if (href.startsWith("tel:")) {
+        pushLeadEvent("phone_click", { page_path: window.location.pathname });
+      } else if (href.startsWith("mailto:")) {
+        pushLeadEvent("email_click", { page_path: window.location.pathname });
       }
     };
 

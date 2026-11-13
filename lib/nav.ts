@@ -43,20 +43,41 @@ export const TOP_LEVEL_LINKS: NavLink[] = [
   { label: "About", href: "/about" },
 ];
 
-export function buildMobileLinks(categories: EquipmentCategory[]): NavLink[] {
+export interface NavGroup {
+  title: string;
+  links: NavLink[];
+}
+
+// Phone menu: every top-level destination, grouped so it scans in sections.
+export function buildMobileGroups(categories: EquipmentCategory[]): NavGroup[] {
   return [
-    { label: "Home", href: "/" },
-    { label: "Products", href: "/products" },
-    { label: "Generator Spare Parts", href: "/generator-spare-parts-uae" },
-    { label: "Obsolete & Hard-to-Find Parts", href: "/obsolete-hard-to-find-parts-uae" },
-    ...buildProductLinks(categories),
-    { label: "Search All Stock", href: "/search" },
-    { label: "Brands", href: "/brands" },
-    { label: "Machinery", href: "/machinery" },
-    { label: "Request a Part", href: "/sourcing#request" },
-    { label: "Sourcing", href: "/sourcing" },
-    { label: "Export", href: "/export" },
-    { label: "About", href: "/about" },
-    { label: "Contact", href: "/contact" },
+    {
+      title: "Spare Parts",
+      links: [
+        { label: "Search All Stock", href: "/search" },
+        { label: "All Products", href: "/products" },
+        ...buildProductLinks(categories),
+        { label: "Generator Spare Parts", href: "/generator-spare-parts-uae" },
+        { label: "Obsolete & Hard-to-Find Parts", href: "/obsolete-hard-to-find-parts-uae" },
+        { label: "Brands", href: "/brands" },
+      ],
+    },
+    {
+      title: "Sourcing & Machinery",
+      links: [
+        { label: "Request a Part", href: "/sourcing#request" },
+        { label: "Sourcing", href: "/sourcing" },
+        { label: "Machinery", href: "/machinery" },
+        { label: "Export", href: "/export" },
+      ],
+    },
+    {
+      title: "Company",
+      links: [
+        { label: "Home", href: "/" },
+        { label: "About", href: "/about" },
+        { label: "Contact", href: "/contact" },
+      ],
+    },
   ];
 }

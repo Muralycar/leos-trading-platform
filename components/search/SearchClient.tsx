@@ -201,7 +201,7 @@ export function SearchClient({ settings, stats }: { settings: SiteSettings; stat
         </div>
       </div>
 
-      <div className="wrap grid grid-cols-1 gap-10 py-12 min-[901px]:grid-cols-[240px_1fr] min-[901px]:py-14">
+      <div className="wrap grid grid-cols-1 gap-6 py-8 min-[901px]:grid-cols-[240px_1fr] min-[901px]:gap-10 min-[901px]:py-14">
         <FilterSidebar
           categoryOptions={categoryOptions}
           availabilityOptions={availabilityOptions}
