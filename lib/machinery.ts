@@ -125,10 +125,16 @@ export function formatUsage(machine: Pick<Machine, "hoursOrKm" | "category">): s
 }
 
 export function slugify(input: string): string {
-  return input
-    .toLowerCase()
+  let text = input.trim().toLowerCase();
+  // A full URL pasted into the slug field must not become the slug itself:
+  // keep only its last path segment.
+  if (/^([a-z]+:\/\/|www\.)/.test(text)) {
+    text = text.replace(/[?#].*$/, "").replace(/\/+$/, "").replace(/^.*\//, "");
+  }
+  return text
     .replace(/&/g, " and ")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
     .slice(0, 80);
+}
 }
