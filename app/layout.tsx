@@ -31,7 +31,7 @@ const plexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "OEM & Aftermarket Spare Parts Supplier UAE | Leos Trading",
+  title: "Leos Trading FZE | OEM & Aftermarket Spare Parts Supplier UAE",
   description:
     "Leos Trading FZE supplies OEM, aftermarket, obsolete and hard-to-find spare parts for trucks, construction equipment, generators, marine and industrial applications worldwide from the UAE.",
   // "./" = each page's own URL (without ?filters), so search engines index one clean version of every page.
